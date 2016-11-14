@@ -239,3 +239,33 @@
 	done))
 
 (test-string <Number> "-09/0")	
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;; String ;;;;;;;;;;;;;;;;;;;;;;
+
+(define <StringVisibleChar>
+	(new (*parser <VisibleSimpleChar> )done)
+	)
+
+()
+
+
+(define <string-char>
+  (new (*parser <any-char>)
+       (*parser (char #\"))
+       *diff
+       done))
+
+(define <string>
+  (new (*parser (char #\"))
+       (*parser <string-char>) *star
+       (*parser (char #\"))
+       (*caten 3)
+       (*pack-with
+	(lambda (open-delim chars close-delim)
+	  (list->string chars)))
+       done))
+
+(test-string <Number> "-09/0")	
