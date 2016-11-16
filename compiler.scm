@@ -21,99 +21,41 @@
 		 (*disj 2)
 	done))
 
- (test-string <Boolean> "#t")
-  (test-string <Boolean> "#F")
+ ;(test-string <Boolean> "#t")
+ ; (test-string <Boolean> "#F")
 
 
 ;;;;;;;;;;;;;;;;;;;;;; Char ;;;;;;;;;;;;;;;;;;;;;;
 
 
-;;;; hex digit ;;;;
 
-
-(define <hex-digit>
-  (let ((zero (char->integer #\0))
-	(lc-a (char->integer #\a))
-	(uc-a (char->integer #\A)))
-    (new (*parser (range #\0 #\9))
-	 (*pack
-	  (lambda (ch)
-	    (- (char->integer ch) zero)))
-
-	 (*parser (range #\a #\f))
-	 (*pack
-	  (lambda (ch)
-	    (+ 10 (- (char->integer ch) lc-a))))
-
-	 (*parser (range #\A #\F))
-	 (*pack
-	  (lambda (ch)
-	    (+ 10 (- (char->integer ch) uc-a))))
-
-	 (*disj 3)
-	 done)))
-
-(define <X>
-  (new (*parser <hex-digit>)
-       (*pack
-			(lambda (l)
-			  l ))
-		       done))
-
-(define <XX>
-  (new (*parser <hex-digit>)
-       (*parser <hex-digit>)
-       (*caten 2)
-       (*pack-with
-			(lambda (h l)
-			  (+ l (* h 16))))
-		       done))
-
-(define <XXX>
-	(new (*parser <hex-digit>)
-		(*parser <hex-digit>)
-       (*parser <hex-digit>)
-       (*caten 3)
-       (*pack-with
-	       (lambda (a b c)
-	       	(+ (+ c (* b 16)) (* a 256))
-	       	)
-		)
-       done)
-	)
-
-(define <XXXX>
-  (new (*parser <XX>)
-       (*parser <XX>)
-       (*caten 2)
-       (*pack-with
-	(lambda (h l)
-	  (+ l (* 256 h))))
+(define <HexChar>
+  (new
+      (*parser (range #\0 #\9))
+      (*parser (range-ci #\a #\f))
+      (*disj 2)
        done))
-
-
 
 
 
 (define <HexUnicodeChar>
   (new (*parser (char-ci #\x))
-       (*parser <XXXX>)
-       (*parser <XXX>)
-       (*parser <XX>)
-       (*parser <X>)
-       (*disj 4)
-       (*pack integer->char)
-       (*caten 2)
-       (*pack-with (lambda (_< ch) ch))
+       (*parser <HexChar>)
+       (*parser <HexChar>) *star
+       (*caten 3)
+       (*pack-with
+          (lambda (x digit digits)
+            (integer->char 
+            (string->number
+                (list->string `(,digit ,@digits)) 16))))
        done))
 
 
 
 
-;(test-string <HexUnicodeChar> "xB")	
+;(test-string <HexUnicodeChar> "x12")	
 
 
-;;;;;;;;;;;;;;;;;;
 
 (define <CharPrefix>
     (new (*parser (char #\#))
@@ -131,42 +73,42 @@
 (define <VisibleSimpleChar>
 	(new 
 		(*parser (range #\! #\~))
-		(*pack
+    (*pack
 			(lambda (a)
 				 a))
 	done))
 
-(define ^<meta-char>
-  (lambda (ch)
-	 ch))
-	 
 
+
+
+(define ^<meta-char>
+    (lambda (str ch)
+        (new (*parser (word str))
+            (*pack (lambda (_) ch))
+            done)))
+        
 
 (define <NamedChar>
-	(new 
-		(*parser (char #\x0))
-		(*parser (word "lambda"))
-		(*parser (word "newline"))
-		(*parser (word "page"))
-		(*parser (word "return"))
-		(*parser (word "space"))
-		(*parser (word "tab"))
-		(*parser (word "DEL"))
-		(*disj 8)
-		(*pack
-		(lambda (a)
-		 	 a))
-		done))
-
-
+    (new
+        (*parser (^<meta-char> "lambda" (integer->char 955)))
+        (*parser (^<meta-char> "newline" (integer->char 10)))
+        (*parser (^<meta-char> "page" (integer->char 12)))
+        (*parser (^<meta-char> "return" (integer->char 13)))
+        (*parser (^<meta-char> "space" (integer->char 32)))
+        (*parser (^<meta-char> "tab" (integer->char 9)))
+        (*parser (^<meta-char> "nul" (integer->char 0)))
+        (*disj 7)
+        done))
 
 	
 (define <Char>
   (new (*parser <CharPrefix>)
-  		;(*parser <NamedChar>)
+  		(*parser <NamedChar>)
   		(*parser <HexUnicodeChar>)
   		(*parser <VisibleSimpleChar>)
-  		(*disj 2)
+      (*parser <VisibleSimpleChar>)
+      *not-followed-by
+  		(*disj 3)
   		(*caten 2)
   		(*pack-with
     		(lambda(a b)
@@ -176,8 +118,7 @@
 
 
 
-
-(test-string <Char> "#\\x")	
+;(test-string <Char> "#\lambda")	
 
 
 
@@ -238,34 +179,124 @@
 		(*disj 2)
 	done))
 
-(test-string <Number> "-09/0")	
+;(test-string <Number> "-09/0")	
 
 
 
 
 ;;;;;;;;;;;;;;;;;;;;;; String ;;;;;;;;;;;;;;;;;;;;;;
-
 (define <StringVisibleChar>
-	(new (*parser <VisibleSimpleChar> )done)
-	)
+    (new
+        (*parser (range #\! #\~))
+        (*pack
+            (lambda (a) a))
+        done))
 
-()
 
 
-(define <string-char>
-  (new (*parser <any-char>)
-       (*parser (char #\"))
-       *diff
-       done))
+(define <StringMetaChar>
+    (new
+        (*parser (^<meta-char> "\\\\" #\\))
+        (*parser (^<meta-char> "\\\"" #\"))
+        (*parser (^<meta-char> "\\n" #\newline))
+        (*parser (^<meta-char> "\\t" #\tab))
+        (*parser (^<meta-char> "\\f" #\page))
+        (*parser (^<meta-char> "\\r" #\return))
+        (*disj 6)
+        done))
 
-(define <string>
-  (new (*parser (char #\"))
-       (*parser <string-char>) *star
-       (*parser (char #\"))
-       (*caten 3)
-       (*pack-with
-	(lambda (open-delim chars close-delim)
-	  (list->string chars)))
-       done))
 
-(test-string <Number> "-09/0")	
+(define <StringHexChar>
+    (new
+        (*parser (char #\\))
+        (*parser (char-ci #\x))
+        (*parser <HexChar>) *star
+        (*parser (char #\;))
+        (*caten 4)
+        (*pack-with
+          (lambda (s x digits end)
+            (integer->char 
+            (string->number
+                (list->string digits) 16))))
+        done))
+
+(define <StringChar>
+    (new
+        (*parser <StringMetaChar>)
+        (*parser <StringHexChar>)
+        (*parser <StringVisibleChar>)
+        (*disj 3)
+        
+        done))
+
+;(test-string <StringChar> "\\xabc;")
+
+
+
+(define <String>
+  (new 
+            (*parser (word "\""))
+            (*parser <StringChar>)
+            (*parser (word "\"")) *diff *star
+            (*parser (word "\""))
+            (*caten 3)
+            (*pack-with
+                (lambda (open-delim chars close-delim)
+                    (list->string chars)))
+            done))
+            
+
+
+
+;;;;;;;;;;;;;;;;;;;;;; Symbol ;;;;;;;;;;;;;;;;;;;;;;
+
+
+(define <SymbolChar>
+  (new 
+    (*parser <digit-0-9>)
+    (*parser (range-ci #\a #\z))
+    (*parser (char #\!))
+    (*parser (char #\$))
+    (*parser (char #\^))
+    (*parser (char #\*))
+    (*parser (char #\-))
+    (*parser (char #\_))
+    (*parser (char #\+))
+    (*parser (char #\=))
+    (*parser (char #\>))
+    (*parser (char #\<))
+    (*parser (char #\?))
+    (*parser (char #\/))
+    (*disj 14)
+    (*pack 
+      (lambda (_)
+        '_))
+    done)
+  )
+(test-string <SymbolChar> "a")
+
+
+(define <Symbol>
+  (new
+    (*parser <SymbolChar>) *plus
+    ;(*pack 
+    ;  (lambda(_) `(,@_)))
+  done))
+
+(test-string <Symbol> "abc")
+
+
+;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
+
+(define <Sexpr>
+  (new
+    (*parser <Boolean>)
+    (*parser <Char>)
+    (*parser <Number>)
+    (*parser <String>)
+    (*disj 4)
+    done)
+  )
+
+;(display "blaaa\n")
+(test-string <Sexpr> "#t")
