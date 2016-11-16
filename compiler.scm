@@ -180,6 +180,8 @@
 	done))
 
 ;(test-string <Number> "-09/0")	
+;(test-string <Number> "1+1")  
+
 
 
 
@@ -268,22 +270,43 @@
     (*parser (char #\?))
     (*parser (char #\/))
     (*disj 14)
-    (*pack 
-      (lambda (_)
-        '_))
     done)
   )
-(test-string <SymbolChar> "a")
+;(test-string <SymbolChar> "a")
 
 
 (define <Symbol>
   (new
     (*parser <SymbolChar>) *plus
-    ;(*pack 
-    ;  (lambda(_) `(,@_)))
-  done))
+    (*pack 
+      (lambda(symbols)
+       (string->symbol (list->string symbols) )))
+  done)
+  )
 
-(test-string <Symbol> "abc")
+;(test-string <Symbol> "xabc!v")
+
+
+;;;;;;;;;;;;;;;;;;;;;; ProperList ;;;;;;;;;;;;;;;;;;;;;;
+
+
+(define <ProperList>
+  (new
+    (*parser (char (integer->char 40))) 
+    (*delayed
+     (lambda()
+        <Sexpr>) 
+      )
+      *star
+    (*parser (char (integer->char 41))) 
+    (*caten 3)
+    (*pack-with (lambda (a b c)  ;;TODO: return as a symbol
+            (string->symbol
+                (list->string `(a b c))))) 
+
+    done)
+
+  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
@@ -291,12 +314,30 @@
 (define <Sexpr>
   (new
     (*parser <Boolean>)
+    (*parser <Symbol>)
     (*parser <Char>)
     (*parser <Number>)
     (*parser <String>)
-    (*disj 4)
+    (*parser <ProperList>)
+    (*disj 6)
     done)
   )
 
-;(display "blaaa\n")
-(test-string <Sexpr> "#t")
+
+
+;;;;;;;;;;;;;;;;;;;;;; Tests ;;;;;;;;;;;;;;;;;;;;;;
+
+
+(display "\n> > > > > > > > Our Rock Tests > > > > > > > >\n")
+(display "> > > > > > > > > > > > > > > > > > > > > > > \n\n")
+(test-string <Sexpr> "abc!$")
+(test-string <Sexpr> "-09/0")
+;(test-string <Sexpr> "#\aaa")
+(test-string <Sexpr> "1+1")
+(test-string <Sexpr> "+93a")  
+(test-string <Sexpr> "#\\lambda") 
+(test-string <Sexpr> "-1234-12345") 
+(test-string <Sexpr> "(123a+!)")
+
+
+
