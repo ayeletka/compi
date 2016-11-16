@@ -1,5 +1,5 @@
-(load "pc.scm")
-
+(load "/home/shugs/comp/pc.scm")
+;(load "pc.scm")
 
 
 ;;;;;;;;;;;;;;;;;;;;;; Boolean;;;;;;;;;;;;;;;;;;;;;;
@@ -300,14 +300,52 @@
       *star
     (*parser (char (integer->char 41))) 
     (*caten 3)
-    (*pack-with (lambda (a b c)  ;;TODO: return as a symbol
-            (string->symbol
-                (list->string `(a b c))))) 
+    (*pack-with (lambda (a b c)  
+            b)) 
 
     done)
-
   )
 
+
+;;;;;;;;;;;;;;this is not working - need to fix the space thing (char 32)...;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;; ImproperList ;;;;;;;;;;;;;;
+(define <ImproperList>
+    (new    
+        (*parser (char #\())
+        (*delayed
+            (lambda() <Sexpr>)) *plus
+        (*parser (integer->char 32))
+        (*parser (char #\.))
+        (*parser (integer->char 32))
+        (*delayed
+            (lambda() <Sexpr>))
+        (*parser (char #\)))
+        (*caten 7)
+        (*pack-with 
+            (lambda (open lst sp1 dot sp2 var close)
+                (map (lambda (val)
+                            (if (null? val) (cons (cons val var))
+                                val)) lst)))
+        done));need to get rid of the lst actual list, flatten not good since what if var is a list? not sure map is any greater option
+
+ (define <Vector>
+    (new 
+        (*parser (integer->char 35))
+        (*parser (integer->char 40))
+        (*delayed
+            (lambda() <Sexpr>))
+        (*parser (integer->char 41))
+            *diff
+                *star
+        (*parser (integer->char 41))
+        (*caten 4)
+        (*pack-with
+            (lambda (st open lst close)
+                `(st ,lst))) ; no idea how to return this 
+        done))
+  
+  
+  
 
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -318,8 +356,9 @@
     (*parser <Char>)
     (*parser <Number>)
     (*parser <String>)
+    (*parser <ImproperList>)
     (*parser <ProperList>)
-    (*disj 6)
+    (*disj 7)
     done)
   )
 
@@ -338,6 +377,7 @@
 (test-string <Sexpr> "#\\lambda") 
 (test-string <Sexpr> "-1234-12345") 
 (test-string <Sexpr> "(123a+!)")
-
+(test-string <Sexpr> "(the answer is . 2)")
+;(test-string <Vector> "#\#(123a+!)")
 
 
