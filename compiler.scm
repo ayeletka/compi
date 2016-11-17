@@ -306,9 +306,7 @@
      (lambda()
         <sexpr>) 
       )
-      *star
-    ;(*parser (char (integer->char 32))) *star
-    
+      *star    
     (*parser (char (integer->char 41))) 
     (*caten 3)
     (*pack-with (lambda (a b c)  
@@ -333,8 +331,8 @@
         (*caten 5)
         (*pack-with 
             (lambda (open lst dot var close)
-                ; `(,@lst . ,var)))
-                (cons  `(,@lst) var)))
+                 `(,@lst . ,var)))
+                ;(cons  `(,@lst) var)))
         done))
  
 

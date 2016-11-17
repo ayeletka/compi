@@ -2,11 +2,11 @@
 
 (display "\n- ---  Our parser: ----\n\n")
 
-(define test1 "(b c    !  . abc   )")
+(define test1 "(b c    ! .  abc )")
 
 
 
-(test-string <ImproperList> test1)
+(test-string <sexpr> test1)
 
 
 
