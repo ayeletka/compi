@@ -2,7 +2,8 @@
 
 (display "\n- ---  Our parser: ----\n\n")
 
-(define test1 "(b c    ! .  abc )")
+
+(define test1 "(the answer is . t)" )
 
 
 
@@ -29,7 +30,7 @@
 ;(define test5 "#\\lambda") 
 ;(define test6 "-1234-12345") 
 ;(define test7 "(123a+!)")
-;(define test8 "(the answer is . 2)")
+;(define test8 "(the answer is . 2)") ;we have problem with that
 
 ;(test-string <sexpr> test2)
 ;(test-string <sexpr> test3)

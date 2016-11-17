@@ -9,7 +9,7 @@
     done)
   )
 
-(test-string <WhiteSpace> "  \t  \r  \f        a")
+;(test-string <WhiteSpace> "  \t  \r  \f        a")
 
 ;;;;;;;;;;;;;;;;;;;;;; Boolean;;;;;;;;;;;;;;;;;;;;;;
 
@@ -336,7 +336,7 @@
         done))
  
 
- ;;;;;;;;;;;;;;;;;;; Vector ;;;;;;;;;;;;;;
+ ;;;;;;;;;;;;;;;;;;; Vector ;;;;;;;;;;;;;;;;
   
   (define <Vector>
     (new
@@ -350,6 +350,59 @@
      done))
   
   
+ ;;;;;;;;;;;;;;;;;;; Quoted ;;;;;;;;;;;;;;;;;
+
+(define <Quoted>
+  (new
+    (*parser (char (integer->char 39))) 
+    (*delayed
+      (lambda() <sexpr>))
+    (*caten 2)
+    (*pack-with
+      (lambda (q expr)
+        (list 'quote expr)))
+    done))
+
+
+ ;;;;;;;;;;;;;;;;;;; QuasiQuoted ;;;;;;;;;;;;;;;;;
+
+(define <QuasiQuoted>
+  (new
+    (*parser (char (integer->char 96))) 
+    (*delayed
+      (lambda() <sexpr>))
+    (*caten 2)
+    (*pack-with
+      (lambda (q expr)
+        (list 'quasiquote expr)))
+    done))
+
+;;;;;;;;;;;;;;;;;;; QuasiQuoted ;;;;;;;;;;;;;;;;;
+
+(define <Unquoted>
+  (new
+    (*parser (char (integer->char 44))) 
+    (*delayed
+      (lambda() <sexpr>))
+    (*caten 2)
+    (*pack-with
+      (lambda (q expr)
+        (list 'unquote expr)))
+    done))
+
+;;;;;;;;;;;;;;;;;;; UnquoteAndSpliced⟩ ;;;;;;;;;;;;;;;;;
+
+(define <UnquoteAndSpliced⟩>
+  (new
+    (*parser (char (integer->char 44))) 
+    (*parser (char (integer->char 64))) 
+    (*delayed
+      (lambda() <sexpr>))
+    (*caten 3)
+    (*pack-with
+      (lambda (a b expr)
+        (list 'unquote-splicing expr)))
+  done))
 
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -358,21 +411,22 @@
     (*parser <WhiteSpace>)
     (*parser <Boolean>)
     (*parser <Symbol>)
-    (*parser <Char>)
     (*parser <Number>)
+    (*parser <Char>)
     (*parser <String>)
     (*parser <ProperList>)
     (*parser <ImproperList>)
     (*parser <Vector>)
-(*disj 8)
-
+    (*parser <Quoted>)
+    (*parser <QuasiQuoted>)
+    (*parser <Unquoted>)
+    (*parser <UnquoteAndSpliced⟩>)
+    (*disj 12)
     (*parser <WhiteSpace>)
-(*caten 3)
-(*pack-with 
+    (*caten 3)
+    (*pack-with 
      (lambda(space1 expr space2)
            expr))
-    
-    done)
-  )
+  done)
+)
 
-fgdfg
