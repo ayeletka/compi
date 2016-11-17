@@ -1,6 +1,15 @@
-(load "/home/shugs/comp/pc.scm")
-;(load "pc.scm")
+;(load "/home/shugs/comp/pc.scm")
+(load "pc.scm")
 
+;;;;;;;;;;;;;;;;;;;;;; WhiteSpace;;;;;;;;;;;;;;;;;;;;;;
+
+(define <WhiteSpace>
+  (new (*parser (range (integer->char 1) (integer->char 32)))
+    *star
+    done)
+  )
+
+(test-string <WhiteSpace> "  \t  \r  \f        a")
 
 ;;;;;;;;;;;;;;;;;;;;;; Boolean;;;;;;;;;;;;;;;;;;;;;;
 
@@ -295,89 +304,75 @@
     (*parser (char (integer->char 40))) 
     (*delayed
      (lambda()
-        <Sexpr>) 
+        <sexpr>) 
       )
       *star
+    ;(*parser (char (integer->char 32))) *star
+    
     (*parser (char (integer->char 41))) 
     (*caten 3)
     (*pack-with (lambda (a b c)  
             b)) 
-
     done)
   )
 
 
-;;;;;;;;;;;;;;this is not working - need to fix the space thing (char 32)...;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;; ImproperList ;;;;;;;;;;;;;;
+
+
+        
 (define <ImproperList>
     (new    
         (*parser (char #\())
         (*delayed
-            (lambda() <Sexpr>)) *plus
-        (*parser (integer->char 32))
+            (lambda() <sexpr>)) *plus
         (*parser (char #\.))
-        (*parser (integer->char 32))
         (*delayed
-            (lambda() <Sexpr>))
+            (lambda() <sexpr>))
         (*parser (char #\)))
-        (*caten 7)
+        (*caten 5)
         (*pack-with 
-            (lambda (open lst sp1 dot sp2 var close)
-                (map (lambda (val)
-                            (if (null? val) (cons (cons val var))
-                                val)) lst)))
-        done));need to get rid of the lst actual list, flatten not good since what if var is a list? not sure map is any greater option
-
- (define <Vector>
-    (new 
-        (*parser (integer->char 35))
-        (*parser (integer->char 40))
-        (*delayed
-            (lambda() <Sexpr>))
-        (*parser (integer->char 41))
-            *diff
-                *star
-        (*parser (integer->char 41))
-        (*caten 4)
-        (*pack-with
-            (lambda (st open lst close)
-                `(st ,lst))) ; no idea how to return this 
+            (lambda (open lst dot var close)
+                ; `(,@lst . ,var)))
+                (cons  `(,@lst) var)))
         done))
+ 
+
+ ;;;;;;;;;;;;;;;;;;; Vector ;;;;;;;;;;;;;;
   
+  (define <Vector>
+    (new
+      (*parser (char (integer->char 35)))
+      (*parser <ProperList>)
+      (*caten 2)
+      (*pack-with
+        (lambda(a b)
+          (list->vector b)))
+
+     done))
   
   
 
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
 
-(define <Sexpr>
+(define <sexpr>
   (new
+    (*parser <WhiteSpace>)
     (*parser <Boolean>)
     (*parser <Symbol>)
     (*parser <Char>)
     (*parser <Number>)
     (*parser <String>)
-    (*parser <ImproperList>)
     (*parser <ProperList>)
-    (*disj 7)
+    (*parser <ImproperList>)
+    (*parser <Vector>)
+(*disj 8)
+
+    (*parser <WhiteSpace>)
+(*caten 3)
+(*pack-with 
+     (lambda(space1 expr space2)
+           expr))
+    
     done)
   )
-
-
-
-;;;;;;;;;;;;;;;;;;;;;; Tests ;;;;;;;;;;;;;;;;;;;;;;
-
-
-(display "\n> > > > > > > > Our Rock Tests > > > > > > > >\n")
-(display "> > > > > > > > > > > > > > > > > > > > > > > \n\n")
-(test-string <Sexpr> "abc!$")
-(test-string <Sexpr> "-09/0")
-;(test-string <Sexpr> "#\aaa")
-(test-string <Sexpr> "1+1")
-(test-string <Sexpr> "+93a")  
-(test-string <Sexpr> "#\\lambda") 
-(test-string <Sexpr> "-1234-12345") 
-(test-string <Sexpr> "(123a+!)")
-(test-string <Sexpr> "(the answer is . 2)")
-;(test-string <Vector> "#\#(123a+!)")
-
-
