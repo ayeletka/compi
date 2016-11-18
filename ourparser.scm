@@ -1,22 +1,27 @@
-(load "compiler.scm")
+;(load "compiler.scm")
+(load "/home/shugs/comp/compiler.scm")
 
 (display "\n- ---  Our parser: ----\n\n")
 
 
-(define test1 "(the answer is . t)" )
+;(define test1 "(the answer is . t)" )
+;(define test1 "#(3)" ) 
+;(define test2 "#(a b 66)" )    
+;(define test8 "##8 ^ (7+8) (3)[4][5][6](5,3+7^2)(9)[(17*3) ^ 5 ] + 7") ;no go, failed with report
+(define test8 "##3^2")
+(define test8 "##2+3+4")
 
-
-
-(test-string <sexpr> test1)
-
+(test-string <sexpr> test8)
+;(test-string <sexpr> test2)
 
 
 (display "\n- ---  Meirs parser: ----\n\n")
-(load "parser.so")
+;(load "parser.so")
+(load "/home/shugs/comp/parser.so")
 
 
-(test-string <sexpr> test1)
-
+(test-string <sexpr> test8)
+;(test-string <sexpr> test2)
 
 
 
@@ -30,7 +35,7 @@
 ;(define test5 "#\\lambda") 
 ;(define test6 "-1234-12345") 
 ;(define test7 "(123a+!)")
-;(define test8 "(the answer is . 2)") ;we have problem with that
+;(define test8 "(the answer is . 2)") ;fixed
 
 ;(test-string <sexpr> test2)
 ;(test-string <sexpr> test3)

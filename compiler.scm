@@ -1,5 +1,5 @@
-;(load "/home/shugs/comp/pc.scm")
-(load "pc.scm")
+(load "/home/shugs/comp/pc.scm")
+;(load "pc.scm")
 
 ;;;;;;;;;;;;;;;;;;;;;; WhiteSpace;;;;;;;;;;;;;;;;;;;;;;
 
@@ -293,7 +293,7 @@
   done)
   )
 
-;(test-string <Symbol> "xabc!v")
+;(test-string <Symbol> "x")
 
 
 ;;;;;;;;;;;;;;;;;;;;;; ProperList ;;;;;;;;;;;;;;;;;;;;;;
@@ -332,7 +332,6 @@
         (*pack-with 
             (lambda (open lst dot var close)
                  `(,@lst . ,var)))
-                ;(cons  `(,@lst) var)))
         done))
  
 
@@ -404,14 +403,161 @@
         (list 'unquote-splicing expr)))
   done))
 
+;;;;;;;;;;;;;;;;;;; Infix the Satan;;;;;;;;;
+
+(define <InfixPrefixExtensionPrefix>
+  (new 
+    (*parser (char (integer->char 35))) 
+    (*parser (char (integer->char 35))) 
+    (*caten 2)
+    (*parser (char (integer->char 35)))
+    (*parser (char (integer->char 37))) 
+    (*caten 2)
+    (*disj 2)
+    done))
+  
+(define <InfixSymbol>
+  (new 
+    (*parser <Symbol>)
+    (*parser (char (integer->char 43))) ;+
+    (*parser (char (integer->char 45))) ;-
+    (*parser (char (integer->char 42))) ;*
+    (*parser (char (integer->char 42))) ;**
+    (*parser (char (integer->char 42))) ;**
+    (*caten 2)
+    (*parser (char (integer->char 94))) ;^
+    (*parser (char (integer->char 47))) ;/
+    (*disj 6)
+    *diff
+    done))       
+ 
+(define <PowerSymbol>
+    (new 
+        (*parser (word "**")) ;**
+        (*parser (word "^")) ;^
+        (*disj 2)
+        (*pack 
+            (lambda(symbol)
+                (string->symbol (list->string symbol)) ))
+        done))
+        
+
+(define <InfixLast>
+    (new 
+        (*parser <Number>)
+        (*parser <InfixSymbol>) ;returns the wrong output not sure why
+        (*disj 2)
+        done))              
+        
+(define <InfixPow>
+    (new 
+        (*parser <InfixLast>)
+        (*parser <PowerSymbol>)
+        (*parser <InfixLast>)
+        (*caten 2) 
+        (*pack-with (lambda (exp1 exp2)
+            `(,@exp2))) *star
+        (*caten 2) 
+        (*pack-with (lambda (exp1 exp2)
+                `('expt ,exp1 ,@exp2)))
+        done))
+        
+(test-string <InfixPow> "3^2^5")
+
+ (define <InfixDiv>
+    (new 
+        (*parser <InfixPow>)
+        (*parser (char (integer->char 47)))
+        (*parser <InfixPow>)
+        (*caten 2) *star
+        ;(*pack-with (lambda (exp1 exp2)
+        ;    `(/ ,@exp2)))
+        (*caten 2) 
+        (*pack-with (lambda (exp1 exp2)
+                `(,@exp2 ,@exp1)))
+        done))
+
+(test-string <InfixDiv> "4/3^2")
+        
+(define <InfixMul>
+    (new 
+        (*parser <InfixDiv>)
+        (*parser (char (integer->char 42)))
+        (*parser <InfixDiv>)
+        (*caten 2) *star
+        ;(*pack-with (lambda (exp1 exp2)
+         ;   `(* ,@exp2)))        
+        (*caten 2) 
+        (*pack-with (lambda (exp1 exp2)
+                `(,@exp2 ,@exp1)))
+        done))
+        
+        
+(define <InfixSub>
+    (new 
+        (*parser <InfixMul>)
+        (*parser (char (integer->char 45)))
+        (*parser <InfixMul>)
+        (*caten 2) *star
+        (*caten 2) 
+        (*pack-with (lambda (exp1 exp2)
+                `(,@exp2 ,@exp1)))
+        done))
+
+(define <Add>
+    (new
+        (*parser <InfixSub>)
+        (*parser (char (integer->char 43)))
+        (*parser <InfixSub>)
+        (*caten 3)
+        (*pack-with
+            (lambda (num1 plus num2)
+                `(+ ,num1 ,num2)))
+        done))
+  
+(define <InfixAdd>
+    (new 
+        ;(*parser <Add>)
+        (*parser <InfixSub>)
+        ;(*disj 2)
+        (*parser (char (integer->char 43)))
+        (*parser <InfixSub>)
+        (*caten 2)
+        (*pack-with (lambda (exp1 exp2)
+            `(,@exp2))) 
+         *star
+        (*caten 2) 
+        (*pack-with (lambda (exp1 exp2)
+                `(+ ,exp1 ,@exp2)))
+        done))
+   (test-string <InfixAdd> "2+3+4+5")
+        
+(define <InfixExpression>
+    (new 
+        (*parser <InfixAdd>) 
+        done)) 
+        
+(define <InfixExtension>
+    (new (*parser <InfixPrefixExtensionPrefix>)
+        (*parser <InfixExpression>)
+        (*caten 2)
+        (*pack-with 
+            (lambda (a b)
+                b))
+        done))
+
+;(test-string <InfixExtension> "##3");nott sure why this returns as xsomething and not as3
+;(test-string <InfixExpression> "**");not sure why this returns as xsomething and not as3
+(test-string <InfixExtension> "##2+3+4")
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
 
 (define <sexpr>
   (new
     (*parser <WhiteSpace>)
+    (*parser <InfixExtension>)
+    (*parser <Number>)
     (*parser <Boolean>)
     (*parser <Symbol>)
-    (*parser <Number>)
     (*parser <Char>)
     (*parser <String>)
     (*parser <ProperList>)
@@ -421,7 +567,7 @@
     (*parser <QuasiQuoted>)
     (*parser <Unquoted>)
     (*parser <UnquoteAndSpliced⟩>)
-    (*disj 12)
+    (*disj 13)
     (*parser <WhiteSpace>)
     (*caten 3)
     (*pack-with 
