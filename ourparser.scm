@@ -8,8 +8,8 @@
 ;(define test1 "#(3)" ) 
 ;(define test2 "#(a b 66)" )    
 ;(define test8 "##8 ^ (7+8) (3)[4][5][6](5,3+7^2)(9)[(17*3) ^ 5 ] + 7") ;no go, failed with report
-(define test8 "##3^2")
-(define test8 "##2+3+4")
+;(define test8 "##3^2")
+(define test8 "##3*3*5^5")
 
 (test-string <sexpr> test8)
 ;(test-string <sexpr> test2)

@@ -442,99 +442,83 @@
         done))
         
 
-(define <InfixLast>
+        
+        
+(define <InfixAddSub>
     (new 
         (*parser <Number>)
-        (*parser <InfixSymbol>) ;returns the wrong output not sure why
+        (*parser (word "+"))
+        (*parser (word "-"))
         (*disj 2)
-        done))              
-        
+        (*parser <Number>)
+        (*caten 2)         
+        (*pack-with (lambda (delim exp2)
+            `(,(string->symbol (list->string delim)) ,exp2)))
+        *star
+        (*caten 2) 
+        (*pack-with (lambda (exp1 lst)
+                (letrec ((loop
+                            (lambda (exp1 lst1)
+                                (if (equal? (length lst1) 1) `(,(caar lst1) ,exp1 ,(cadar lst1))
+                                    (loop `(,(caar lst1) ,exp1 ,(cadar lst1)) (cdr lst1))))))
+                                   (loop exp1 lst))))
+        done))
+(test-string <InfixAddSub> "2+3-4+5")
+
+
+
+
 (define <InfixPow>
     (new 
-        (*parser <InfixLast>)
+        (*parser <Number>)
         (*parser <PowerSymbol>)
-        (*parser <InfixLast>)
+        (*parser <Number>)
+        (*caten 2)         
+        (*pack-with (lambda (delim exp2)
+            `(,@exp2)))
+        *star
         (*caten 2) 
-        (*pack-with (lambda (exp1 exp2)
-            `(,@exp2))) *star
-        (*caten 2) 
-        (*pack-with (lambda (exp1 exp2)
-                `('expt ,exp1 ,@exp2)))
+        (*pack-with (lambda (exp2 lst)
+                (if (equal? (length lst) 0) exp2
+                (if (equal? (length lst) 1) `(expt ,exp2 ,(car lst))
+                 (letrec ((loop
+                            (lambda (exp1 lst1)
+                                (if (equal? (length lst1) 2) `(expt ,exp1 (expt ,(car lst1) ,(cadr lst1)))
+                                    `(expt ,exp1 ,(loop (car lst1) (cdr lst1)))))))
+                                   (loop exp2 lst))))))
         done))
-        
-(test-string <InfixPow> "3^2^5")
-
- (define <InfixDiv>
-    (new 
-        (*parser <InfixPow>)
-        (*parser (char (integer->char 47)))
-        (*parser <InfixPow>)
-        (*caten 2) *star
-        ;(*pack-with (lambda (exp1 exp2)
-        ;    `(/ ,@exp2)))
-        (*caten 2) 
-        (*pack-with (lambda (exp1 exp2)
-                `(,@exp2 ,@exp1)))
-        done))
-
-(test-string <InfixDiv> "4/3^2")
-        
+;(test-string <InfixPow> "2^3^4^5^6"))
 (define <InfixMul>
     (new 
-        (*parser <InfixDiv>)
-        (*parser (char (integer->char 42)))
-        (*parser <InfixDiv>)
-        (*caten 2) *star
-        ;(*pack-with (lambda (exp1 exp2)
-         ;   `(* ,@exp2)))        
+        (*parser <InfixPow>)
+         (*parser (word "*"))
+        (*parser (word "/"))
+        (*disj 2)
+        (*parser <InfixPow>)
+        (*caten 2)         
+         (*pack-with (lambda (delim exp2)
+            `(,(string->symbol (list->string delim)) ,exp2)))
+        *star
         (*caten 2) 
-        (*pack-with (lambda (exp1 exp2)
-                `(,@exp2 ,@exp1)))
+        (*pack-with (lambda (exp1 lst)
+                (if (equal? (length lst) 0) exp1
+                (letrec ((loop
+                            (lambda (exp1 lst1)
+                                (if (equal? (length lst1) 1) `(,(caar lst1) ,exp1 ,(cadar lst1))
+                                    (loop `(,(caar lst1) ,exp1 ,(cadar lst1)) (cdr lst1))))))
+                                   (loop exp1 lst)))))
         done))
         
         
-(define <InfixSub>
-    (new 
-        (*parser <InfixMul>)
-        (*parser (char (integer->char 45)))
-        (*parser <InfixMul>)
-        (*caten 2) *star
-        (*caten 2) 
-        (*pack-with (lambda (exp1 exp2)
-                `(,@exp2 ,@exp1)))
-        done))
-
-(define <Add>
-    (new
-        (*parser <InfixSub>)
-        (*parser (char (integer->char 43)))
-        (*parser <InfixSub>)
-        (*caten 3)
-        (*pack-with
-            (lambda (num1 plus num2)
-                `(+ ,num1 ,num2)))
-        done))
-  
-(define <InfixAdd>
-    (new 
-        ;(*parser <Add>)
-        (*parser <InfixSub>)
-        ;(*disj 2)
-        (*parser (char (integer->char 43)))
-        (*parser <InfixSub>)
-        (*caten 2)
-        (*pack-with (lambda (exp1 exp2)
-            `(,@exp2))) 
-         *star
-        (*caten 2) 
-        (*pack-with (lambda (exp1 exp2)
-                `(+ ,exp1 ,@exp2)))
-        done))
-   (test-string <InfixAdd> "2+3+4+5")
+        (test-string <InfixMul> "3*3*5^5")   
         
 (define <InfixExpression>
     (new 
-        (*parser <InfixAdd>) 
+        (*parser <InfixPow>)
+        (*parser <InfixMul>)
+        (*parser <InfixAddSub>)
+
+        (*disj 3)
         done)) 
         
 (define <InfixExtension>
@@ -548,7 +532,7 @@
 
 ;(test-string <InfixExtension> "##3");nott sure why this returns as xsomething and not as3
 ;(test-string <InfixExpression> "**");not sure why this returns as xsomething and not as3
-(test-string <InfixExtension> "##2+3+4")
+;(test-string <InfixExtension> "##2+3+4")
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
 
 (define <sexpr>
