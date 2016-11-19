@@ -92,7 +92,7 @@
 
 (define ^<meta-char>
     (lambda (str ch)
-        (new (*parser (word str))
+        (new (*parser (word-ci str))
             (*pack (lambda (_) ch))
             done)))
         
@@ -196,11 +196,14 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;; String ;;;;;;;;;;;;;;;;;;;;;;
-(define <StringVisibleChar>
+(define <StringLiteralChar>
     (new
-        (*parser (range #\! #\~))
+        (*parser <any-char>)
+        (*parser (char #\\))
+        *diff
         (*pack
             (lambda (a) a))
+
         done))
 
 
@@ -235,7 +238,7 @@
     (new
         (*parser <StringMetaChar>)
         (*parser <StringHexChar>)
-        (*parser <StringVisibleChar>)
+        (*parser <StringLiteralChar>)
         (*disj 3)
         
         done))
@@ -257,7 +260,7 @@
             done))
             
 
-
+(test-string <String> "\"TRt\"")
 
 ;;;;;;;;;;;;;;;;;;;;;; Symbol ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -450,13 +453,18 @@
         
 
 (define <InfixLast>
-  (new 
+  (new
+    (*parser <WhiteSpace>) 
     (*parser <Number>)
-    (*parser <InfixSymbol>) *star 
+    (*parser <InfixSymbol>) *star
     (*pack 
       (lambda(symbol)
        (string->symbol (list->string symbol))))
     (*disj 2)
+    (*parser <WhiteSpace>)
+    (*caten 3)
+    (*pack-with (lambda (sp1 exp sp2)
+      exp))
     done))    
         
 
@@ -465,11 +473,15 @@
 
 (define <InfixParen>
   (new
+    (*parser <WhiteSpace>)
     (*parser (char (integer->char 40)))
+    (*parser <WhiteSpace>)
     (*delayed (lambda () <InfixAddSub>))
+    (*parser <WhiteSpace>)
     (*parser (char (integer->char 41)))
-    (*caten 3)
-    (*pack-with (lambda (del1 num del2)
+    (*parser <WhiteSpace>)
+    (*caten 7)
+    (*pack-with (lambda (sp1 del1 sp2 num sp3 del2 sp4)
         `(,@num)
       ))
   done)) 
@@ -478,12 +490,17 @@
 
 (define <InfixArrayGet>
   (new
+    (*parser <WhiteSpace>)
     (*parser <InfixLast>)
+    (*parser <WhiteSpace>)
     (*parser (char (integer->char 91)))
+    (*parser <WhiteSpace>)
     (*delayed (lambda () <InfixAddSub>))
+    (*parser <WhiteSpace>)
     (*parser (char (integer->char 93)))
-    (*caten 3)
-    (*pack-with (lambda (del1 num del2)
+    (*parser <WhiteSpace>)
+    (*caten 7)
+    (*pack-with (lambda (sp1 del1 sp2 num sp3 del2 sp4)
         `(,@num)
       ))
      *star
@@ -498,20 +515,28 @@
                                 (loop `(vector-ref ,exp ,(car lst)) (cdr lst))
                               ))))
                     (loop `(vector-ref ,arrname ,(car lst1)) (cdr lst1)))))))
+       (*parser <WhiteSpace>)
+        (*caten 3)
+          (*pack-with (lambda (space exp space2)
+            exp))
   done))  
 
 
 (define <InfixPow>
-    (new 
+    (new
+        (*parser <WhiteSpace>) 
         (*parser <InfixParen>)
         (*parser <InfixArrayGet>)
         (*disj 2)
+        (*parser <WhiteSpace>)
         (*parser <PowerSymbol>)
+        (*parser <WhiteSpace>)
         (*parser <InfixParen>)
         (*parser <InfixArrayGet>)
         (*disj 2)
-        (*caten 2)         
-        (*pack-with (lambda (delim exp2)
+        (*parser <WhiteSpace>)
+        (*caten 5)         
+        (*pack-with (lambda (sp1 delim sp2 exp2 sp3)
             `(,@exp2)))
         *star
         (*caten 2) 
@@ -523,20 +548,28 @@
                                 (if (equal? (length lst1) 2) `(expt ,exp1 (expt ,(car lst1) ,(cadr lst1)))
                                     `(expt ,exp1 ,(loop (car lst1) (cdr lst1)))))))
                                    (loop exp2 lst))))))
+        (*parser <WhiteSpace>)
+        (*caten 3)
+          (*pack-with (lambda (space exp space2)
+            exp))
         done))
 
 (test-string <InfixPow> "a^7")
 
 
 (define <InfixMul>
-    (new 
+    (new
+        (*parser <WhiteSpace>) 
         (*parser <InfixPow>)
-         (*parser (word "*"))
+        (*parser <WhiteSpace>)
+        (*parser (word "*"))
         (*parser (word "/"))
         (*disj 2)
+        (*parser <WhiteSpace>)
         (*parser <InfixPow>)
-        (*caten 2)         
-         (*pack-with (lambda (delim exp2)
+        (*parser <WhiteSpace>)
+        (*caten 5)         
+         (*pack-with (lambda (sp1 delim sp2 exp2 sp3)
             `(,(string->symbol (list->string delim)) ,exp2)))
         *star
         (*caten 2) 
@@ -547,6 +580,10 @@
                                 (if (equal? (length lst1) 1) `(,(caar lst1) ,exp1 ,(cadar lst1))
                                     (loop `(,(caar lst1) ,exp1 ,(cadar lst1)) (cdr lst1))))))
                                    (loop exp1 lst)))))
+        (*parser <WhiteSpace>)
+        (*caten 3)
+          (*pack-with (lambda (space exp space2)
+            exp))
         done))
  
 
@@ -554,12 +591,15 @@
     (new
         (*parser <WhiteSpace>)
         (*parser <InfixMul>)
+        (*parser <WhiteSpace>)
         (*parser (word "+"))
         (*parser (word "-"))
         (*disj 2)
+        (*parser <WhiteSpace>)
         (*parser <InfixMul>)
-        (*caten 2)         
-        (*pack-with (lambda (delim exp2)
+        (*parser <WhiteSpace>)
+        (*caten 5)         
+        (*pack-with (lambda (sp1 delim sp2 exp2 sp3)
             `(,(string->symbol (list->string delim)) ,exp2)))
         *star
         (*caten 2) 
@@ -582,11 +622,12 @@
   (new
       (*parser <WhiteSpace>)
       (*parser (char (integer->char 45)))
+      (*parser <WhiteSpace>)
       (*delayed
         (lambda() <InfixExpression>))
-      (*caten 2)
+      (*caten 3)
       (*pack-with
-        (lambda (a expr)
+        (lambda (a sp expr)
           `(- ,expr)))
       (*parser <WhiteSpace>)
       (*caten 3)
@@ -656,14 +697,13 @@
       (*delayed 
         (lambda () <sexpr>))
       (*caten 3)
-      (*pack-with (lambda (prefix lst sp)
-        lst))
+      (*pack-with (lambda (prefix sp lst)
+         lst))
       (*parser <WhiteSpace>) 
       (*caten 3)
-        (*pack-with (lambda (space exp space2)
+        (*pack-with (lambda (sp exp sp2)
           exp))
       done))
-
 
 (define <InfixExpression>
     (new
@@ -729,4 +769,4 @@
 )
 
 
-(test-string <sexpr> "5*b")
+(test-string <InfixSexprEscape> "f(2*3,6^a[2],7*2)")
