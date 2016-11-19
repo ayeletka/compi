@@ -1,5 +1,5 @@
-;(load "compiler.scm")
-(load "/home/shugs/comp/compiler.scm")
+(load "compiler.scm")
+;(load "/home/shugs/comp/compiler.scm")
 
 (display "\n- ---  Our parser: ----\n\n")
 
@@ -8,16 +8,17 @@
 ;(define test1 "#(3)" ) 
 ;(define test2 "#(a b 66)" )    
 ;(define test8 "##8 ^ (7+8) (3)[4][5][6](5,3+7^2)(9)[(17*3) ^ 5 ] + 7") ;no go, failed with report
-;(define test8 "##3^2")
-(define test8 "##3*3*5^5")
+(define test8 "##3^2[3*4^(-2+4)]*4+(1-(5+5)/6)")
+;(define test8 "##f(1+2)()(3+2)")
+;(define test8 "##---1")
 
 (test-string <sexpr> test8)
 ;(test-string <sexpr> test2)
 
 
 (display "\n- ---  Meirs parser: ----\n\n")
-;(load "parser.so")
-(load "/home/shugs/comp/parser.so")
+(load "parser.so")
+;(load "/home/shugs/comp/parser.so")
 
 
 (test-string <sexpr> test8)

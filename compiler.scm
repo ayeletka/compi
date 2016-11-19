@@ -1,5 +1,5 @@
-(load "/home/shugs/comp/pc.scm")
-;(load "pc.scm")
+;(load "/home/shugs/comp/pc.scm")
+(load "pc.scm")
 
 ;;;;;;;;;;;;;;;;;;;;;; WhiteSpace;;;;;;;;;;;;;;;;;;;;;;
 
@@ -415,6 +415,7 @@
     (*caten 2)
     (*disj 2)
     done))
+
   
 (define <InfixSymbol>
   (new 
@@ -429,8 +430,9 @@
     (*parser (char (integer->char 47))) ;/
     (*disj 6)
     *diff
-    done))       
- 
+    done)) 
+
+
 (define <PowerSymbol>
     (new 
         (*parser (word "**")) ;**
@@ -442,37 +444,68 @@
         done))
         
 
+         (define <InfixLast>
+        (new 
+            (*parser <Number>)
+            (*parser <InfixSymbol>) 
+            (*disj 2)
+            done))    
         
-        
-(define <InfixAddSub>
-    (new 
-        (*parser <Number>)
-        (*parser (word "+"))
-        (*parser (word "-"))
-        (*disj 2)
-        (*parser <Number>)
-        (*caten 2)         
-        (*pack-with (lambda (delim exp2)
-            `(,(string->symbol (list->string delim)) ,exp2)))
-        *star
-        (*caten 2) 
-        (*pack-with (lambda (exp1 lst)
-                (letrec ((loop
-                            (lambda (exp1 lst1)
-                                (if (equal? (length lst1) 1) `(,(caar lst1) ,exp1 ,(cadar lst1))
-                                    (loop `(,(caar lst1) ,exp1 ,(cadar lst1)) (cdr lst1))))))
-                                   (loop exp1 lst))))
-        done))
-(test-string <InfixAddSub> "2+3-4+5")
+
+;(test-string <InfixAddSub> "2+3-4+5")
 
 
+(define <InfixParen>
+  (new
+    (*parser (char (integer->char 40)))
+    (*delayed (lambda () <InfixAddSub>))
+    (*parser (char (integer->char 41)))
+    (*caten 3)
+    (*pack-with (lambda (del1 num del2)
+        `(,@num)
+      ))
+  done)) 
+
+
+
+(define <InfixArrayGet>
+  (new
+    (*parser <InfixLast>)
+    ;(*parser (char (integer->char 40)))
+    ;*diff
+    ;(*parser <InfixParen>)
+    ;(*disj 2)
+    (*parser (char (integer->char 91)))
+    (*delayed (lambda () <InfixAddSub>))
+    (*parser (char (integer->char 93)))
+    (*caten 3)
+    (*pack-with (lambda (del1 num del2)
+        `(,@num)
+      ))
+     *star
+    (*caten 2)
+       (*pack-with (lambda (arrname lst1)
+              (if (equal? (length lst1) 0) arrname
+                  (if (equal? (length lst1) 1) `(vector-ref ,arrname ,(car lst1))
+                    (letrec ((loop
+                          (lambda (exp lst)
+                            (if (equal? (length lst) 1) 
+                                `(vector-ref ,exp ,(car lst))
+                                (loop `(vector-ref ,exp ,(car lst)) (cdr lst))
+                              ))))
+                    (loop `(vector-ref ,arrname ,(car lst1)) (cdr lst1)))))))
+  done))  
 
 
 (define <InfixPow>
     (new 
-        (*parser <Number>)
+        (*parser <InfixParen>)
+        (*parser <InfixArrayGet>)
+        (*disj 2)
         (*parser <PowerSymbol>)
-        (*parser <Number>)
+        (*parser <InfixParen>)
+        (*parser <InfixArrayGet>)
+        (*disj 2)
         (*caten 2)         
         (*pack-with (lambda (delim exp2)
             `(,@exp2)))
@@ -508,18 +541,62 @@
                                     (loop `(,(caar lst1) ,exp1 ,(cadar lst1)) (cdr lst1))))))
                                    (loop exp1 lst)))))
         done))
-        
-        
-        (test-string <InfixMul> "3*3*5^5")   
-        
+ 
+
+
+(define <InfixAddSub>
+    (new 
+        (*parser <InfixMul>)
+        (*parser (word "+"))
+        (*parser (word "-"))
+        (*disj 2)
+        (*parser <InfixMul>)
+        (*caten 2)         
+        (*pack-with (lambda (delim exp2)
+            `(,(string->symbol (list->string delim)) ,exp2)))
+        *star
+        (*caten 2) 
+        (*pack-with (lambda (exp1 lst)
+              (if (equal? (length lst) 0) exp1
+               (letrec ((loop
+                            (lambda (exp1 lst1)
+                                (if (equal? (length lst1) 1) `(,(caar lst1) ,exp1 ,(cadar lst1))
+                                    (loop `(,(caar lst1) ,exp1 ,(cadar lst1)) (cdr lst1))))))
+                                   (loop exp1 lst)))))
+      done)) 
+
+
+
+(define <InfixNeg>
+  (new
+      (*parser (char (integer->char 45)))
+      (*delayed
+        (lambda() <InfixExpression>))
+      (*caten 2)
+      (*pack-with
+        (lambda (a expr)
+          `(- ,expr)))
+      done))
+
+
+(test-string <InfixAddSub> "ab[2+3]+2")
+  
+
 (define <InfixExpression>
     (new 
-        (*parser <InfixPow>)
-        (*parser <InfixMul>)
         (*parser <InfixAddSub>)
+        (*parser <InfixNeg>)
+        ;(*parser <InfixArrayGet>)
+        (*disj 2)
+        done))
 
-        (*disj 3)
-        done)) 
+ ;(test-string <InfixArrayGet> "a[2][3]")
+
+;(test-string <InfixExpression> "ab[2]")
+
+
+
+   
         
 (define <InfixExtension>
     (new (*parser <InfixPrefixExtensionPrefix>)
