@@ -454,7 +454,7 @@
 
 (define <InfixLast>
   (new
-    (*parser <WhiteSpace>) 
+    (*parser <WhiteSpace>)
     (*parser <Number>)
     (*parser <InfixSymbol>) *star
     (*pack 
@@ -463,10 +463,9 @@
     (*disj 2)
     (*parser <WhiteSpace>)
     (*caten 3)
-    (*pack-with (lambda (sp1 exp sp2)
-      exp))
-    done))    
-        
+    (*pack-with (lambda (sp1 expr sp2)
+      expr))
+    done))     
 
 ;(test-string <InfixAddSub> "2+3-4+5")
 
@@ -522,6 +521,7 @@
   done))  
 
 
+
 (define <InfixPow>
     (new
         (*parser <WhiteSpace>) 
@@ -554,7 +554,6 @@
             exp))
         done))
 
-(test-string <InfixPow> "a^7")
 
 
 (define <InfixMul>
@@ -585,7 +584,7 @@
           (*pack-with (lambda (space exp space2)
             exp))
         done))
- 
+
 
 (define <InfixAddSub>
     (new
@@ -615,7 +614,6 @@
           (*pack-with (lambda (space exp space2)
             exp))
       done)) 
-
 
 
 (define <InfixNeg>
@@ -662,6 +660,8 @@
 
         done)) 
 
+
+
 (define <InfixFuncall>
     (new 
           (*parser <WhiteSpace>)
@@ -673,11 +673,22 @@
           (*parser <WhiteSpace>)
           (*parser (char (integer->char 41)))
           (*parser <WhiteSpace>)
-          (*caten 8)
+          (*caten 7)
           (*pack-with 
-            (lambda (func sp1 par1 sp2 exp2 sp3 par2 sp4)
-              `(,func ,@exp2)
-              ))
+            (lambda (sp1 par1 sp2 exp2 sp3 par2 sp4)
+              exp2)
+              ) 
+            *plus
+          (*caten 2)
+          (*pack-with 
+            (lambda (func exp2)
+                (if (equal? (length exp2) 0) func
+                    (if (equal? (length exp2) 1) `(,func ,@(car exp2))
+                            (letrec ((loop
+                            (lambda (exp1 lst1)
+                                (if (equal? (length lst1) 1) `(,exp1 ,@(car lst1))
+                                    (loop `(,exp1 ,@(car lst1)) (cdr lst1))))))
+                                   (loop `(,func ,@(car exp2)) (cdr exp2)))))))
           (*parser <InfixAddSub>)
           (*disj 2)
           (*parser <WhiteSpace>)
@@ -686,24 +697,23 @@
             exp))
       done))
 
-;(test-string <InfixFuncall> "f(a,4,b)")
-;
-
 (define <InfixSexprEscape>
   (new 
       (*parser <WhiteSpace>) 
       (*parser <InfixPrefixExtensionPrefix>)
       (*parser <WhiteSpace>)
+      (*parser <Symbol>)
+      (*parser <WhiteSpace>)
       (*delayed 
-        (lambda () <sexpr>))
-      (*caten 3)
-      (*pack-with (lambda (prefix sp lst)
-         lst))
+        (lambda () <InfixExpression>))
+      (*caten 5)
+      (*pack-with (lambda (prefix sp symb sp2 lst)
+         `(,symb ,lst)))
       (*parser <WhiteSpace>) 
       (*caten 3)
         (*pack-with (lambda (sp exp sp2)
           exp))
-      done))
+      done)) ;goes all the way down to infixLast and returns a space, not sure why
 
 (define <InfixExpression>
     (new
