@@ -1,5 +1,5 @@
-;(load "/home/shugs/comp/pc.scm")
-(load "pc.scm")
+(load "/home/shugs/Documents/compi/pc.scm")
+;(load "pc.scm")
 
 ;;;;;;;;;;;;;;;;;;;;;; WhiteSpace;;;;;;;;;;;;;;;;;;;;;;
 
@@ -30,8 +30,9 @@
 
 (define <sexpr-comment>
   (new (*parser (word "#;"))
+        (*parser <WhiteSpace>)
        (*delayed (lambda () <sexpr2>))
-       (*caten 2)
+       (*caten 3)
        done))
 
 (define <Comments>
@@ -110,7 +111,7 @@
 	 done))
 
 
-(test-string <CharPrefix> "\#\\")
+;(test-string <CharPrefix> "\#\\")
 
 (define <VisibleSimpleChar>
 	(new 
@@ -148,8 +149,8 @@
   		(*parser <NamedChar>)
   		(*parser <HexUnicodeChar>)
   		(*parser <VisibleSimpleChar>)
-      (*parser <VisibleSimpleChar>)
-      *not-followed-by
+      ;(*parser <VisibleSimpleChar>)
+      ;*not-followed-by
   		(*disj 3)
       (*parser <WhiteSpace>)
   		(*caten 4)
@@ -175,7 +176,6 @@
 
 (define <Natural>
   (new 
-
   		(*parser (char #\0)) *star
        (*parser <digit-1-9>)
        (*parser <digit-0-9>) *star
@@ -220,8 +220,8 @@
 	(new (*parser <Fraction>)
 		(*parser <Integer>)
 		(*disj 2)
-    (*delayed (lambda () <SymbolChar>))
-    *not-followed-by 
+    ;;(*delayed (lambda () <SymbolChar>))
+    ;;*not-followed-by 
 	done))
 
 ;(test-string <Number> "-09/0")	
@@ -328,20 +328,19 @@
 
 (define <Symbol>
   (new
+    (*parser <Number>)
     (*parser <SymbolChar>) *plus
-    (*parser <digit-0-9>) *star
-    (*caten 2)
-    (*pack-with (lambda (ch lst)
-      `(,@ch ,@lst)))
+    *not-followed-by
     (*parser <digit-0-9>) *star
     (*parser <SymbolChar>) *plus
-    (*caten 2)
-    (*pack-with (lambda (ch lst)
-      `(,@ch ,@lst)))
-    (*disj 2)
+    (*parser <digit-0-9>) *star
+    (*caten 3)
+    (*pack-with (lambda (ch lst ch2)
+      `(,@ch ,@lst ,@ch2)))
     (*pack 
       (lambda(symbols)
        (string->symbol (list->string symbols) )))
+    (*disj 2)
   done)
   )
 
@@ -362,7 +361,6 @@
             b)) 
     done)
   )
-
 
 ;;;;;;;;;;;;;;;;;;; ImproperList ;;;;;;;;;;;;;;
 
@@ -465,11 +463,15 @@
     (*disj 2)
     done))
 
-  
+
+
 (define <InfixSymbol>
   (new 
-    (*parser <SymbolChar>)
-    ;(*parser <any-char>)
+    (*parser <Number>)
+    (*parser <SymbolChar>) *plus
+    *not-followed-by
+    (*parser <digit-0-9>) *star
+    (*parser <SymbolChar>) 
     (*parser (char (integer->char 43))) ;+
     (*parser (char (integer->char 45))) ;-
     (*parser (char (integer->char 42))) ;*
@@ -478,14 +480,24 @@
     (*caten 2)
     (*parser (char (integer->char 94))) ;^
     (*parser (char (integer->char 47))) ;/
-        ;(*parser (char (integer->char 0))) ;nul
-
     (*disj 6)
-    ;(*parser <any-char>)
-    ;(*caten 3)
     *diff   
-    
+    *plus
+    (*parser <digit-0-9>) *star
+    (*caten 3)
+    (*pack-with (lambda (ch lst ch2)
+      `(,@ch ,@lst ,@ch2)))
+    (*pack 
+      (lambda(symbols)
+       (string->symbol (list->string symbols) )))
+    (*disj 2)
+    ;(*parser <any-char>)
+   
     done)) 
+
+
+
+
 
 ;(test-string <SymbolChar> "")
 
@@ -503,11 +515,11 @@
 (define <InfixLast>
   (new
     (*parser <WhiteSpace>)
+    (*parser <InfixSymbol>) ;*plus
+    ;(*pack
+    ;  (lambda(symbol)
+    ;   (string->symbol (list->string symbol))))
     (*parser <Number>)
-    (*parser <InfixSymbol>) *plus
-    (*pack 
-      (lambda(symbol)
-       (string->symbol (list->string symbol))))
     (*disj 2)
     (*parser <WhiteSpace>)
     
@@ -516,7 +528,7 @@
       expr))
     done))     
 
-;(test-string <InfixSymbol> "*")
+;(test-string <InfixLast> "123a")
 
 
 (define <InfixParen>
@@ -540,6 +552,10 @@
   (new
     (*parser <WhiteSpace>)
     (*parser <InfixLast>)
+    (*parser (char (integer->char 40)))
+    *not-followed-by
+    (*parser <InfixParen>)
+    (*disj 2)
     (*parser <WhiteSpace>)
     (*parser (char (integer->char 91)))
     (*parser <WhiteSpace>)
@@ -632,15 +648,15 @@
 (define <InfixPow>
     (new
         (*parser <WhiteSpace>) 
-        (*parser <InfixParen>)
         (*parser <InfixArrayGet>)
+        (*parser <InfixParen>)
         (*parser <InfixFuncall>)
         (*disj 3)
         (*parser <WhiteSpace>)
         (*parser <PowerSymbol>)
         (*parser <WhiteSpace>)
-        (*parser <InfixParen>)
         (*parser <InfixArrayGet>)
+        (*parser <InfixParen>)
         (*parser <InfixFuncall>)
         (*disj 3)
         (*parser <WhiteSpace>)
@@ -827,8 +843,8 @@
     (*parser <Comments>) *star
     (*parser <WhiteSpace>)
     (*parser <InfixExtension>)
-    (*parser <Number>)
     (*parser <Symbol>)
+    ;(*parser <Number>)
     (*parser <Boolean>)
     (*parser <Char>)
     (*parser <String>)
@@ -839,7 +855,7 @@
     (*parser <QuasiQuoted>)
     (*parser <Unquoted>)
     (*parser <UnquoteAndSpliced⟩>)
-    (*disj 13)
+    (*disj 12)
     (*parser <WhiteSpace>)
     (*parser <Comments>) *star
     (*parser <WhiteSpace>)
@@ -850,9 +866,7 @@
   done)
 )
 
-;(test-string <Char> "#\a")
-
+(test-string <InfixAddSub> "i+j")
 ;(test-string <InfixSexprEscape> "f(2*3,6^a[2],7*2)")
-;(test-string <sexpr2> ";gdkdkj\n 1 ;gfdre\n 2")
-;(test-string <sexpr2> "#;gdkdkj 1")
+;(test-string <ProperList> "(#\\a)")
 
