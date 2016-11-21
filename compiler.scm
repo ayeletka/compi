@@ -32,7 +32,8 @@
   (new (*parser (word "#;"))
         (*parser <WhiteSpace>)
        (*delayed (lambda () <sexpr2>))
-       (*caten 3)
+       (*parser <WhiteSpace>)
+       (*caten 4)
        done))
 
 (define <Comments>
@@ -559,7 +560,13 @@
     (*parser <WhiteSpace>)
     (*parser (char (integer->char 91)))
     (*parser <WhiteSpace>)
+    (*parser <Comments>) *star
+    (*parser <WhiteSpace>)
     (*delayed (lambda () <InfixExpression>))
+    (*parser <WhiteSpace>)
+    (*parser <Comments>) *star
+    (*caten 5)
+    (*pack-with (lambda (com1 ws1 exp ws2 com2) exp))
     (*parser <WhiteSpace>)
     (*parser (char (integer->char 93)))
     (*parser <WhiteSpace>)
@@ -584,6 +591,8 @@
           (*pack-with (lambda (space exp space2)
             exp))
   done))  
+
+
 
 (define <InfixArgList>
     (new 
@@ -866,7 +875,8 @@
   done)
 )
 
-(test-string <InfixAddSub> "i+j")
+
 ;(test-string <InfixSexprEscape> "f(2*3,6^a[2],7*2)")
 ;(test-string <ProperList> "(#\\a)")
 
+(test-string <sexpr2> "## b #; 1+5^7")
