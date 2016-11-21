@@ -28,10 +28,29 @@
    (*caten 3)
    done)))
 
+(define <SymbolComment>
+  (new
+    (*delayed (lambda () <Number>))
+    (*delayed (lambda () <SymbolChar>)) *plus
+    *not-followed-by
+    (*delayed (lambda () <digit-0-9>)) *star
+    (*delayed (lambda () <SymbolChar>)) *plus
+    (*delayed (lambda () <digit-0-9>)) *star
+    (*caten 2) *plus
+    (*caten 2)
+    (*pack-with (lambda (ch lst)
+      `(,@ch ,@lst)))
+    (*disj 2)
+  done)
+  )
+
+
 (define <sexpr-comment>
   (new (*parser (word "#;"))
         (*parser <WhiteSpace>)
+        (*parser <SymbolComment>)
        (*delayed (lambda () <sexpr2>))
+       (*disj 2)
        (*parser <WhiteSpace>)
        (*caten 4)
        done))

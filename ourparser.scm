@@ -16,7 +16,7 @@
 ;(define test8 "####f()()");;;;have to fix spacing shit
 ;(define test8 "##atom(1)+1 ((2+1)*2, 3)")
 ;(define test9 "#%A[1]+A[2]*A[3]^B[4][5][6]")
-(define test9 "## #; 2+5 -b+7")
+(define test9 "## #; 2+5 -")
 (define test10 "## #; 2+5 6+7")
 
 
