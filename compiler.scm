@@ -96,7 +96,7 @@
 
 
 
-;(test-string <HexUnicodeChar> "x12")	
+;(test-string <HexUnicodeChar> "x11000")	
 
 
 
@@ -104,14 +104,13 @@
     (new (*parser (char #\#))
     	(*parser (char #\\))
     	(*caten 2)
-    	(*pack-with
-    		(lambda(a b)
-    			(list a b)))
-  
+      (*pack-with
+        (lambda(a b)
+          (list #\# #\\)))
 	 done))
 
 
-
+(test-string <CharPrefix> "\#\\")
 
 (define <VisibleSimpleChar>
 	(new 
@@ -120,8 +119,6 @@
 			(lambda (a)
 				 a))
 	done))
-
-
 
 
 (define ^<meta-char>
@@ -145,16 +142,19 @@
 
 	
 (define <Char>
-  (new (*parser <CharPrefix>)
+  (new 
+      (*parser <WhiteSpace>)
+      (*parser <CharPrefix>)
   		(*parser <NamedChar>)
   		(*parser <HexUnicodeChar>)
   		(*parser <VisibleSimpleChar>)
       (*parser <VisibleSimpleChar>)
       *not-followed-by
   		(*disj 3)
-  		(*caten 2)
+      (*parser <WhiteSpace>)
+  		(*caten 4)
   		(*pack-with
-    		(lambda(a b)
+    		(lambda(sp1 a b sp2)
     			b))
    done))
 
@@ -220,6 +220,8 @@
 	(new (*parser <Fraction>)
 		(*parser <Integer>)
 		(*disj 2)
+    (*delayed (lambda () <SymbolChar>))
+    *not-followed-by 
 	done))
 
 ;(test-string <Number> "-09/0")	
@@ -294,17 +296,16 @@
             done))
             
 
-(test-string <String> "\"TRt\"")
+;(test-string <String> "\"TRt\"")
 
 ;;;;;;;;;;;;;;;;;;;;;; Symbol ;;;;;;;;;;;;;;;;;;;;;;
 
 
 (define <SymbolChar>
   (new 
-    (*parser <digit-0-9>)
     (*parser (range #\A #\Z))
     (*pack (lambda (ch)
-      (string->symbol (string (integer->char  (+ (char->integer ch) 32))))))
+        (integer->char  (+ (char->integer ch) 32))))
     (*parser (range #\a #\z))
     (*parser (char #\!))
     (*parser (char #\$))
@@ -318,23 +319,31 @@
     (*parser (char #\<))
     (*parser (char #\?))
     (*parser (char #\/))
-    (*disj 15)
+    (*disj 14)
     done)
   )
-(test-string <SymbolChar> "A")
+
+
 
 
 (define <Symbol>
   (new
     (*parser <SymbolChar>) *plus
+    (*parser <digit-0-9>) *star
+    (*caten 2)
+    (*pack-with (lambda (ch lst)
+      `(,@ch ,@lst)))
+    (*parser <digit-0-9>) *star
+    (*parser <SymbolChar>) *plus
+    (*caten 2)
+    (*pack-with (lambda (ch lst)
+      `(,@ch ,@lst)))
+    (*disj 2)
     (*pack 
       (lambda(symbols)
        (string->symbol (list->string symbols) )))
   done)
   )
-
-;(test-string <Symbol> "x")
-
 
 ;;;;;;;;;;;;;;;;;;;;;; ProperList ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -409,7 +418,7 @@
   (new
     (*parser (char (integer->char 96))) 
     (*delayed
-      (lambda() <sexpr2>))
+      (lambda() <sexpr2>)) 
     (*caten 2)
     (*pack-with
       (lambda (q expr)
@@ -507,7 +516,7 @@
       expr))
     done))     
 
-(test-string <InfixSymbol> "-")
+;(test-string <InfixSymbol> "*")
 
 
 (define <InfixParen>
@@ -542,7 +551,7 @@
     (*pack-with (lambda (sp1 del1 sp2 num sp3 del2 sp4)
         `(,@num)
       ))
-     *star
+     *plus
     (*caten 2)
        (*pack-with (lambda (arrname lst1)
               (if (equal? (length lst1) 0) arrname
@@ -560,20 +569,80 @@
             exp))
   done))  
 
+(define <InfixArgList>
+    (new 
+        (*parser <WhiteSpace>)
+        (*delayed (lambda() <InfixExpression>))
+        (*parser <WhiteSpace>)
+        (*parser (char (integer->char 44)))
+        (*parser <WhiteSpace>)
+        (*delayed (lambda() <InfixExpression>))
+        (*parser <WhiteSpace>)
+        (*caten 5)
+        (*pack-with (lambda (sp1 del1 sp2 num sp3)
+            `(,@num)
+          ))
+        *star
+        (*parser <WhiteSpace>)
+        (*caten 4)
+        (*pack-with
+          (lambda (sp1 num1 lst sp2)
+            `(,num1 ,@lst)))
+        (*parser <epsilon>)
+        (*disj 2)
 
+        done)) 
+
+
+
+(define <InfixFuncall>
+    (new 
+          (*parser <WhiteSpace>)
+          (*parser <InfixLast>)
+          (*parser <WhiteSpace>)
+          (*parser (char (integer->char 40)))
+          (*parser <WhiteSpace>)
+          (*parser <InfixArgList>)
+          (*parser <WhiteSpace>)
+          (*parser (char (integer->char 41)))
+          (*parser <WhiteSpace>)
+          (*caten 7)
+          (*pack-with 
+            (lambda (sp1 par1 sp2 exp2 sp3 par2 sp4)
+              exp2)
+              ) 
+            *star
+          (*caten 2)
+          (*pack-with 
+            (lambda (func exp2)
+                (if (equal? (length exp2) 0) func
+                    (if (equal? (length exp2) 1) `(,func ,@(car exp2))
+                            (letrec ((loop
+                            (lambda (exp1 lst1)
+                                (if (equal? (length lst1) 1) `(,exp1 ,@(car lst1))
+                                    (loop `(,exp1 ,@(car lst1)) (cdr lst1))))))
+                                   (loop `(,func ,@(car exp2)) (cdr exp2)))))))
+         
+          (*parser <WhiteSpace>)
+          (*caten 3)
+          (*pack-with (lambda (space exp space2)
+            exp))
+      done))
 
 (define <InfixPow>
     (new
         (*parser <WhiteSpace>) 
         (*parser <InfixParen>)
         (*parser <InfixArrayGet>)
-        (*disj 2)
+        (*parser <InfixFuncall>)
+        (*disj 3)
         (*parser <WhiteSpace>)
         (*parser <PowerSymbol>)
         (*parser <WhiteSpace>)
         (*parser <InfixParen>)
         (*parser <InfixArrayGet>)
-        (*disj 2)
+        (*parser <InfixFuncall>)
+        (*disj 3)
         (*parser <WhiteSpace>)
         (*caten 5)         
         (*pack-with (lambda (sp1 delim sp2 exp2 sp3)
@@ -688,66 +757,7 @@
 
 
 
-(define <InfixArgList>
-    (new 
-        (*parser <WhiteSpace>)
-        (*delayed (lambda() <InfixExpression>))
-        (*parser <WhiteSpace>)
-        (*parser (char (integer->char 44)))
-        (*parser <WhiteSpace>)
-        (*delayed (lambda() <InfixExpression>))
-        (*parser <WhiteSpace>)
-        (*caten 5)
-        (*pack-with (lambda (sp1 del1 sp2 num sp3)
-            `(,@num)
-          ))
-        *star
-        (*parser <WhiteSpace>)
-        (*caten 4)
-        (*pack-with
-          (lambda (sp1 num1 lst sp2)
-            `(,num1 ,@lst)))
-        (*parser <epsilon>)
-        (*disj 2)
 
-        done)) 
-
-
-
-(define <InfixFuncall>
-    (new 
-          (*parser <WhiteSpace>)
-          (*delayed (lambda() <InfixAddSub>))
-          (*parser <WhiteSpace>)
-          (*parser (char (integer->char 40)))
-          (*parser <WhiteSpace>)
-          (*parser <InfixArgList>)
-          (*parser <WhiteSpace>)
-          (*parser (char (integer->char 41)))
-          (*parser <WhiteSpace>)
-          (*caten 7)
-          (*pack-with 
-            (lambda (sp1 par1 sp2 exp2 sp3 par2 sp4)
-              exp2)
-              ) 
-            *plus
-          (*caten 2)
-          (*pack-with 
-            (lambda (func exp2)
-                (if (equal? (length exp2) 0) func
-                    (if (equal? (length exp2) 1) `(,func ,@(car exp2))
-                            (letrec ((loop
-                            (lambda (exp1 lst1)
-                                (if (equal? (length lst1) 1) `(,exp1 ,@(car lst1))
-                                    (loop `(,exp1 ,@(car lst1)) (cdr lst1))))))
-                                   (loop `(,func ,@(car exp2)) (cdr exp2)))))))
-          (*parser <InfixAddSub>)
-          (*disj 2)
-          (*parser <WhiteSpace>)
-          (*caten 3)
-          (*pack-with (lambda (space exp space2)
-            exp))
-      done))
 
 (define <InfixSexprEscape>
   (new 
@@ -762,7 +772,8 @@
       *star
       (*caten 5)
       (*pack-with (lambda (prefix sp symb sp2 lst)
-         `(,symb ,lst)))
+        (if (equal? (length lst) 0) symb
+         `(,symb ,@lst))))
       (*parser <WhiteSpace>) 
       (*caten 3)
         (*pack-with (lambda (sp exp sp2)
@@ -775,11 +786,10 @@
         (*parser <Comments>) *star
         (*parser <WhiteSpace>) 
         (*parser <InfixSexprEscape>)
-        (*parser <InfixFuncall>)
         (*parser <InfixAddSub>)
         ;(*parser <InfixNeg>)
         ;(*parser <InfixArrayGet>)
-        (*disj 3)
+        (*disj 2)
         (*parser <WhiteSpace>)
         (*parser <Comments>) *star
         (*parser <WhiteSpace>)
@@ -787,7 +797,7 @@
         (*pack-with (lambda (space comment1 space1 exp space2 comment2 space3)
           exp))
         done))
-(test-string <InfixExpression> "-f(1 , (2*3))")
+;(test-string <InfixExpression> "-f(1 , (2*3))")
 
  ;(test-string <InfixExpression> " 2+4 ")
 ;(test-string <InfixExpression> "2^7")
@@ -840,7 +850,8 @@
   done)
 )
 
-(test-string <sexpr2> "##4 * atan(1)")
+;(test-string <Char> "#\a")
+
 ;(test-string <InfixSexprEscape> "f(2*3,6^a[2],7*2)")
 ;(test-string <sexpr2> ";gdkdkj\n 1 ;gfdre\n 2")
 ;(test-string <sexpr2> "#;gdkdkj 1")
