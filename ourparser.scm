@@ -24,7 +24,7 @@
  ; #%cons(x, y)")
 
 ;(define test10 "####ab3+5b+5[3]")
-(define test10 "ab3+5b+5")
+(define test10 "####ab3+5b+5[3]")
 
 
 

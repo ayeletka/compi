@@ -68,10 +68,6 @@
   (new 
         (*parser (word "#;"))
         (*parser <WhiteSpace>)
-       ; (*parser <SymbolComment>)
-       ;(*delayed (lambda () <InfixExtension>))
-       ;(*delayed (lambda () <sexpr2>))
-       ;(*disj 2)
         (*delayed (lambda() <InfixExtension>))
        (*delayed (lambda () <InfixSexprEscape>))
         (*delayed (lambda () <InfixAddSub>))
@@ -266,8 +262,8 @@
 	(new (*parser <Fraction>)
 		(*parser <Integer>)
 		(*disj 2)
-    ;(*delayed (lambda () <SymbolChar>))
-    ;*not-followed-by 
+    (*delayed (lambda () <SymbolChar>))
+    *not-followed-by 
 	done))
 
 ;(test-string <Number> "-09/0")	
@@ -351,6 +347,7 @@
 
 (define <SymbolChar>
   (new 
+    (*parser (range #\0 #\9))
     (*parser (range #\A #\Z))
     (*pack (lambda (ch)
         (integer->char  (+ (char->integer ch) 32))))
@@ -367,7 +364,7 @@
     (*parser (char #\<))
     (*parser (char #\?))
     (*parser (char #\/))
-    (*disj 14)
+    (*disj 15)
     done)
   )
 
@@ -376,19 +373,10 @@
 
 (define <Symbol>
   (new
-    (*parser <Number>)
     (*parser <SymbolChar>) *plus
-    *not-followed-by
-    (*parser <digit-0-9>) *star
-    (*parser <SymbolChar>) *plus
-    (*parser <digit-0-9>) *star
-    (*caten 3)
-    (*pack-with (lambda (ch lst ch2)
-      `(,@ch ,@lst ,@ch2)))
-    (*pack 
-      (lambda(symbols)
-       (string->symbol (list->string symbols) )))
-    (*disj 2)
+    (*pack (lambda(symbolLst)
+                  (string->symbol
+                    (list->string symbolLst))))
   done)
   )
 
@@ -516,37 +504,51 @@
     done))
 
 
+(define <InfixNumber>
+  (new 
+    (*parser <Fraction>)
+    (*parser <Integer>)
+    (*disj 2)
+    (*delayed (lambda () <InfixSymbolChar>))
+    *not-followed-by 
+    done))
+
+(define <InfixSymbolChar>
+  (new 
+    (*parser (range #\0 #\9))
+    (*parser (range #\A #\Z))
+    (*pack 
+      (lambda (capital)
+        (integer->char  (+ (char->integer capital) 32))))
+    (*parser (range #\a #\z))
+    (*parser (char #\!))
+    (*parser (char #\$))
+    (*parser (char #\_))
+    (*parser (char #\=))
+    (*parser (char #\<))
+    (*parser (char #\>))
+    (*parser (char #\?))
+    (*disj 10)
+    done))
 
 (define <InfixSymbol>
-  (new 
-    (*parser <Number>)
-    (*parser <SymbolChar>) *plus
+  (new
+    (*parser <InfixNumber>) 
+    (*parser <InfixSymbolChar>) *plus
     *not-followed-by
     (*parser <digit-0-9>) *star
-    (*parser <SymbolChar>) 
-    (*parser (char (integer->char 43))) ;+
-    (*parser (char (integer->char 45))) ;-
-    (*parser (char (integer->char 42))) ;*
-    (*parser (char (integer->char 42))) ;**
-    (*parser (char (integer->char 42))) ;**
-    (*caten 2)
-    (*parser (char (integer->char 94))) ;^
-    (*parser (char (integer->char 47))) ;/
-    (*disj 6)
-    *diff   
-    *plus
+    (*parser <InfixSymbolChar>) *plus
     (*parser <digit-0-9>) *star
     (*caten 3)
-    (*pack-with (lambda (ch lst ch2)
-      `(,@ch ,@lst ,@ch2)))
+    (*pack-with 
+      (lambda (nums1 charsLst nums2)
+      `(,@nums1 ,@charsLst ,@nums2)))
     (*pack 
-      (lambda(symbols)
-       (string->symbol (list->string symbols) )))
+      (lambda (lst)
+        (string->symbol (list->string lst))))        
     (*disj 2)
-    ;(*parser <any-char>)
-   
-    done)) 
 
+    done))
 
 
 
@@ -567,20 +569,15 @@
 (define <InfixLast>
   (new
     (*parser <WhiteSpace>)
-    (*parser <InfixSymbol>) ;*plus
-    ;(*pack
-    ;  (lambda(symbol)
-    ;   (string->symbol (list->string symbol))))
-    (*parser <Number>)
+    (*parser <InfixSymbol>)
+    (*parser <InfixNumber>)
     (*disj 2)
     (*parser <WhiteSpace>)
-    
     (*caten 3)
     (*pack-with (lambda (sp1 expr sp2)
       expr))
     done))     
 
-;(test-string <InfixLast> "123a")
 
 
 (define <InfixParen>
@@ -588,7 +585,9 @@
     (*parser <WhiteSpace>)
     (*parser (char (integer->char 40)))
     (*parser <WhiteSpace>)
+    ;(*delayed (lambda () <InfixSexprEscape>))
     (*delayed (lambda () <InfixExpression>))
+    ;(*disj 2)
     (*parser <WhiteSpace>)
     (*parser (char (integer->char 41)))
     (*parser <WhiteSpace>)
@@ -603,7 +602,9 @@
 (define <InfixArrayGet>
   (new
     (*parser <WhiteSpace>)
+    (*delayed (lambda () <InfixSexprEscape>))
     (*parser <InfixLast>)
+    (*disj 2)
     (*parser (char (integer->char 40)))
     *not-followed-by
     (*parser <InfixParen>)
@@ -642,7 +643,6 @@
           (*pack-with (lambda (space exp space2)
             exp))
   done))  
-
 
 
 (define <InfixArgList>
@@ -710,6 +710,7 @@
             exp ))
       done))
 
+
 (define <InfixSexprEscape>
   (new 
       (*parser <WhiteSpace>)
@@ -721,7 +722,7 @@
       (*parser <CommentsInf>) *star
       (*caten 6)
       (*pack-with (lambda (prefix sp com1 symb sp2 com2)
-         `(,symb)))
+         `(,@symb)))
       (*parser <WhiteSpace>) 
       (*caten 3)
         (*pack-with (lambda (sp exp sp2)
@@ -756,13 +757,15 @@
         (*parser <CommentsInf>) *star
         (*parser <InfixArrayGet>)
         (*parser <InfixParen>)
+        (*parser <InfixSexprEscape>)
         (*parser <InfixFuncall>)
-        (*disj 3)
+        (*disj 4)
         (*parser (word "-"))
         (*parser <InfixArrayGet>)
         (*parser <InfixParen>)
+        (*parser <InfixSexprEscape>)
         (*parser <InfixFuncall>)
-        (*disj 3)
+        (*disj 4)
         (*caten 2)
         (*pack-with (lambda (minus exp)
             `(- ,exp)))
@@ -942,6 +945,7 @@
     (*parser <Comments>) *star
     (*parser <WhiteSpace>)
     (*parser <InfixExtension>)
+    (*parser <Number>)
     (*parser <Symbol>)
     (*parser <Boolean>)
     (*parser <Char>)
@@ -953,7 +957,7 @@
     (*parser <QuasiQuoted>)
     (*parser <Unquoted>)
     (*parser <UnquoteAndSpliced⟩>)
-    (*disj 12)
+    (*disj 13)
     (*parser <WhiteSpace>)
     (*parser <Comments>) *star
     (*parser <WhiteSpace>)
