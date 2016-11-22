@@ -18,8 +18,17 @@
 ;(define test9 "#%A[1]+A[2]*A[3]^B[4][5][6]")
 ;(define test9 "##1+2 #; 2+5 -b")
 ;(define test10 "## #; 2+5 1+7 ")
-(define test10 "(cons 1 2)")
-(define test11 "## #; 2     +   6   - 5   7 a")
+;(define test11 "
+ ; #%1+1
+ ; #;#%this-is-in-infix
+ ; #%cons(x, y)")
+
+(define test10 "#\\a")
+
+
+
+  
+;(define test11 "## #; 2     +   6   - 5   7 a")
 
 
 

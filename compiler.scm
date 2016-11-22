@@ -15,6 +15,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;; Comments;;;;;;;;;;;;;;;;;;;;;;
 
+
 (define <line-comment>
   (let ((<end-of-line-comment>
    (new (*parser (char #\newline))
@@ -22,54 +23,46 @@
         (*disj 2)
         done)))
     (new (*parser (char #\;))
+   
    (*parser <any-char>)
    (*parser <end-of-line-comment>)
    *diff *star
+
    (*parser <end-of-line-comment>)
    (*caten 3)
    done)))
 
-(define <SymbolComment>
-  (new
-    (*delayed (lambda () <Number>))
-    (*delayed (lambda () <SymbolChar>)) *plus
-    *not-followed-by
-    (*delayed (lambda () <digit-0-9>)) *star
-    (*parser <WhiteSpace>)
-    (*caten 2)
-    (*delayed (lambda () <SymbolChar>)) *plus
-    (*parser <WhiteSpace>)
-    (*delayed (lambda () <digit-0-9>)) *star
-    (*parser <WhiteSpace>)
-    (*caten 4) *plus
-    (*caten 2)
-    (*pack-with (lambda (ch lst)
-      `(,@ch ,@lst)))
-    (*disj 2)
-  done)
-  )
-
-
-
-
 (define <sexpr-comment>
   (new (*parser (word "#;"))
-        (*parser <WhiteSpace>)
-        (*parser <SymbolComment>)
-       ;(*delayed (lambda () <InfixExtension>))
        (*delayed (lambda () <sexpr2>))
-       (*disj 2)
-       (*parser <WhiteSpace>)
-       (*caten 4)
+       (*caten 2)
        done))
 
 (define <Comments>
-  (new 
-    (*parser <line-comment>)
-    (*parser <sexpr-comment>)
-    (*disj 2)
+  (disj <line-comment>
+  <sexpr-comment>))
 
-    done))
+(define <skip>
+  (disj <Comments>
+  <WhiteSpace>))
+
+(define ^^<wrapped>
+  (lambda (<wrapper>)
+    (lambda (<p>)
+      (new (*parser <wrapper>)
+     (*parser <p>)
+     (*parser <wrapper>)
+     (*caten 3)
+     (*pack-with
+      (lambda (_left e _right) e))
+     done))))
+
+(define ^<CommentOutPrefix*> (^^<wrapped> (star <skip>)))
+
+
+
+
+
 
 (define <sexpr-comment-inf>
   (new 
@@ -79,9 +72,10 @@
        ;(*delayed (lambda () <InfixExtension>))
        ;(*delayed (lambda () <sexpr2>))
        ;(*disj 2)
+        (*delayed (lambda() <InfixExtension>))
        (*delayed (lambda () <InfixSexprEscape>))
         (*delayed (lambda () <InfixAddSub>))
-        (*disj 2)
+        (*disj 3)
        (*parser <WhiteSpace>)
        (*caten 4)
        done))
@@ -166,8 +160,10 @@
 (define <VisibleSimpleChar>
 	(new 
 		(*parser (range #\! #\~))
-    (*pack
-			(lambda (a)
+    (*parser <end-of-input>)
+    (*caten 2)
+    (*pack-with
+			(lambda (a end)
 				 a))
 	done))
 
@@ -198,15 +194,15 @@
       (*parser <CharPrefix>)
   		(*parser <NamedChar>)
   		(*parser <HexUnicodeChar>)
-  		(*parser <VisibleSimpleChar>)
+      (*parser <VisibleSimpleChar>)
       ;(*parser <VisibleSimpleChar>)
       ;*not-followed-by
   		(*disj 3)
       (*parser <WhiteSpace>)
-  		(*caten 4)
-  		(*pack-with
-    		(lambda(sp1 a b sp2)
-    			b))
+      (*caten 4)
+      (*pack-with
+        (lambda(sp1 a b sp2)
+          b))
    done))
 
 
@@ -613,11 +609,11 @@
     (*parser <WhiteSpace>)
     (*parser (char (integer->char 91)))
     (*parser <WhiteSpace>)
-    (*parser <Comments>) *star
+    (*parser <CommentsInf>) *star
     (*parser <WhiteSpace>)
     (*delayed (lambda () <InfixExpression>))
     (*parser <WhiteSpace>)
-    (*parser <Comments>) *star
+    (*parser <CommentsInf>) *star
     (*caten 5)
     (*pack-with (lambda (com1 ws1 exp ws2 com2) exp))
     (*parser <WhiteSpace>)
@@ -675,6 +671,9 @@
 
 (define <InfixFuncall>
     (new 
+
+          (*parser <WhiteSpace>)
+          (*parser <CommentsInf>) *star
           (*parser <WhiteSpace>)
           (*parser <InfixLast>)
           (*parser <WhiteSpace>)
@@ -702,28 +701,52 @@
                                    (loop `(,func ,@(car exp2)) (cdr exp2)))))))
          
           (*parser <WhiteSpace>)
-          (*caten 3)
-          (*pack-with (lambda (space exp space2)
-            exp))
+          (*parser <CommentsInf>) *star
+          (*parser <WhiteSpace>)
+          (*caten 7)
+          (*pack-with (lambda (sp1 com1 sp2 exp sp3 inf sp4)
+            exp ))
       done))
 
 (define <InfixPow>
     (new
-        (*parser <WhiteSpace>) 
+        (*parser <WhiteSpace>)
+        (*parser <CommentsInf>) *star
         (*parser <InfixArrayGet>)
         (*parser <InfixParen>)
         (*parser <InfixFuncall>)
         (*disj 3)
+        (*parser (word "-"))
+        (*parser <InfixArrayGet>)
+        (*parser <InfixParen>)
+        (*parser <InfixFuncall>)
+        (*disj 3)
+        (*caten 2)
+        (*pack-with (lambda (minus exp)
+            `(- ,exp)))
+        (*disj 2)
         (*parser <WhiteSpace>)
+        (*parser <CommentsInf>) *star
         (*parser <PowerSymbol>)
         (*parser <WhiteSpace>)
+        (*parser <CommentsInf>) *star
         (*parser <InfixArrayGet>)
         (*parser <InfixParen>)
         (*parser <InfixFuncall>)
         (*disj 3)
+        (*parser (word "-"))
+        (*parser <InfixArrayGet>)
+        (*parser <InfixParen>)
+        (*parser <InfixFuncall>)
+        (*disj 3)
+        (*caten 2)
+        (*pack-with (lambda (minus exp)
+            `(- ,exp)))
+        (*disj 2)
         (*parser <WhiteSpace>)
-        (*caten 5)         
-        (*pack-with (lambda (sp1 delim sp2 exp2 sp3)
+        (*parser <CommentsInf>) *star
+        (*caten 8)         
+        (*pack-with (lambda (sp1 com1 delim sp2 com2 exp2 sp3 com3)
             `(,@exp2)))
         *star
         (*caten 2) 
@@ -736,8 +759,9 @@
                                     `(expt ,exp1 ,(loop (car lst1) (cdr lst1)))))))
                                    (loop exp2 lst))))))
         (*parser <WhiteSpace>)
-        (*caten 3)
-          (*pack-with (lambda (space exp space2)
+        (*parser <CommentsInf>) *star
+        (*caten 5)
+          (*pack-with (lambda (space com1 exp space2 com2)
             exp))
         done))
 
@@ -747,12 +771,24 @@
     (new
         (*parser <WhiteSpace>) 
         (*parser <InfixPow>)
+        (*parser (word "-"))
+        (*parser <InfixPow>)
+        (*caten 2)
+        (*pack-with (lambda (minus exp)
+            `(- ,exp)))
+        (*disj 2)
         (*parser <WhiteSpace>)
         (*parser (word "*"))
         (*parser (word "/"))
         (*disj 2)
         (*parser <WhiteSpace>)
         (*parser <InfixPow>)
+        (*parser (word "-"))
+        (*parser <InfixPow>)
+        (*caten 2)
+        (*pack-with (lambda (minus exp)
+            `(- ,exp)))
+        (*disj 2)
         (*parser <WhiteSpace>)
         (*caten 5)         
          (*pack-with (lambda (sp1 delim sp2 exp2 sp3)
@@ -842,17 +878,20 @@
 
 (define <InfixSexprEscape>
   (new 
-      (*parser <WhiteSpace>) 
+      (*parser <WhiteSpace>)
+      ;(*parser <CommentsInf>) *star
       (*parser <InfixPrefixExtensionPrefix>)
       (*parser <WhiteSpace>)
+       (*parser <CommentsInf>) *star
       ;(*parser <Symbol>)
       (*delayed (lambda () <sexpr2>))
       (*parser <WhiteSpace>)
+      (*parser <CommentsInf>) *star
       (*delayed 
         (lambda () <InfixExpression>))
       *star
-      (*caten 5)
-      (*pack-with (lambda (prefix sp symb sp2 lst)
+      (*caten 7)
+      (*pack-with (lambda (prefix sp com1 symb sp2 com2 lst)
         (if (equal? (length lst) 0) symb
          `(,symb ,@lst))))
       (*parser <WhiteSpace>) 
@@ -903,13 +942,13 @@
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
 
 (define <sexpr2>
+  ;(^<CommentOutPrefix*>
   (new
     (*parser <WhiteSpace>)
     (*parser <Comments>) *star
     (*parser <WhiteSpace>)
     (*parser <InfixExtension>)
     (*parser <Symbol>)
-    ;(*parser <Number>)
     (*parser <Boolean>)
     (*parser <Char>)
     (*parser <String>)
@@ -926,17 +965,18 @@
     (*parser <WhiteSpace>)
     (*caten 7)
     (*pack-with 
-     (lambda (space1 comment1 space3 expr space2 comment2 space4)
+     (lambda (space1 comm1 space3 expr space2 comm2 space4)
            expr))
-  done)
-)
+  done))
 
 
-;(test-string <InfixSexprEscape> "f(2*3,6^a[2],7*2)")
+(test-string <Char> "#\\abc")
 ;(test-string <ProperList> "(#\\a)")
 
-;(test-string <sexpr2> "#; \"345\" ## 2+ #; 3- 5*6 8 #; \"abc\"")
-;(test-string <sexpr2> "## 2+2 #; 3- 5*6 8 #; \"abc\"")
-(test-string <sexpr2> "## 2 + #; 3 - 4 + 5 * 6 ^ 7 8")
 
-(test-string <InfixExpression> "2+ #;  3 - 4 + 5 * 6 ^ 7 1")
+
+;(test-string <sexpr2> "(cons 1 2)")
+
+
+;expected: ((match (cons (f (+ x y) (- x z) (* x t) (g (cons x y) (cons x y) (list x y) (h (* x y) (expt x z)))) 2)) (remaining ))
+; actual:   ((match (cons (f (+ x y) (- x z) (* x t) (g (cons x y) (cons x y) (x ,y) (h (* x y) (expt x z)))) 2)) (remaining ))
