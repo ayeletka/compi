@@ -160,10 +160,10 @@
 (define <VisibleSimpleChar>
 	(new 
 		(*parser (range #\! #\~))
-    (*parser <end-of-input>)
-    (*caten 2)
-    (*pack-with
-			(lambda (a end)
+    (*parser (range-ci #\a #\z))
+    *not-followed-by
+    (*pack
+			(lambda (a)
 				 a))
 	done))
 
@@ -208,7 +208,7 @@
 
 
 
-;(test-string <Char> "#\lambda")	
+(test-string <CharPrefix> "#\\x[2]")	
 
 
 
@@ -266,8 +266,8 @@
 	(new (*parser <Fraction>)
 		(*parser <Integer>)
 		(*disj 2)
-    ;;(*delayed (lambda () <SymbolChar>))
-    ;;*not-followed-by 
+    ;(*delayed (lambda () <SymbolChar>))
+    ;*not-followed-by 
 	done))
 
 ;(test-string <Number> "-09/0")	
@@ -345,6 +345,8 @@
 ;(test-string <String> "\"TRt\"")
 
 ;;;;;;;;;;;;;;;;;;;;;; Symbol ;;;;;;;;;;;;;;;;;;;;;;
+
+
 
 
 (define <SymbolChar>
@@ -708,19 +710,41 @@
             exp ))
       done))
 
+(define <InfixSexprEscape>
+  (new 
+      (*parser <WhiteSpace>)
+      (*parser <InfixPrefixExtensionPrefix>)
+      (*parser <WhiteSpace>)
+       (*parser <CommentsInf>) *star
+      (*delayed (lambda () <sexpr2>))
+      (*parser <WhiteSpace>)
+      (*parser <CommentsInf>) *star
+      (*caten 6)
+      (*pack-with (lambda (prefix sp com1 symb sp2 com2)
+         `(,symb)))
+      (*parser <WhiteSpace>) 
+      (*caten 3)
+        (*pack-with (lambda (sp exp sp2)
+          exp))
+      done)) ;goes all the way down to infixLast and returns a space, not sure why
+
+
+
 (define <InfixPow>
     (new
         (*parser <WhiteSpace>)
         (*parser <CommentsInf>) *star
         (*parser <InfixArrayGet>)
         (*parser <InfixParen>)
+        (*parser <InfixSexprEscape>)
         (*parser <InfixFuncall>)
-        (*disj 3)
+        (*disj 4)
         (*parser (word "-"))
         (*parser <InfixArrayGet>)
         (*parser <InfixParen>)
+        (*parser <InfixSexprEscape>)
         (*parser <InfixFuncall>)
-        (*disj 3)
+        (*disj 4)
         (*caten 2)
         (*pack-with (lambda (minus exp)
             `(- ,exp)))
@@ -872,44 +896,14 @@
       done))
 
 
-
-
-
-
-(define <InfixSexprEscape>
-  (new 
-      (*parser <WhiteSpace>)
-      ;(*parser <CommentsInf>) *star
-      (*parser <InfixPrefixExtensionPrefix>)
-      (*parser <WhiteSpace>)
-       (*parser <CommentsInf>) *star
-      ;(*parser <Symbol>)
-      (*delayed (lambda () <sexpr2>))
-      (*parser <WhiteSpace>)
-      (*parser <CommentsInf>) *star
-      (*delayed 
-        (lambda () <InfixExpression>))
-      *star
-      (*caten 7)
-      (*pack-with (lambda (prefix sp com1 symb sp2 com2 lst)
-        (if (equal? (length lst) 0) symb
-         `(,symb ,@lst))))
-      (*parser <WhiteSpace>) 
-      (*caten 3)
-        (*pack-with (lambda (sp exp sp2)
-          exp))
-      done)) ;goes all the way down to infixLast and returns a space, not sure why
-
 (define <InfixExpression>
     (new
         (*parser <WhiteSpace>)
         (*parser <CommentsInf>) *star
         (*parser <WhiteSpace>) 
-        (*parser <InfixSexprEscape>)
         (*parser <InfixAddSub>)
         ;(*parser <InfixNeg>)
         ;(*parser <InfixArrayGet>)
-        (*disj 2)
         (*parser <WhiteSpace>)
         (*parser <CommentsInf>) *star
         (*parser <WhiteSpace>)
