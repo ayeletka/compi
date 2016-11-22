@@ -40,7 +40,8 @@
     (*delayed (lambda () <SymbolChar>)) *plus
     (*parser <WhiteSpace>)
     (*delayed (lambda () <digit-0-9>)) *star
-    (*caten 3) *plus
+    (*parser <WhiteSpace>)
+    (*caten 4) *plus
     (*caten 2)
     (*pack-with (lambda (ch lst)
       `(,@ch ,@lst)))
@@ -49,10 +50,13 @@
   )
 
 
+
+
 (define <sexpr-comment>
   (new (*parser (word "#;"))
         (*parser <WhiteSpace>)
         (*parser <SymbolComment>)
+       ;(*delayed (lambda () <InfixExtension>))
        (*delayed (lambda () <sexpr2>))
        (*disj 2)
        (*parser <WhiteSpace>)
@@ -67,6 +71,29 @@
 
     done))
 
+(define <sexpr-comment-inf>
+  (new 
+        (*parser (word "#;"))
+        (*parser <WhiteSpace>)
+       ; (*parser <SymbolComment>)
+       ;(*delayed (lambda () <InfixExtension>))
+       ;(*delayed (lambda () <sexpr2>))
+       ;(*disj 2)
+       (*delayed (lambda () <InfixSexprEscape>))
+        (*delayed (lambda () <InfixAddSub>))
+        (*disj 2)
+       (*parser <WhiteSpace>)
+       (*caten 4)
+       done))
+
+
+(define <CommentsInf>
+  (new 
+    (*parser <line-comment>)
+    (*parser <sexpr-comment-inf>)
+    (*disj 2)
+
+    done))
 ;(test-string <sexpr2> "## 2+ #; 3- 5*6 8 #; \"abc\"")
 
 ;;;;;;;;;;;;;;;;;;;;;; Boolean;;;;;;;;;;;;;;;;;;;;;;
@@ -757,12 +784,12 @@
             `(- ,exp)))
         (*disj 2)
         (*parser <WhiteSpace>) ; sp n sp
-        (*parser <Comments>) *star
+        (*parser <CommentsInf>) *star
         (*parser (word "+"))
         (*parser (word "-"))
         (*disj 2)
         (*parser <WhiteSpace>) ; sp n sp cm + sp
-        (*parser <Comments>) *star
+        (*parser <CommentsInf>) *star
         (*parser <InfixMul>)
         (*parser (word "-"))
         (*parser <InfixMul>)
@@ -771,7 +798,7 @@
             `(- ,exp)))
         (*disj 2)
         (*parser <WhiteSpace>) ; sp n sp cm + sp cm n sp
-        (*parser <Comments>) *star ; sp n sp cm + sp cm n sp cm
+        (*parser <CommentsInf>) *star ; sp n sp cm + sp cm n sp cm
         (*caten 8)         
         (*pack-with (lambda (sp1 com1 delim sp2 com2 exp2 sp3 com3)
             `(,(string->symbol (list->string delim)) ,exp2)))
@@ -837,7 +864,7 @@
 (define <InfixExpression>
     (new
         (*parser <WhiteSpace>)
-        (*parser <Comments>) *star
+        (*parser <CommentsInf>) *star
         (*parser <WhiteSpace>) 
         (*parser <InfixSexprEscape>)
         (*parser <InfixAddSub>)
@@ -845,7 +872,7 @@
         ;(*parser <InfixArrayGet>)
         (*disj 2)
         (*parser <WhiteSpace>)
-        (*parser <Comments>) *star
+        (*parser <CommentsInf>) *star
         (*parser <WhiteSpace>)
         (*caten 7)
         (*pack-with (lambda (space comment1 space1 exp space2 comment2 space3)
@@ -910,4 +937,6 @@
 
 ;(test-string <sexpr2> "#; \"345\" ## 2+ #; 3- 5*6 8 #; \"abc\"")
 ;(test-string <sexpr2> "## 2+2 #; 3- 5*6 8 #; \"abc\"")
-(test-string <sexpr2> "## 2+2 #; 3- 5*6")
+(test-string <sexpr2> "## 2 + #; 3 - 4 + 5 * 6 ^ 7 8")
+
+(test-string <InfixExpression> "2+ #;  3 - 4 + 5 * 6 ^ 7 1")
