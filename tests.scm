@@ -1,7 +1,10 @@
 ; Change to your own location
-(load "/home/shugs/Documents/compi/pc.scm")
-(load "/home/shugs/Documents/compi/compiler.scm")
-(load "/home/shugs/Documents/compi/parser.so")
+;(load "/home/shugs/Documents/compi/pc.scm")
+;(load "/home/shugs/Documents/compi/compiler.scm")
+;(load "/home/shugs/Documents/compi/parser.so")
+(load "pc.scm")
+(load "compiler.scm")
+(load "parser.so")
 
 (define <my-sexpr> <sexpr2>) ; Change to your sexpr name
 (define <staff-sexpr> <sexpr>)

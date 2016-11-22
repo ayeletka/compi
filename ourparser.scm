@@ -1,5 +1,5 @@
-;(load "compiler.scm")
-(load "/home/shugs/Documents/compi/compiler.scm")
+(load "compiler.scm")
+;(load "/home/shugs/Documents/compi/compiler.scm")
 
 (display "\n- ---  Our parser: ----\n\n")
 
@@ -17,13 +17,15 @@
 ;(define test8 "##atom(1)+1 ((2+1)*2, 3)")
 ;(define test9 "#%A[1]+A[2]*A[3]^B[4][5][6]")
 (define test9 "## #; 2+5 -")
-(define test10 "## #; 2+5 6+7")
+(define test10 "## - 5+4")
+(define test11 "3-5*6")
+
 
 
 ;(define test8 "####a+b+c +1")
 ;(define test8 ";gdkdkj\n 1 ;gfdre\n 2")
 
-(test-string <sexpr2> test9)
+;(test-string <sexpr2> test9)
 (test-string <sexpr2> test10)
 ;(test-string <sexpr> test2)
 
@@ -35,7 +37,7 @@
 
 ;(test-string <sexpr> test8)
 
-(test-string <sexpr> test9)
+;(test-string <sexpr> test9)
 (test-string <sexpr> test10)
 ;(test-string <sexpr> test2)
 

@@ -1,5 +1,5 @@
-(load "/home/shugs/Documents/compi/pc.scm")
-;(load "pc.scm")
+;(load "/home/shugs/Documents/compi/pc.scm")
+(load "pc.scm")
 
 ;;;;;;;;;;;;;;;;;;;;;; WhiteSpace;;;;;;;;;;;;;;;;;;;;;;
 
@@ -14,6 +14,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;; Comments;;;;;;;;;;;;;;;;;;;;;;
+
 (define <line-comment>
   (let ((<end-of-line-comment>
    (new (*parser (char #\newline))
@@ -34,9 +35,12 @@
     (*delayed (lambda () <SymbolChar>)) *plus
     *not-followed-by
     (*delayed (lambda () <digit-0-9>)) *star
+    (*parser <WhiteSpace>)
+    (*caten 2)
     (*delayed (lambda () <SymbolChar>)) *plus
+    (*parser <WhiteSpace>)
     (*delayed (lambda () <digit-0-9>)) *star
-    (*caten 2) *plus
+    (*caten 3) *plus
     (*caten 2)
     (*pack-with (lambda (ch lst)
       `(,@ch ,@lst)))
@@ -63,8 +67,7 @@
 
     done))
 
-
-
+;(test-string <sexpr2> "## 2+ #; 3- 5*6 8 #; \"abc\"")
 
 ;;;;;;;;;;;;;;;;;;;;;; Boolean;;;;;;;;;;;;;;;;;;;;;;
 
@@ -363,6 +366,10 @@
     (*disj 2)
   done)
   )
+
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;; ProperList ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -749,11 +756,13 @@
         (*pack-with (lambda (minus exp)
             `(- ,exp)))
         (*disj 2)
-        (*parser <WhiteSpace>)
+        (*parser <WhiteSpace>) ; sp n sp
+        (*parser <Comments>) *star
         (*parser (word "+"))
         (*parser (word "-"))
         (*disj 2)
-        (*parser <WhiteSpace>)
+        (*parser <WhiteSpace>) ; sp n sp cm + sp
+        (*parser <Comments>) *star
         (*parser <InfixMul>)
         (*parser (word "-"))
         (*parser <InfixMul>)
@@ -761,9 +770,10 @@
         (*pack-with (lambda (minus exp)
             `(- ,exp)))
         (*disj 2)
-        (*parser <WhiteSpace>)
-        (*caten 5)         
-        (*pack-with (lambda (sp1 delim sp2 exp2 sp3)
+        (*parser <WhiteSpace>) ; sp n sp cm + sp cm n sp
+        (*parser <Comments>) *star ; sp n sp cm + sp cm n sp cm
+        (*caten 8)         
+        (*pack-with (lambda (sp1 com1 delim sp2 com2 exp2 sp3 com3)
             `(,(string->symbol (list->string delim)) ,exp2)))
         *star
         (*caten 2) 
@@ -898,4 +908,6 @@
 ;(test-string <InfixSexprEscape> "f(2*3,6^a[2],7*2)")
 ;(test-string <ProperList> "(#\\a)")
 
-(test-string <sexpr2> "## b #; 1+5^7")
+;(test-string <sexpr2> "#; \"345\" ## 2+ #; 3- 5*6 8 #; \"abc\"")
+;(test-string <sexpr2> "## 2+2 #; 3- 5*6 8 #; \"abc\"")
+(test-string <sexpr2> "## 2+2 #; 3- 5*6")
