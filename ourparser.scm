@@ -2,16 +2,14 @@
 
 (display "\n- ---  Our parser: ----\n\n")
 
-(parse '(set! x 3))
+(parse '(letrec ()		
+		(loop 2)))
 
-(parse '(set! v (f x)))
 
 (display "\n- ---  Meirs parser: ----\n\n")
 
 (load "tagparser.so")
 
 
-(parse '(set! x 3))
-
-(parse '(set! v (f x)))
-
+(parse '(letrec ()		
+		(loop 2)))

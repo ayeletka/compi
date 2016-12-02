@@ -13,14 +13,14 @@
 			((null? var) var)
 			((vector? var) var)
 			((equal? var #t) var)
-			((equal? var #f) var) ;;;check how boolean is received and parsed
+			((equal? var #f) #t) ;;;check how boolean is received and parsed
 			((char? var) var)
 			((number? var) var)
 			((string? var) var)
 			(else #f)
 			)
 		))
-	
+
 (define *reserved-words*
 	'(and begin cond define do else if lambda
 		let let* letrec or quasiquote unquote
@@ -146,6 +146,34 @@
 					(lambda (func rest)
 						`(applic ,(parse func) ,(map parse rest))
 						))
+				;;;;;;;;;;;empty letrec ;;;;;;;;;
+				(pattern-rule
+					`(letrec ,(? 'vars list? null?) ,(? 'expr) . ,(? 'exprs list?))
+						(lambda (vars expr exprs) 
+							(parse
+								`((lambda ()
+										((lambda () ,(beginify (cons expr exprs)))
+										 ,@vars))	
+									,@vars)
+								)))
+				;;;;;;;;;;;letrec ;;;;;;;;;
+				(pattern-rule
+					`(letrec ((,(? 'var var?) ,(? 'val)) . ,(? 'rest letVariables?)) . ,(? 'exprs))
+					(lambda (var val rest exprs)
+						(let* ((vals (cons val (vals-getter rest)))
+								(vars (vars-getter var rest))
+								(sets (map (lambda (var2 val2)
+													`(set! ,var2 ,val2))
+													 vars vals))
+								(emptylst (list))
+								(falsevars (map (lambda (val) '#f) vals)))
+							(parse
+								`((lambda (,@vars)
+									,(beginify 
+										`(,@sets ((lambda () ,@exprs) ,@emptylst))	
+									)) 
+									,@falsevars
+								)))))
 				;;;;;;;;;;empty let ;;;;;;;;
 				(pattern-rule
 					`(let ,(? 'vars list? null?) ,(? 'expr) . ,(? 'exprs list?))
@@ -172,7 +200,12 @@
 				;;;;; let * ;;;;;;;
 				(pattern-rule
 					`(let* ((,(? 'var var?) ,(? 'val)) . ,(? 'rest)) . ,(? 'exprs))
-					(lambda (var val rest exprs) (parse `(let ((,var ,val)) (let* ,rest . ,exprs)))))
+					(lambda (var val rest exprs) 
+						(if (not (null? rest))
+							(parse `(let ((,var ,val)) 
+								(let* ,rest . ,exprs)))
+							(parse `(let ((,var ,val)) 
+								,@exprs)))))
 				)))
 			(lambda (e)
 				(run e
@@ -181,3 +214,6 @@
 									(format "I can't recognize this: ~s" e)))))))
 
  
+(parse '(letrec ((loop (lambda (a) (+ a 1)))
+					(ayelet a))
+		(loop 2)))
