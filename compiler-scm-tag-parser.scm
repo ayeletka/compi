@@ -8,6 +8,11 @@
 			(else `(begin ,@s)))))
 
 
+(define MIT-define-to-regular-define
+	(lambda (var&params exp)
+			`(define ,(car var&params) (lambda ,(cdr var&params) ,exp))))
+
+
 (define simple-const?
 	(lambda (var)
 		(cond 
@@ -77,6 +82,10 @@
 				(pattern-rule
 					`(or . ,(? 'rest))
 					(lambda (rest) `(or ,(map parse rest))))
+				;;;;;;;; sequences i.e. begin
+				(pattern-rule
+					`(begin ,(? 'args) . ,(? 'rest))
+					(lambda (args rest) `(seq (,(parse args) ,@(map parse rest)))))
 				;;;; regular lambda 
 				(pattern-rule
 					`(lambda ,(? 'vars list?) ,(? 'body) . ,(? 'rest))
@@ -89,12 +98,15 @@
 				(pattern-rule 
 					`(lambda args ,(? 'body) . ,(? 'rest))
 					(lambda (body rest) `(lambda-var args ,(parse (beginify (cons body rest)))))) ;notice begin is not memomash, WTF args
-				;;;;;;;; sequences i.e. begin
+				;;;; define 
 				(pattern-rule
-					`(begin ,(? 'args) . ,(? 'rest))
-					(lambda (args rest) `(seq (,(parse args) ,@(map parse rest)))))
-				;;;;;define
-				()
+					`(define ,(? 'var&params)  ,(? 'exp))
+					(lambda (var&params exp) 
+					(if (symbol? var&params)
+						 `(define ,(parse var&params) ,(parse exp))
+						 (parse (MIT-define-to-regular-define var&params exp))))
+				)
+				
 				;;let*
 				;(pattern-rule
 				;	`(let* () ,(? 'expr) . ,(? 'exprs list?))
@@ -111,4 +123,4 @@
 									(format "I can't recognize this: ~s" e)))))))
 
  
- (parse '(lambda (a) (if a b c) (if a b c)))
+ 
