@@ -7,12 +7,6 @@
 			((null? (cdr s)) (car s))
 			(else `(begin ,@s)))))
 
-
-(define MIT-define-to-regular-define
-	(lambda (var&params exp)
-			`(define ,(car var&params) (lambda ,(cdr var&params) ,exp))))
-
-
 (define simple-const?
 	(lambda (var)
 		(cond 
@@ -26,18 +20,22 @@
 			(else #f)
 			)
 		))
-
+	
 (define *reserved-words*
 	'(and begin cond define do else if lambda
 		let let* letrec or quasiquote unquote
 		unquote-splicing quote set!))
 
+(define reserved-words?
+	(lambda (var)
+		(not (ormap (lambda (rw)
+					 (equal? rw var)) *reserved-words*))))
+
 (define var?
 	(lambda (var)
 		(cond 
 			((and (symbol? var) 
-				(not (ormap (lambda (rw)
-					 (equal? rw var)) *reserved-words*))) var)
+				(reserved-words? var)) var)
 			(else #f)
 			)))
 
@@ -54,6 +52,33 @@
 				(loop (list) vars))
 			#f
 			)))
+
+;;;;;;macro helpres;;;;;;;
+(define MIT-define-to-regular-define
+	(lambda (var&params exp)
+			`(def ,(car var&params) (lambda ,(cdr var&params) ,exp))))
+
+(define letVariables?
+	(lambda (lst)
+		(and (list? lst) (andmap 
+			(lambda (vals) (and (pair? vals) (equal? (length vals) 2))) lst))))
+
+(define vals-getter
+	(lambda (lst)
+		(map cadr lst)))
+
+(define validList?
+	(lambda (lst)
+		(if (null? lst) #t
+			(if (member (car lst) (cdr lst)) #f
+				(validList? (cdr lst))))))
+
+(define vars-getter
+	(lambda (var lst)
+		(let ((vars (cons var (map car lst))))
+			(if (validList? vars)
+				vars
+				(error 'let "Variables must be different")))))
 
 (define parse
 	(let ((run 
@@ -86,6 +111,10 @@
 				(pattern-rule
 					`(begin ,(? 'args) . ,(? 'rest))
 					(lambda (args rest) `(seq (,(parse args) ,@(map parse rest)))))
+				;;;;;;;; let-sequences i.e. begin
+				(pattern-rule
+					`(letseq ,(? 'args list?))
+					(lambda (args) (map parse args)))
 				;;;; regular lambda 
 				(pattern-rule
 					`(lambda ,(? 'vars list?) ,(? 'body) . ,(? 'rest))
@@ -98,23 +127,52 @@
 				(pattern-rule 
 					`(lambda args ,(? 'body) . ,(? 'rest))
 					(lambda (body rest) `(lambda-var args ,(parse (beginify (cons body rest)))))) ;notice begin is not memomash, WTF args
-				;;;; define 
+				;;;; define
 				(pattern-rule
 					`(define ,(? 'var&params)  ,(? 'exp))
 					(lambda (var&params exp) 
-					(if (symbol? var&params)
-						 `(define ,(parse var&params) ,(parse exp))
-						 (parse (MIT-define-to-regular-define var&params exp))))
+					(if (pair? var&params)
+						 (parse (MIT-define-to-regular-define var&params exp))
+						 `(def ,(parse var&params) ,(parse exp))))
 				)
-				
-				;;let*
-				;(pattern-rule
-				;	`(let* () ,(? 'expr) . ,(? 'exprs list?))
-				;	(lambda (expr exprs) (parse (beginify (cons expr exprs)))))
-				;(pattern-rule
-				;	`(let* ((,(? 'var var?) ,(? val?)) . ,(? 'rest)) . ,(? 'exprs))
-				;	(lambda (var val rest exprs) (parse `(let ((,var val)) (let* ,rest . ,exprs)))))
-				;; add more rules here
+				;;;;;;set;;;;;;
+				(pattern-rule 
+					`(set! ,(? 'var var?) ,(? 'exp))
+						(lambda (var exp)
+							`(set ,(parse var) ,(parse exp))))
+				;;;; applic
+				(pattern-rule
+					`( ,(? 'func reserved-words?) . ,(? 'rest) )
+					(lambda (func rest)
+						`(applic ,(parse func) ,(map parse rest))
+						))
+				;;;;;;;;;;empty let ;;;;;;;;
+				(pattern-rule
+					`(let ,(? 'vars list? null?) ,(? 'expr) . ,(? 'exprs list?))
+						(lambda (vars expr exprs) 
+							(parse 
+								`((lambda () ,(beginify (cons expr exprs)))
+								,@vars))))
+				;;;;;;;;;;;let ;;;;;;;;;
+				(pattern-rule
+					`(let ((,(? 'var var?) ,(? 'val)) . ,(? 'rest letVariables?)) . ,(? 'exprs))
+					(lambda (var val rest exprs)
+						(let ((vals (cons val (vals-getter rest)))
+								(vars (vars-getter var rest)))
+							(parse
+								`((lambda (,@vars)
+									,@exprs) ,@vals)))))
+				;;;;; empty let* ;;;;;;;;;;;
+				(pattern-rule
+					`(let* ,(? 'vars list? null?) ,(? 'expr) . ,(? 'exprs list?))
+						(lambda (vars expr exprs) 
+							(parse 
+								`((lambda () ,(beginify (cons expr exprs)))
+								,@vars))))
+				;;;;; let * ;;;;;;;
+				(pattern-rule
+					`(let* ((,(? 'var var?) ,(? 'val)) . ,(? 'rest)) . ,(? 'exprs))
+					(lambda (var val rest exprs) (parse `(let ((,var ,val)) (let* ,rest . ,exprs)))))
 				)))
 			(lambda (e)
 				(run e
@@ -122,5 +180,4 @@
 							(error 'parse
 									(format "I can't recognize this: ~s" e)))))))
 
- 
  
