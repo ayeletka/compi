@@ -2,14 +2,17 @@
 
 (display "\n- ---  Our parser: ----\n\n")
 
-(parse '(letrec ()		
-		(loop 2)))
+
+(parse '(cond (a b) (c d) (else y))
+	)
+
+
 
 
 (display "\n- ---  Meirs parser: ----\n\n")
 
 (load "tagparser.so")
 
-
-(parse '(letrec ()		
-		(loop 2)))
+	
+(parse '(cond (a b) (c d) (else y))
+	)

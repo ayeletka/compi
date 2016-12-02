@@ -206,6 +206,37 @@
 								(let* ,rest . ,exprs)))
 							(parse `(let ((,var ,val)) 
 								,@exprs)))))
+
+				;;;;;;;;; and ;;;;;;;
+				(pattern-rule
+					`(and . ,(? 'vals))
+					(lambda (vals) 
+						(cond ((null? vals) (parse #t))
+							((equal? (length vals) 1) (parse (car vals)))
+							((equal? (length vals) 2)
+								(parse `(if ,(car vals) ,(cadr vals) #f)))
+							(else
+								(parse `(if ,(car vals) (and ,@(cdr vals)) #f))))))
+				;;;;;;;;; cond ;;;;;;;
+				(pattern-rule
+					`(cond . ,(? 'vals letVariables?))
+					(lambda (vals) 
+						(cond 
+							((and (equal? (length vals) 2) (equal? (caadr vals) 'else))
+								(parse 
+									`(if ,(caar vals) ,(cadar vals) ,(cadadr vals))
+									))
+							((equal? (length vals) 1) (parse `(if ,(caar vals) ,(cadar vals))))
+							(else 
+								(parse `(if ,(caar vals) ,(cadar vals)
+									(cond ,@(cdr vals))
+									)))
+								)
+							))
+
+				
+			
+
 				)))
 			(lambda (e)
 				(run e
@@ -213,7 +244,3 @@
 							(error 'parse
 									(format "I can't recognize this: ~s" e)))))))
 
- 
-(parse '(letrec ((loop (lambda (a) (+ a 1)))
-					(ayelet a))
-		(loop 2)))
