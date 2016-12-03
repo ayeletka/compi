@@ -3,8 +3,7 @@
 (display "\n- ---  Our parser: ----\n\n")
 
 
-(parse '(cond (a b) (c d) (else y))
-	)
+(parse-2 `(quasiquote (a b c)))
 
 
 
@@ -14,5 +13,4 @@
 (load "tagparser.so")
 
 	
-(parse '(cond (a b) (c d) (else y))
-	)
+(parse `(quasiquote (a b c)))
