@@ -53,11 +53,24 @@
 			 rlst)
 		))
 
+(define flatten
+	(lambda  (lst)
+  		(cond ((null? lst) '())
+        	((pair? lst) (append (flatten (car lst)) (flatten (cdr lst))))
+        		(else (list lst)))))
+
 (define minFinder
 	(lambda (lst)
-		 (cond ((null? (cdr lst)) (car lst))
-          ((< (length (car lst)) (length (minFinder (cdr lst)))) (car lst))
-          (else (minFinder (cdr lst)))) ))
+		 (if (null? (cdr lst)) (car lst)
+		 	(let ((lr (minFinder (cdr lst))))
+		 		(cond 
+		          ((< (length (car lst)) (length lr)) (car lst))
+		          ((= (length (car lst)) (length lr))
+		          	(if (< (length (flatten (car lst))) (length (flatten lr)))
+		          		(car lst)
+		          		(minFinder (cdr lst))))
+		          (else (minFinder (cdr lst)))) ))))
+
 
 (define sortLst
 	(lambda (lst)
@@ -65,24 +78,6 @@
 					(if (null? lst2) (append newLst lst2)
 						(let ((minf (minFinder lst2)))
 						(loop (append newLst (list minf)) (remove minf lst2))
-				))))
-			)
-		(loop (list) lst))
-		)
-	)
-
-(define maxFinder
-	(lambda (lst)
-		 (cond ((null? (cdr lst)) (car lst))
-          ((> (length (car lst)) (length (maxFinder (cdr lst)))) (car lst))
-          (else (maxFinder (cdr lst)))) ))
-
-(define reSortLst
-	(lambda (lst)
-		(letrec ((loop (lambda (newLst lst2)
-					(if (null? lst2) (append newLst lst2)
-						(let ((maxf (maxFinder lst2)))
-						(loop (append newLst (list maxf)) (remove maxf lst2))
 				))))
 			)
 		(loop (list) lst))
@@ -101,7 +96,7 @@
 					(swap oldVar newVar (car lst))
 					(swap oldVar newVar (cdr lst)))))))
 
-;(swap '(a) '(new) '((a) (b) (a)))
+;(swap '(* g0 g1) '(g2) '(+ (* g0 g1) g1 (foo g0) (goo (* g0 g1))))
 
 
 (define swapVars
@@ -121,11 +116,16 @@
 
 (define swapped-body
 	(lambda (vars exp)
-		(let ((newExp exp))
-			(begin (map
-				(lambda (var)
-					(set! newExp (swap (cadr var) (car var) newExp))) vars)
-			newExp)
+		(let* ((newExp exp)
+			 (byswap (letrec 
+			 	((loop
+					(lambda (var rest)
+						(set! newExp (swap (cadr var) (car var) newExp))
+						(if (null? rest) newExp
+							(loop (car rest) (cdr rest))
+							))))
+			 (loop (car vars) (cdr vars)))))
+			byswap
 		))
 	)
 
@@ -136,24 +136,29 @@
 				(srlist (sortLst rlist))
 				(letVars (gensymVars srlist))
 				(swapedVars (swapped letVars))
-				(swapedBody (swapped-body (reSortLst swapedVars) exp)))
+				(swapedBody (swapped-body swapedVars exp)))
 
 		;(display letVars)
-		(display `(let* ,swapedVars ,swapedBody))
+		(display `(let* 
+			,"\n" 
+			,swapedVars 
+			,"\n" 
+			,swapedBody))
 		)))
 
 
 (cse '((b) ))
 
-
+(display "\n")
 (cse '((b) (b)))
+(display "\n")
 
 (cse '(+ (* (- x y) (* x x))
 (* x x)
 (foo (- x y))
 (goo (* (- x y) (* x x)))))
 
-
+(display "\n")
 
 (cse '(f (g x)
 (g (g x))
