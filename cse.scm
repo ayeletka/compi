@@ -48,15 +48,56 @@
 (define gensymVars
 	(lambda (rlst)
 		(map (lambda (var)
-				(list (gensym "#:g") var))
+			(let ((newVar (gensym)))
+				(list newVar var)))
 			 rlst)
 		))
 
+(define minFinder
+	(lambda (lst)
+		 (cond ((null? (cdr lst)) (car lst))
+          ((< (length (car lst)) (length (minFinder (cdr lst)))) (car lst))
+          (else (minFinder (cdr lst)))) ))
+
+(define sortLst
+	(lambda (lst)
+		(letrec ((loop (lambda (newLst lst2)
+					(if (null? lst2) (append newLst lst2)
+						(let ((minf (minFinder lst2)))
+						(loop (append newLst (list minf)) (remove minf lst2))
+				))))
+			)
+		(loop (list) lst))
+		)
+	)
+
+
+(define swap 
+	(lambda (oldVar newVar lst)
+		(cond 
+			((not (list? lst)) lst)
+			((null? lst) lst)
+			((equal? lst oldVar) newVar)
+			(else
+				(cons
+					(swap oldVar newVar (car lst))
+					(swap oldVar newVar (cdr lst)))))))
+
+;(swap '(a) '(new) '((a) (b) (a)))
+
+
+(define swapVars
+	(lambda (exp)
+		(append  (list (car exp)) (swap (cadar exp) (caar exp) (cdr exp)))))
 
 (define cse
 	(lambda (exp)
-		(let ((rlist (recurringList exp)))
-			(gensymVars rlist)
+		(let* (
+				(rlist (recurringList exp))
+				(srlist (sortLst rlist))
+				(letVars (gensymVars srlist)))
+		(display letVars)
+		(swapVars letVars)
 		)))
 
 
