@@ -1,4 +1,4 @@
-
+(load "pattern-matcher.scm")
 
 (define isMember?
 	(lambda (var exp)
@@ -129,17 +129,58 @@
 		))
 	)
 
+
+(define simple-const?
+	(lambda (var)
+		(cond 
+			((null? var) var)
+			((vector? var) var)
+			((equal? var #t) var)
+			((equal? var #f) #t) ;;;check how boolean is received and parse-2d
+			((char? var) var)
+			((number? var) var)
+			((string? var) var)
+			(else #f)
+			)
+		))
+
+(define *void-object* (void))
+
+(define qoute-pattern
+	(let ((run 
+			(compose-patterns
+				(pattern-rule
+					`(quote ,(? 'c))
+					(lambda (c) `(const ,c)))
+				)))
+			(lambda (e)
+				(run e
+						(lambda ()
+							#f)))))
+
+
+(define constEliminator
+	(lambda (lst)
+		(let ((noConstLst (map
+					(lambda (var)
+						(if (and (not (simple-const? var)) (not (qoute-pattern var)) ) var)
+						) lst)))
+			(remove *void-object* noConstLst))
+		))
+
+
+
 (define cse
 	(lambda (exp)
 		(let* (
 				(rlist (recurringList exp))
-				(srlist (sortLst rlist))
+				(lstNoConst (constEliminator rlist))
+				(srlist (sortLst lstNoConst))
 				(letVars (gensymVars srlist))
 				(swapedVars (swapped letVars))
 				(swapedBody (swapped-body swapedVars exp)))
-
-		;(display letVars)
-		(display `(let* 
+		(display 
+			`(let* 
 			,"\n" 
 			,swapedVars 
 			,"\n" 
@@ -164,3 +205,18 @@
 (g (g x))
 (h (g (g x)) (g x))
 ((g x) (g x))))
+
+(display "\n")
+
+(cse '(list '(a b)
+(list '(a b) '(c d))
+(list '(a b) '(c d))))
+
+(display "\n")
+
+(cse '(list (cons 'a 'b)
+(cons 'a 'b)
+(list (cons 'a 'b)
+(cons 'a 'b))
+(list (list (cons 'a 'b)
+(cons 'a 'b)))))

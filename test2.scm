@@ -11,39 +11,40 @@
      (try-thunk))))
 
 (define testVSstaff
-  (lambda (input)
-    (let* ((my-res (try-catch (lambda () (my-parse-func input)) (lambda () "ERROR")))
-          (staff-res (try-catch (lambda () (staff-parse-func input)) (lambda () "ERROR"))))
-      (display (format "~s:" input))
-      (cond ((equal? my-res staff-res)
-        (display (format "\033[1;32m Success! ☺ \033[0m \n")) #t)
-        (else 
-        (display (format "\033[1;31m Failed! ☹\033[0m , Expected: ~s, Actual: ~s \n" staff-res my-res)) #f))
-      )))
-      
+	(lambda (input)
+		(let* ((my-res (try-catch (lambda () (my-parse-func input)) (lambda () "ERROR")))
+		      (staff-res (try-catch (lambda () (staff-parse-func input)) (lambda () (display "\033[1;34m !!Negative Test!! \033[0m ") "ERROR"))))
+			(display (format "~s:" input))
+			;(display my-res)
+			(cond ((equal? my-res staff-res)
+				(display (format "\033[1;32m Success! ☺ \033[0m \n")) #t)
+				(else 
+				(display (format "\033[1;31m Failed! ☹\033[0m , Expected: ~s, Actual: ~s \n" staff-res my-res)) #f))
+			)))
+			
 (define runTests
   (lambda (tests-name lst)
-  (newline)
-  (display tests-name)
-  (display ":")
-  (newline)
-  (display "=============")
-  (newline)
-  (let ((results (map testVSstaff lst)))
-  (newline)
-  (cond ((andmap (lambda (exp) (equal? exp #t)) results)  
-    (display (format "\033[1;32m~s Tests: SUCCESS! ☺ \033[0m\n \n" tests-name)) #t)   
-    (else
-    (display (format "\033[1;31m~s Tests: FAILED! ☹ \033[0m\n \n" tests-name)) #f)))
+	(newline)
+	(display tests-name)
+	(display ":")
+	(newline)
+	(display "=============")
+	(newline)
+	(let ((results (map testVSstaff lst)))
+	(newline)
+	(cond ((andmap (lambda (exp) (equal? exp #t)) results)	
+		(display (format "\033[1;32m~s Tests: SUCCESS! ☺ \033[0m\n \n" tests-name)) #t)		
+		(else
+		(display (format "\033[1;31m~s Tests: FAILED! ☹ \033[0m\n \n" tests-name)) #f)))
 ))
 
 (define runAllTests
   (lambda (lst)
     (let ((results (map (lambda (test) (runTests (car test) (cdr test))) lst)))
-        (cond ((andmap (lambda (exp) (equal? exp #t)) results)    
-    (display "\033[1;32m !!!!!  ☺  ALL TESTS SUCCEEDED  ☺  !!!!\033[0m\n"))
-    (else (display "\033[1;31m #####  ☹  SOME TESTS FAILED  ☹  #####\033[0m\n")))
-    (newline))
+      	(cond ((andmap (lambda (exp) (equal? exp #t)) results)		
+		(display "\033[1;32m !!!!!  ☺  ALL TESTS SUCCEEDED  ☺  !!!!\033[0m\n"))
+		(else (display "\033[1;31m #####  ☹  SOME TESTS FAILED  ☹  #####\033[0m\n")))
+		(newline))
 ))
 
 (define ifTests
@@ -166,11 +167,14 @@
     ;regular-define
     '(define x 5)
     '(define x (lambda (x) x))
+    '(define a b c d)
+    '(define a (b c d))
     
     ;mit-style-define
     '(define (id x) x)
+    '(define (id x) x y)
     '(define (foo x y z) (if x y z))
-    '(define (foo x y . z) (if x y z))
+    '(define (foo x y . z) (if x y z) #t)
     '(define (list . args) args)
 ))
 
@@ -179,6 +183,7 @@
     '(a)
     '(a b c)
     '((a b) (a c) (a d))
+    '((lambda (x y z . e) (e (f x y z123))))
 ))
 
 (define quasiquoteTests
@@ -197,7 +202,13 @@
     '(begin)
     '(begin 1)
     '(begin (or 1 2 3))
-    '(begin (or 1 2) (if 1 2 3))    
+    '(begin (or 1 2) (if 1 2 3))   
+    '(begin (begin a b) a)
+    '(begin (begin a (begin c (begin d e f g))) a (a b c))
+    '(begin (begin a b c) (begin d e f) (begin e f) g)
+    '(begin (begin a c) b (begin d) g (begin e f) (or 1 2 3))
+    '(begin (if (if 1 2 3) (and 2 "a" #f) #t) (begin d e) (lambda args a b c) (begin e f) (or 1 2 3))
+    '(begin a (begin b (begin c (begin d e (begin f g h) "Akuna Matata"))))
 ))
 
 (define setTests
@@ -208,60 +219,62 @@
 
 (define parserTests
   '(4 
-  -3 
-  #t 
-  #f 
-  #\a 
-  #\A 
-  #\space 
-  #\tab
-  '3 
-  3 
-  '"abc" 
-  "abc" 
-  '#\a 
-  #\a 
-  ''a 
-  ''''''a
-  'abc 
-  abc 
-  '#(a b c) 
-  '#() 
-  '#(() 
-  (#()))
-  (a b c)
-  (if (zero? n) 1 (* n (fact (- n 1))))
-  (cond ((foo? x) foo-x)
-    ((goo? x) goo-x)
-    ((boo? x) boo-x)
-    (else poo-x))
-  (begin e1)
-  (begin e1 e2 e3)
-  (lambda a b c)
-  (lambda a b)
-  (lambda (a b . c) (list a b c))
-  (lambda (a b c) (list a b c))
-  (let ((a 1) (b 2) (c 3))
-    (+ a b c))
-  (let* ((a 1)
-       (a (+ a 1))
-       (a (+ a a))
-       (a (* a a)))
-    (set-car! x a)
-    a)
-  (define a 3)
-  (define a (lambda (x) x))
-  (define (fact n) (if (zero? n) 1 (* n (fact (- n 1)))))
-  (define (foo a b . c) (list a b c))
-  (define (foo . a) (list a))
-  (define (foo a b c) (list a b c))
+	-3 
+	#t 
+	#f 
+	#\a 
+	#\A 
+	#\space 
+	#\tab
+	'3 
+	3 
+	'"abc" 
+	"abc" 
+	'#\a 
+	#\a 
+	''a 
+	''''''a
+	'abc 
+	abc 
+	'#(a b c) 
+	'#() 
+	'#(() 
+	(#()))
+	(a b c)
+	(if (zero? n) 1 (* n (fact (- n 1))))
+	(cond ((foo? x) foo-x)
+		((goo? x) goo-x)
+		((boo? x) boo-x)
+		(else poo-x))
+	(begin e1)
+	(begin e1 e2 e3)
+	(lambda a b c)
+	(lambda a b)
+	(lambda (a b . c) (list a b c))
+	(lambda (a b c) (list a b c))
+	(let ((a 1) (b 2) (c 3))
+	  (+ a b c))
+	(let* ((a 1)
+		   (a (+ a 1))
+		   (a (+ a a))
+		   (a (* a a)))
+	  (set-car! x a)
+	  a)
+	(define a 3)
+	(define a (lambda (x) x))
+	(define (fact n) (if (zero? n) 1 (* n (fact (- n 1)))))
+	(define (foo a b . c) (list a b c))
+	(define (foo . a) (list a))
+	(define (foo a b c) (list a b c))
 ))
 
 (define negativeTests
   (list
+    '(if)
     '(cond)  
     '(lambda (a b c a) (f x))
     '(let ((AbC 5) (Sym123 "abc") (AbC 12)) (if (= AbC 12) #t (begin (display "WOW") #f)))
+    '(letrec ((AbC (lambda (x) (AbC x))) (Sym123 "abc") (AbC 12)) (if (= AbC 12) #t (begin (display "WOW") #f)))
 ))
 
 (runAllTests

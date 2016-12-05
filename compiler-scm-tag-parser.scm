@@ -394,3 +394,8 @@
 
 
 (validList? '(a c . a))
+
+
+(cse '(list '(a b)
+(list '(a b) '(c d))
+(list '(a b) '(c d))))
