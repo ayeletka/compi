@@ -253,11 +253,11 @@
 					(lambda (var rest) `(lambda-var ,var ,(parse-2 (beginify rest))))) ;notice begin is not memomash, WTF args
 				;;;; define
 				(pattern-rule
-					`(define ,(? 'var&params)  ,(? 'exp))
-					(lambda (var&params exp) 
+					`(define ,(? 'var&params)  ,(? 'exp) . ,(? 'rest))
+					(lambda (var&params exp rest) 
 					(if (pair? var&params)
-						 (parse-2 (MIT-define-to-regular-define var&params exp))
-						 `(def ,(parse-2 var&params) ,(parse-2 exp))))
+						 (parse-2 (MIT-define-to-regular-define var&params (beginify (cons exp rest))))
+				 		`(def ,(parse-2 var&params) ,(parse-2 (beginify (cons exp rest))))))
 				)
 				;;;;;;set;;;;;;
 				(pattern-rule 
