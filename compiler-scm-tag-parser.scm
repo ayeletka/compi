@@ -10,10 +10,10 @@
 (define simple-const?
 	(lambda (var)
 		(cond 
+			((not var) var) ;;;check how boolean is received and parsed
 			((null? var) var)
 			((vector? var) var)
 			((equal? var #t) var)
-			((equal? var #f) var) ;;;check how boolean is received and parsed
 			((char? var) var)
 			((number? var) var)
 			((string? var) var)
