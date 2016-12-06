@@ -53,6 +53,58 @@
 			#f
 			)))
 
+
+;'(begin a (begin c (begin d e f g))) a (a b c)
+
+(define getRidOfBegin
+	(lambda (lst)
+		(if (equal? (car lst) 'begin)
+			(map parse-2 (cdr lst))
+		 	(list (parse-2 lst)))
+		)
+	)
+
+
+
+(define simpleList?
+  (lambda (expr)
+    (if 
+    	(not (list? expr))
+        #f
+        (if (equal? (length expr) 1)
+            #f
+    		(andmap (lambda (x)
+              			(not (list? x)))
+          			expr)
+  ))))
+
+;(isSimpleList? '((begin a (begin c (begin d e f g))) a (a b c)))
+;(simpleList? '( (begin d e f g) a (a b c)))
+
+
+
+(define expWithOutBegin
+	(lambda (lst)
+		(let ((lst2 lst))
+			(begin (newline )(display lst2) (newline)
+		(cond
+		 	((not (list? lst2)) (list lst2))
+			((equal? (length lst2) 1) (set! lst2 (car lst2)))
+			((simpleList? lst2) (getRidOfBegin lst2))
+			(else 
+				(append
+				(expWithOutBegin (car lst2)) ;; ((var d) (var e) (var f) (var g)) 
+				(expWithOutBegin (cdr lst2)))) ;; (a (a b c)) 
+			))))
+)
+
+
+
+(define al  '((begin d e f g) a (a b c)))
+; (append ((var d) (var e) (var f) (var g)) (append (a) (applic (var a) ((var b) (var c)))   ))
+
+
+
 ;;;;;;macro helpres;;;;;;;
 (define MIT-define-to-regular-define
 	(lambda (var&params exp)
@@ -234,7 +286,8 @@
 					(lambda (rest) 
 						(cond ((null? rest) `(const ,*void-object*))
 								((equal? (length rest) 1) (parse-2 (car rest)))
-								(else `(seq ,(map parse-2 rest))))))
+								(else (let ((fixedRest  rest))
+											`(seq ,(map parse-2 fixedRest)))))))
 				;;;;;;;; let-sequences i.e. begin
 				(pattern-rule
 					`(letseq ,(? 'args list?))
@@ -393,9 +446,12 @@
 									(format "I can't recognize this: ~s" e)))))))
 
 
-(validList? '(a c . a))
 
 
-(cse '(list '(a b)
-(list '(a b) '(c d))
-(list '(a b) '(c d))))
+
+
+(expWithOutBegin '( (begin d e f g) a (a b c) b))
+
+
+
+
