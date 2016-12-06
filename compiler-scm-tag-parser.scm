@@ -82,22 +82,23 @@
 ;(simpleList? '( (begin d e f g) a (a b c)))
 
 
-
 (define expWithOutBegin
 	(lambda (lst)
-		(let ((lst2 lst))
-			(begin (newline )(display lst2) (newline)
+   (display lst)
+   (newline)
 		(cond
-		 	((not (list? lst2)) (list lst2))
-			((equal? (length lst2) 1) (set! lst2 (car lst2)))
-			((simpleList? lst2) (getRidOfBegin lst2))
+    		((null? lst) '())
+		 	((not (list? lst)) (list (parse-2 lst)))
+    			
+			((simpleList? lst) (getRidOfBegin lst))
 			(else 
 				(append
-				(expWithOutBegin (car lst2)) ;; ((var d) (var e) (var f) (var g)) 
-				(expWithOutBegin (cdr lst2)))) ;; (a (a b c)) 
-			))))
-)
-
+				(expWithOutBegin (car lst)) ;; ((var d) (var e) (var f) (var g)) 
+    			(if (equal? (length (cdr lst)) 1)
+           	
+					(expWithOutBegin (car (cdr lst))) ;; (a (a b c)) 
+    				(expWithOutBegin (cdr lst))))) ;; (a (a b c)) 
+			)))
 
 
 (define al  '((begin d e f g) a (a b c)))
