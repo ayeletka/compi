@@ -66,6 +66,7 @@
 
 
 
+
 (define simpleList?
   (lambda (expr)
     (if 
@@ -78,8 +79,6 @@
           			expr)
   ))))
 
-;(isSimpleList? '((begin a (begin c (begin d e f g))) a (a b c)))
-;(simpleList? '( (begin d e f g) a (a b c)))
 
 
 (define expWithOutBegin
@@ -100,11 +99,52 @@
     				(expWithOutBegin (cdr lst))))) ;; (a (a b c)) 
 			)))
 
+(define b '(seq ((seq ((var a) (var b) (var c))) (seq ((var d) (var e) (var f))) (seq ((var e) (var f))) (var g))) )  
+(define c '((var a) (seq ((var b) (seq ((var c) (seq ((var d) (var e) (seq ((var f) (var g) (var h))) (const "Akuna Matata")))))))))                                                             
+(define d ' ((seq ((var a) (seq ((var c) (seq ((var d) (var e) (var f) (var g))))))) (var a) (applic (var a) ((var b) (var c)))))
 
-(define al  '((begin d e f g) a (a b c)))
-; (append ((var d) (var e) (var f) (var g)) (append (a) (applic (var a) ((var b) (var c)))   ))
+(define expWithOutSeq
+	(lambda (lst)
+   (display lst)
+   (newline)
+		(cond
+    		((null? lst) '())
+		 	((not (list? lst))  (list lst))
+			((simpleList? lst)  lst)
+			((equal? (length lst) 1) (car lst))
+			((equal? (car lst) 'seq ) (expWithOutSeq (cadr lst)))
+			(else 
+				(append
+					(let ((carExp (expWithOutSeq (car lst))
+							))
+				(if (equal? (length carExp) 1)
+					(car carExp) 
+					carExp)) 
+    			(if (equal? (length (cdr lst)) 1)
+           	
+					(expWithOutSeq (car (cdr lst)))  
+    				(expWithOutSeq (cdr lst))))) 
+			)))
 
 
+
+(define swapListItem
+  (lambda (exp old new)
+    (if (list? exp)
+        (if (null? exp)
+            '()
+            (append (list (swapListItem (car exp) old new))
+                    (swapListItem (cdr exp) old new)
+                    )
+            )
+        (if (equal? exp old)
+            new
+            exp)
+          )))
+
+
+
+(define exp '(begin a b c (begin a)))
 
 ;;;;;;macro helpres;;;;;;;
 (define MIT-define-to-regular-define
@@ -282,13 +322,41 @@
 							((equal? (length rest) 1) (parse-2 (car rest)))
 							(else `(or ,(map parse-2 rest))))))
 				;;;;;;;; sequences i.e. begin
-				(pattern-rule
-					`(begin . ,(? 'rest))
-					(lambda (rest) 
-						(cond ((null? rest) `(const ,*void-object*))
-								((equal? (length rest) 1) (parse-2 (car rest)))
-								(else (let ((fixedRest  rest))
-											`(seq ,(map parse-2 fixedRest)))))))
+
+				  (pattern-rule
+				    `(begin .,(? 'rest null?))
+				    (lambda (rest)
+				     	 `(const ,*void-object*)))
+
+
+				 (pattern-rule
+				    `(innerBegin ,(? 'sexpr) . ,(? 'otherSexpr))
+				    (lambda (sexpr otherSexpr)
+				      (if (null? otherSexpr)
+				      (parse-2 sexpr)
+				        `( ,(parse-2 sexpr) ,@(map parse-2 otherSexpr))
+				      )))
+
+
+				 (pattern-rule
+				    `(begin ,(? 'sexpr) . ,(? 'otherSexpr))
+				    (lambda (sexpr otherSexpr)
+				    	(cond   ((null? sexpr)  `(const ,*void-object*))
+				      			((null? otherSexpr) `,(parse-2 sexpr))
+				        		(else `(seq (,(parse-2 (swapListItem sexpr 'begin 'innerBegin)) 
+				                 		,@(map parse-2 (swapListItem otherSexpr 'begin 'innerBegin))))))
+				        
+				    
+				      ))
+				  
+
+			;	(pattern-rule
+			;		`(begin . ,(? 'rest))
+			;		(lambda (rest) 
+			;			(cond ((null? rest) `(const ,*void-object*))
+			;					((equal? (length rest) 1) (parse-2 (car rest)))
+			;					(else (let ((fixedRest  rest))
+			;								`(seq ,(map parse-2 fixedRest)))))))
 				;;;;;;;; let-sequences i.e. begin
 				(pattern-rule
 					`(letseq ,(? 'args list?))
@@ -450,8 +518,6 @@
 
 
 
-
-(expWithOutBegin '( (begin d e f g) a (a b c) b))
 
 
 

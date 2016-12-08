@@ -170,7 +170,7 @@
 
 
 
-(define cse
+(define cse1
 	(lambda (exp)
 		(let* (
 				(rlist (recurringList exp))
@@ -187,36 +187,23 @@
 			,swapedBody))
 		)))
 
+(define cse2
+	(lambda (exp)
+		(let* (
+				(rlist (recurringList exp)))
+				(if (null? rlist)
+					 exp
+				(let* (
+						(lstNoConst (constEliminator rlist))
+						(srlist (sortLst lstNoConst))
+						(letVars (gensymVars srlist))
+						(swapedVars (swapped letVars))
+						(swapedBody (swapped-body swapedVars exp)))
+				(display 
+					`(let* 
+					,"\n" 
+					,swapedVars 
+					,"\n" 
+					,swapedBody)))))
+		))
 
-(cse '((b) ))
-
-(display "\n")
-(cse '((b) (b)))
-(display "\n")
-
-(cse '(+ (* (- x y) (* x x))
-(* x x)
-(foo (- x y))
-(goo (* (- x y) (* x x)))))
-
-(display "\n")
-
-(cse '(f (g x)
-(g (g x))
-(h (g (g x)) (g x))
-((g x) (g x))))
-
-(display "\n")
-
-(cse '(list '(a b)
-(list '(a b) '(c d))
-(list '(a b) '(c d))))
-
-(display "\n")
-
-(cse '(list (cons 'a 'b)
-(cons 'a 'b)
-(list (cons 'a 'b)
-(cons 'a 'b))
-(list (list (cons 'a 'b)
-(cons 'a 'b)))))
