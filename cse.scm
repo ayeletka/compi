@@ -199,11 +199,18 @@
 						(letVars (gensymVars srlist))
 						(swapedVars (swapped letVars))
 						(swapedBody (swapped-body swapedVars exp)))
+				(if (equal? (length rlist) 1) 
+					(display 
+					`(let 
+					,"\n" 
+					,swapedVars 
+					,"\n" 
+					,swapedBody))
 				(display 
 					`(let* 
 					,"\n" 
 					,swapedVars 
 					,"\n" 
-					,swapedBody)))))
+					,swapedBody))))))
 		))
 
