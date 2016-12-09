@@ -7,9 +7,10 @@
 
 (display "\n- ---  Our cse: ----\n\n")
 
+
 (cse2 '((b)))
 (newline)
-(cse2 '((b b) (b)))
+(cse2 '((b) (a)))
 (newline)
 (cse2 '((b) (b)))
 (newline)
@@ -43,10 +44,11 @@
 
 (load "cse.so")
 
+
 	
 (cse '((b)))
 (newline)
-(cse '((b b) (b)))
+(cse2 '((b) (a)))
 (newline)
 (cse '((b) (b)))
 (newline)
@@ -72,3 +74,4 @@
 (cons 'a 'b)))))
 (newline)
 (cse '(list '(a b) (a b) (a b)))
+(newline)

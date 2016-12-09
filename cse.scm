@@ -48,7 +48,7 @@
 (define gensymVars
 	(lambda (rlst)
 		(map (lambda (var)
-			(let ((newVar (gensym)))
+			(let ((newVar (string->symbol (symbol->string (gensym)))))
 				(list newVar var)))
 			 rlst)
 		))
@@ -199,18 +199,9 @@
 						(letVars (gensymVars srlist))
 						(swapedVars (swapped letVars))
 						(swapedBody (swapped-body swapedVars exp)))
-				(if (equal? (length rlist) 1) 
-					(display 
-					`(let 
-					,"\n" 
-					,swapedVars 
-					,"\n" 
-					,swapedBody))
-				(display 
-					`(let* 
-					,"\n" 
-					,swapedVars 
-					,"\n" 
-					,swapedBody))))))
+				(if (equal? (length swapedVars) 1) 
+					`(let  ,swapedVars  ,swapedBody)
+				 
+					`(let* ,swapedVars ,swapedBody)))))
 		))
 
