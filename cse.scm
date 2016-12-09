@@ -84,6 +84,19 @@
 		)
 	)
 
+(define simple-const?
+	(lambda (var)
+		(cond 
+			((null? var) var)
+			((vector? var) var)
+			((equal? var #t) var)
+			((equal? var #f) #t) ;;;check how boolean is received and parse-2d
+			((char? var) var)
+			((number? var) var)
+			((string? var) var)
+			(else #f)
+			)
+		))
 
 (define swap 
 	(lambda (oldVar newVar lst)
@@ -96,7 +109,6 @@
 					(swap oldVar newVar (car lst))
 					(swap oldVar newVar (cdr lst)))))))
 
-;(swap '(* g0 g1) '(g2) '(+ (* g0 g1) g1 (foo g0) (goo (* g0 g1))))
 
 
 (define swapVars
@@ -130,19 +142,7 @@
 	)
 
 
-(define simple-const?
-	(lambda (var)
-		(cond 
-			((null? var) var)
-			((vector? var) var)
-			((equal? var #t) var)
-			((equal? var #f) #t) ;;;check how boolean is received and parse-2d
-			((char? var) var)
-			((number? var) var)
-			((string? var) var)
-			(else #f)
-			)
-		))
+
 
 (define *void-object* (void))
 
@@ -177,7 +177,7 @@
 				(lstNoConst (constEliminator rlist))
 				(srlist (sortLst lstNoConst))
 				(letVars (gensymVars srlist))
-				(swapedVars (swapped letVars))
+				(swapedVars  (swapped  letVars))
 				(swapedBody (swapped-body swapedVars exp)))
 		(display 
 			`(let* 

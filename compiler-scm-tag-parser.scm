@@ -1,5 +1,8 @@
 (load "pattern-matcher.scm")
 ;;;;;;;; tag-parse-2r;;;;;;;
+
+
+
 (define beginify
 	(lambda (s)
 		(cond
@@ -13,7 +16,7 @@
 			((null? var) var)
 			((vector? var) var)
 			((equal? var #t) var)
-			((equal? var #f) #t) ;;;check how boolean is received and parse-2d
+			((equal? var #f) #t) 
 			((char? var) var)
 			((number? var) var)
 			((string? var) var)
@@ -54,97 +57,19 @@
 			)))
 
 
-;'(begin a (begin c (begin d e f g))) a (a b c)
-
-(define getRidOfBegin
-	(lambda (lst)
-		(if (equal? (car lst) 'begin)
-			(map parse-2 (cdr lst))
-		 	(list (parse-2 lst)))
-		)
-	)
 
 
-
-
-(define simpleList?
-  (lambda (expr)
-    (if 
-    	(not (list? expr))
-        #f
-        (if (equal? (length expr) 1)
-            #f
-    		(andmap (lambda (x)
-              			(not (list? x)))
-          			expr)
-  ))))
-
-
-
-(define expWithOutBegin
-	(lambda (lst)
-   (display lst)
-   (newline)
-		(cond
-    		((null? lst) '())
-		 	((not (list? lst)) (list (parse-2 lst)))
-    			
-			((simpleList? lst) (getRidOfBegin lst))
-			(else 
-				(append
-				(expWithOutBegin (car lst)) ;; ((var d) (var e) (var f) (var g)) 
-    			(if (equal? (length (cdr lst)) 1)
-           	
-					(expWithOutBegin (car (cdr lst))) ;; (a (a b c)) 
-    				(expWithOutBegin (cdr lst))))) ;; (a (a b c)) 
-			)))
-
-(define b '(seq ((seq ((var a) (var b) (var c))) (seq ((var d) (var e) (var f))) (seq ((var e) (var f))) (var g))) )  
-(define c '((var a) (seq ((var b) (seq ((var c) (seq ((var d) (var e) (seq ((var f) (var g) (var h))) (const "Akuna Matata")))))))))                                                             
-(define d ' ((seq ((var a) (seq ((var c) (seq ((var d) (var e) (var f) (var g))))))) (var a) (applic (var a) ((var b) (var c)))))
 
 (define expWithOutSeq
-	(lambda (lst)
-   (display lst)
-   (newline)
-		(cond
-    		((null? lst) '())
-		 	((not (list? lst))  (list lst))
-			((simpleList? lst)  lst)
-			((equal? (length lst) 1) (car lst))
-			((equal? (car lst) 'seq ) (expWithOutSeq (cadr lst)))
-			(else 
-				(append
-					(let ((carExp (expWithOutSeq (car lst))
-							))
-				(if (equal? (length carExp) 1)
-					(car carExp) 
-					carExp)) 
-    			(if (equal? (length (cdr lst)) 1)
-           	
-					(expWithOutSeq (car (cdr lst)))  
-    				(expWithOutSeq (cdr lst))))) 
-			)))
+	(lambda (exp)
+		(if (null? exp)
+			(list)
+			(if (and (list? (car exp)) (equal? (car (car exp)) 'seq))
+				`(,@(car (cdr(car exp))) ,@(expWithOutSeq (cdr exp)))
+				`(,(car exp) ,@(expWithOutSeq (cdr exp))))
+		)))
 
 
-
-(define swapListItem
-  (lambda (exp old new)
-    (if (list? exp)
-        (if (null? exp)
-            '()
-            (append (list (swapListItem (car exp) old new))
-                    (swapListItem (cdr exp) old new)
-                    )
-            )
-        (if (equal? exp old)
-            new
-            exp)
-          )))
-
-
-
-(define exp '(begin a b c (begin a)))
 
 ;;;;;;macro helpres;;;;;;;
 (define MIT-define-to-regular-define
@@ -178,8 +103,7 @@
 
 
 
-			
-	
+		
 
 
 (define vars-getter
@@ -290,6 +214,8 @@
       (optimize-qq-expansion
        (expand-qq e)))))
 
+
+
 (define parse-2
 	(let ((run 
 			(compose-patterns
@@ -322,41 +248,13 @@
 							((equal? (length rest) 1) (parse-2 (car rest)))
 							(else `(or ,(map parse-2 rest))))))
 				;;;;;;;; sequences i.e. begin
-
-				  (pattern-rule
-				    `(begin .,(? 'rest null?))
-				    (lambda (rest)
-				     	 `(const ,*void-object*)))
-
-
-				 (pattern-rule
-				    `(innerBegin ,(? 'sexpr) . ,(? 'otherSexpr))
-				    (lambda (sexpr otherSexpr)
-				      (if (null? otherSexpr)
-				      (parse-2 sexpr)
-				        `( ,(parse-2 sexpr) ,@(map parse-2 otherSexpr))
-				      )))
-
-
-				 (pattern-rule
-				    `(begin ,(? 'sexpr) . ,(? 'otherSexpr))
-				    (lambda (sexpr otherSexpr)
-				    	(cond   ((null? sexpr)  `(const ,*void-object*))
-				      			((null? otherSexpr) `,(parse-2 sexpr))
-				        		(else `(seq (,(parse-2 (swapListItem sexpr 'begin 'innerBegin)) 
-				                 		,@(map parse-2 (swapListItem otherSexpr 'begin 'innerBegin))))))
-				        
-				    
-				      ))
-				  
-
-			;	(pattern-rule
-			;		`(begin . ,(? 'rest))
-			;		(lambda (rest) 
-			;			(cond ((null? rest) `(const ,*void-object*))
-			;					((equal? (length rest) 1) (parse-2 (car rest)))
-			;					(else (let ((fixedRest  rest))
-			;								`(seq ,(map parse-2 fixedRest)))))))
+				(pattern-rule
+					`(begin . ,(? 'rest))
+					(lambda (rest) 
+						(cond ((null? rest) `(const ,*void-object*))
+								((equal? (length rest) 1) (parse-2 (car rest)))
+								(else (let ((fixedRest  rest))
+											`(seq ,(expWithOutSeq (map parse-2 fixedRest))))))))
 				;;;;;;;; let-sequences i.e. begin
 				(pattern-rule
 					`(letseq ,(? 'args list?))
