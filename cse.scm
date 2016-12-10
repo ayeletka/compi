@@ -102,6 +102,7 @@
 	(lambda (oldVar newVar lst)
 		(cond 
 			((not (list? lst)) lst)
+			((or (simple-const? lst) (qoute-pattern lst)) lst )
 			((null? lst) lst)
 			((equal? lst oldVar) newVar)
 			(else
