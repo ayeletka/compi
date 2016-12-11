@@ -20,8 +20,7 @@
 		(begin (loop exp)
 		(>= counter2 2)))))
 
-
-(define recurringList
+(define recurringList2
 	(lambda (exp)
 		(letrec ((rlist (list))
 			(loop (lambda (exp2 rest)
@@ -42,8 +41,44 @@
 							(if (null? newRest) rlist (loop newRest (list newRest rest)))))
 					rlist))))
 			(loop exp exp))))
+(define const?
+  (lambda (x)
+   
+    (if (list? x)
+        (if (> (length x) 1)
+            (if (equal? (car x) 'quote)
+              #t
+              #f)
+            #f)
+          #t)
+    ))
 
+(define recurringList
+	(lambda (exp)
+		(letrec ((rlist (list))
+			(loop (lambda (exp2 rest)
+				(if (list? exp2)
+					(let ((var (car exp2))
+						(newRest (cdr exp2)))
+					(if (not (const? var))
+							(if (and (isMember? var (list newRest rest)) (not (member var rlist)))
+									(begin (set! rlist (append rlist (list var)))
+									;(loop (car var) newRest)
+									;(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
+									(if (null? newRest) rlist (loop newRest newRest))
+									)
+								(begin
+								(loop var newRest)
+								(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
+								(if (null? newRest) rlist (loop newRest newRest))))
+							(if (null? newRest) rlist (loop newRest (if (equal? (list var newRest) rest) newRest (list newRest rest)) ))))
+					rlist))))
+			(loop exp exp))))
 
+(cddr  '(foo (a b b b b b b)))
+(cadr  '(foo (a b b b b b b)))
+(recurringList '(foo (a b b b b b b)))
+(isMember? (cadr  '(foo (a b b b b b b))) (cdr  '(foo (a b b b b b b))) )
 
 (define gensymVars
 	(lambda (rlst)
@@ -84,6 +119,10 @@
 		)
 	)
 
+
+
+
+
 (define simple-const?
 	(lambda (var)
 		(cond 
@@ -98,11 +137,13 @@
 			)
 		))
 
+(symbol? '(a))
+
 (define swap 
 	(lambda (oldVar newVar lst)
 		(cond 
 			((not (list? lst)) lst)
-			((or (simple-const? lst) (qoute-pattern lst)) lst )
+			((const? lst) lst)
 			((null? lst) lst)
 			((equal? lst oldVar) newVar)
 			(else
@@ -164,7 +205,7 @@
 	(lambda (lst)
 		(let ((noConstLst (map
 					(lambda (var)
-						(if (and (not (simple-const? var)) (not (qoute-pattern var)) ) var)
+						(if (not (const? var)) var)
 						) lst)))
 			(remove *void-object* noConstLst))
 		))
@@ -172,7 +213,7 @@
 
 
 
-(define cse
+(define cse-2
 	(lambda (exp)
 		(let* (
 				(rlist (recurringList exp)))
@@ -190,3 +231,10 @@
 					`(let* ,swapedVars ,swapedBody)))))
 		))
 
+
+ (recurringList '('(a b c d e) '(a b c d e) '(a b c d e)))
+;(qoute-pattern '(quote (a b c)))
+(const? (cadr '( '(a b c) '(a b c))))
+(cse-2  '(foo (a b b b b b b)))
+
+;(cse-2 '(list '(a b) (list '(a b) '(c d)) (list '(a b) '(c d))))
