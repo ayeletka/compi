@@ -87,7 +87,7 @@
       '(g (f '('(1 2 3 4 5 6 7 8 9 0) '(a b c d e)) (list f g h) '('(1 2 3 4 5 6 7 8 9 0) '(a b c d e))) (list f g h))
       '(list '(a b) (list '(a b) '(c d)) (list '(a b) '(c d)))
      ; '(f (+ x 1) (f x) (g x) (lambda (x) (f x)) (+ x 1))
-     ; '(begin '(a b) '(a b))       
+      '(begin '(a b) '(a b))       
 ))
 
 (define otherTests
@@ -105,7 +105,7 @@
     '(begin (define goo (a (b b) (b c) (b b) (b c) (b b) (b c))) (a b))
    ; '(a (f (+ g h) 1 (g (+ g h) (+ g h)) 3 (g (+ g h) (+ g h)) (+ g h)))
     ;'(f '('(+ x 1)) (f x) (g x) (lambda (x) (f x)) '(+ x 1))
-    ;'(begin '(a b) '(a b))     
+    '(begin '(a b) '(a b))     
     '(+ (+ (+ x 2) 1) (+ (+ x 2) 1) (+ (+ x 2) 1) (+ (+ x 2) 1)) 
     '(let ((a (+ x 1)) (b (+ x 1)))
       (let ((c (+ x 1)) (d (+ x 1)))

@@ -70,7 +70,7 @@
 												;(loop var newRest) 
 												(loop (car var) newRest)
 												(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
-												(if (null? newRest) rlist (loop newRest newRest))
+												(if (null? newRest) rlist (loop newRest rest))
 											)))))
 				rlist))))
 			(loop exp exp))))
