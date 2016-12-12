@@ -1,6 +1,6 @@
 (load "pattern-matcher.scm")
 
-(define isMember?
+(define isMember2?
 	(lambda (var exp)
 		(letrec 
 			((counter2 0)
@@ -20,27 +20,31 @@
 		(begin (loop exp)
 		(>= counter2 2)))))
 
-(define recurringList2
-	(lambda (exp)
-		(letrec ((rlist (list))
-			(loop (lambda (exp2 rest)
-				(if (list? exp2)
-					(let ((var (car exp2))
-						(newRest (cdr exp2)))
-					(if (list? var)
-							(if (and (isMember? var (list newRest rest)) (not (member var rlist)))
-									(begin (set! rlist (append rlist (list var)))
-									(loop (car var) newRest)
-									(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
-									(if (null? newRest) rlist (loop newRest newRest))
-									)
-								(begin
-								(loop var newRest)
-								(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
-								(if (null? newRest) rlist (loop newRest newRest))))
-							(if (null? newRest) rlist (loop newRest (list newRest rest)))))
-					rlist))))
-			(loop exp exp))))
+(define isMember?
+	(lambda (var exp)
+		(letrec 
+			((counter2 0)
+			(loop (lambda (exp2)
+				(if (or (not (list? exp2)) (null? exp2)) counter2
+					(let ((varCar (car exp2))
+						 (rest (cdr exp2)))
+						(cond 
+							((or (not (list? varCar)) (null? varCar)) (loop rest))
+							(else 
+								(if (equal? var varCar) 
+									(begin 
+										(set! counter2 (+ counter2 1))
+										(loop rest))
+									(begin 
+										(loop varCar)
+										(loop rest))
+									))))))))
+		(begin (loop exp)
+		(>= counter2 2)))))
+
+
+
+
 (define const?
   (lambda (x)
    
@@ -57,30 +61,26 @@
 	(lambda (exp)
 		(letrec ((rlist (list))
 			(loop (lambda (exp2 rest)
-				(if (and (list? exp2) (not (null? exp2)) (not (null? rest)))
+				(if (and (list? exp2) (not (null? exp2)) (not (const? exp2)))
 					(let ((var (car exp2))
 						(newRest (cdr exp2)))
 
-					(cond 
-						((const? var)  (if (null? newRest) rlist (loop newRest  rest))) 
-						((list? var)  (if (and (isMember? var (list newRest rest)) (not (member var rlist)))
+			
+						(if (and (list? var) (not (null? var)) (not (const? var))) 
+							 (if (and (isMember? var  rest) (not (member var rlist)))
 											(begin (set! rlist (append rlist (list var)))
-													(if (null? newRest) rlist (loop newRest rest)))
-											(begin
-												;(loop var newRest) 
-												(loop (car var) newRest)
-												(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
-												(if (null? newRest) rlist (loop newRest rest))
-											)))))
+													(loop newRest rest))
+											(if (not (member var rlist)) 
+												(begin
+												(loop var rest) 
+												(loop newRest rest))
+												(loop newRest rest))
+											)
+
+							(loop newRest rest)))
 				rlist))))
 			(loop exp exp))))
 
-	
-(null? (list))
-(cddr  '(foo (a b b b b b b)))
-(cadr  '(foo (a b b b b b b)))
-(recurringList '(foo (a b b b b b b)))
-(isMember? (cadr  '(foo (a b b b b b b))) (cdr  '(foo (a b b b b b b))) )
 
 (define gensymVars
 	(lambda (rlst)
@@ -139,7 +139,6 @@
 			)
 		))
 
-(symbol? '(a))
 
 (define swap 
 	(lambda (oldVar newVar lst)
@@ -233,10 +232,5 @@
 					`(let* ,swapedVars ,swapedBody)))))
 		))
 
-
- (recurringList '('(a b c d e) '(a b c d e) '(a b c d e)))
-;(qoute-pattern '(quote (a b c)))
-(const? (cadr '( '(a b c) '(a b c))))
-(cse-2  '(foo (a b b b b b b)))
 
 ;(cse-2 '(list '(a b) (list '(a b) '(c d)) (list '(a b) '(c d))))
