@@ -45,7 +45,7 @@
 
 
 
-(define const?
+(define const2?
   (lambda (x)
    
     (if (list? x)
@@ -56,6 +56,15 @@
             #f)
           #t)
     ))
+
+(define const?
+  (lambda (exp)
+    (cond ((not (list? exp)) #t)
+          ((and (list? exp) (not (> (length exp) 1))) #f)
+            ((and (list? exp) (> (length exp) 1) (not (equal? (car exp) 'quote))) #f)
+             (else #t))))
+              
+
 
 (define recurringList
 	(lambda (exp)
