@@ -6,7 +6,7 @@
 
 
 (display "\n- ---  Our cse: ----\n\n")
-
+(cse-2 '((+ 1 (- 2 3) (- 2 3)) (+ 1 (- 2 3)  (- 2 3)) ))
 (cse-2 '((b)))
 (newline)
 (cse-2 '((b) (a)))
@@ -42,6 +42,7 @@
 (display "\n- ---  Meirs cse: ----\n\n")
 
 (load "cse.so")
+(cse '((+ 1 (- 2 3) (- 2 3)) (+ 1 (- 2 3)  (- 2 3)) ))
 
 (cse '((b)))
 (newline)

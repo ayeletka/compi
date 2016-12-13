@@ -1,24 +1,6 @@
-(load "pattern-matcher.scm")
 
-(define isMember2?
-	(lambda (var exp)
-		(letrec 
-			((counter2 0)
-			(loop (lambda (exp2)
-			(cond 
-				((or (not (list? exp2)) (null? exp2)) counter2)
-				(else 
-					(if (equal? var exp2) 
-						(begin 
-							(set! counter2 (+ counter2 1))
-							(loop (car exp2) )
-							(loop (cdr exp2) ) )
-						(begin 
-							(loop (car exp2))
-							(loop (cdr exp2)))
-						))))))
-		(begin (loop exp)
-		(>= counter2 2)))))
+
+
 
 (define isMember?
 	(lambda (var exp)
@@ -45,17 +27,6 @@
 
 
 
-(define const2?
-  (lambda (x)
-   
-    (if (list? x)
-        (if (> (length x) 1)
-            (if (equal? (car x) 'quote)
-              #t
-              #f)
-            #f)
-          #t)
-    ))
 
 (define const?
   (lambda (exp)
@@ -66,6 +37,8 @@
               
 
 
+
+
 (define recurringList
 	(lambda (exp)
 		(letrec ((rlist (list))
@@ -73,19 +46,16 @@
 				(if (and (list? exp2) (not (null? exp2)) (not (const? exp2)))
 					(let ((var (car exp2))
 						(newRest (cdr exp2)))
-
-			
 						(if (and (list? var) (not (null? var)) (not (const? var))) 
 							 (if (and (isMember? var  rest) (not (member var rlist)))
 											(begin (set! rlist (append rlist (list var)))
-													(loop newRest rest))
+													(loop newRest rest)
+													(loop var var))
 											(if (not (member var rlist)) 
 												(begin
 												(loop var rest) 
 												(loop newRest rest))
-												(loop newRest rest))
-											)
-
+												(loop newRest rest)))
 							(loop newRest rest)))
 				rlist))))
 			(loop exp exp))))
@@ -94,7 +64,7 @@
 (define gensymVars
 	(lambda (rlst)
 		(map (lambda (var)
-			(let ((newVar (string->symbol (symbol->string (gensym)))))
+			(let ((newVar  (gensym)))
 				(list newVar var)))
 			 rlst)
 		))
@@ -124,29 +94,12 @@
 					(if (null? lst2) (append newLst lst2)
 						(let ((minf (minFinder lst2)))
 						(loop (append newLst (list minf)) (remove minf lst2))
-				))))
-			)
+				)))))
 		(loop (list) lst))
-		)
-	)
-
-
-
-
-
-(define simple-const?
-	(lambda (var)
-		(cond 
-			((null? var) var)
-			((vector? var) var)
-			((equal? var #t) var)
-			((equal? var #f) #t) ;;;check how boolean is received and parse-2d
-			((char? var) var)
-			((number? var) var)
-			((string? var) var)
-			(else #f)
-			)
 		))
+
+
+
 
 
 (define swap 
@@ -198,18 +151,6 @@
 
 (define *void-object* (void))
 
-(define qoute-pattern
-	(let ((run 
-			(compose-patterns
-				(pattern-rule
-					`(quote ,(? 'c))
-					(lambda (c) `(const ,c)))
-				)))
-			(lambda (e)
-				(run e
-						(lambda ()
-							#f)))))
-
 
 (define constEliminator
 	(lambda (lst)
@@ -223,7 +164,7 @@
 
 
 
-(define cse-2
+(define cse
 	(lambda (exp)
 		(let* (
 				(rlist (recurringList exp)))
@@ -237,9 +178,7 @@
 						(swapedBody (swapped-body swapedVars exp)))
 				(if (equal? (length swapedVars) 1) 
 					`(let  ,swapedVars  ,swapedBody)
-				 
 					`(let* ,swapedVars ,swapedBody)))))
 		))
 
 
-;(cse-2 '(list '(a b) (list '(a b) '(c d)) (list '(a b) '(c d))))
