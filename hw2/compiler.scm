@@ -964,11 +964,7 @@
 			(loop (list) lst))
 	))
 
-
-
-
 		
-
 
 (define vars-getter
 	(lambda (var lst)
@@ -1080,7 +1076,7 @@
 
 
 
-(define parse-2
+(define parse 
 	(let ((run 
 			(compose-patterns
 				;;;;const
@@ -1098,63 +1094,63 @@
 				;;;; if 2 parms
 				(pattern-rule
 					`(if ,(? 'test) ,(? 'dit))
-					(lambda (test dit) `(if3 ,(parse-2 test) ,(parse-2 dit) (const ,*void-object*))))
+					(lambda (test dit) `(if3 ,(parse test) ,(parse dit) (const ,*void-object*))))
 				;;;; if 3 params
 				(pattern-rule
 					`(if ,(? 'test) ,(? 'dit) ,(? 'dif))
-					(lambda (test dit dif) `(if3 ,(parse-2 test) ,(parse-2 dit) ,(parse-2 dif))))
+					(lambda (test dit dif) `(if3 ,(parse test) ,(parse dit) ,(parse dif))))
 				;;;;; or
 				(pattern-rule
 					`(or . ,(? 'rest))
 					(lambda (rest) 
 						(cond 
-							((null? rest) (parse-2 #f))
-							((equal? (length rest) 1) (parse-2 (car rest)))
-							(else `(or ,(map parse-2 rest))))))
+							((null? rest) (parse #f))
+							((equal? (length rest) 1) (parse (car rest)))
+							(else `(or ,(map parse rest))))))
 				;;;;;;;; sequences i.e. begin
 				(pattern-rule
 					`(begin . ,(? 'rest))
 					(lambda (rest) 
 						(cond ((null? rest) `(const ,*void-object*))
-								((equal? (length rest) 1) (parse-2 (car rest)))
+								((equal? (length rest) 1) (parse (car rest)))
 								(else (let ((fixedRest  rest))
-											`(seq ,(expWithOutSeq (map parse-2 fixedRest))))))))
+											`(seq ,(expWithOutSeq (map parse fixedRest))))))))
 				;;;;;;;; let-sequences i.e. begin
 				(pattern-rule
 					`(letseq ,(? 'args list?))
-					(lambda (args) (map parse-2 args)))
+					(lambda (args) (map parse args)))
 				;;;; regular lambda 
 				(pattern-rule
 					`(lambda ,(? 'vars list? validList?) ,(? 'body) . ,(? 'rest))
-					(lambda (vars body rest) `(lambda-simple ,vars ,(parse-2 (beginify (cons body rest)))))) ;notice begin is not memomash
+					(lambda (vars body rest) `(lambda-simple ,vars ,(parse (beginify (cons body rest)))))) ;notice begin is not memomash
 				;;;;;; lambda optional args
 				(pattern-rule
 					`(lambda ,(? 'vars pair? validList?) ,(? 'body) . ,(? 'rest))
-					(lambda (vars body rest) `(lambda-opt ,@(improper-list? vars) ,(parse-2 (beginify (cons body rest)))))) ;notice begin is not memomash
+					(lambda (vars body rest) `(lambda-opt ,@(improper-list? vars) ,(parse (beginify (cons body rest)))))) ;notice begin is not memomash
 				;;;;;;; variadic lambda
 				(pattern-rule 
 					`(lambda ,(? 'var validList?) . ,(? 'rest))
-					(lambda (var rest) `(lambda-var ,var ,(parse-2 (beginify rest))))) ;notice begin is not memomash, WTF args
+					(lambda (var rest) `(lambda-var ,var ,(parse (beginify rest))))) ;notice begin is not memomash, WTF args
 				;;;; define
 				(pattern-rule
 					`(define ,(? 'var&params)  ,(? 'exp) . ,(? 'rest))
 					(lambda (var&params exp rest) 
 					(if (pair? var&params)
-						 (parse-2 (MIT-define-to-regular-define var&params (beginify (cons exp rest))))
-				 		`(def ,(parse-2 var&params) ,(parse-2 (beginify (cons exp rest))))))
+						 (parse (MIT-define-to-regular-define var&params (beginify (cons exp rest))))
+				 		`(def ,(parse var&params) ,(parse (beginify (cons exp rest))))))
 				)
 				;;;;;;set;;;;;;
 				(pattern-rule 
 					`(set! ,(? 'var var?) ,(? 'exp))
 						(lambda (var exp)
-							`(set ,(parse-2 var) ,(parse-2 exp))))
+							`(set ,(parse var) ,(parse exp))))
 				;;;;;;;;;;; quasi quote ;;;;;;;;;;;;
 				(pattern-rule
 					`(quasiquote . ,(? 'expr))
 					(lambda (expr)
 						(if (or (null? expr) (> (length expr) 1))
 							(error 'quasiquote "wrong params")
-						(parse-2 (expand-qq (car expr))))
+						(parse (expand-qq (car expr))))
 						))
 				;;;;;;;;;;;; unqoute;;;;;;;;
 				(pattern-rule
@@ -1170,13 +1166,13 @@
 				(pattern-rule
 					`( ,(? 'func reserved-words?) . ,(? 'rest) )
 					(lambda (func rest)
-						`(applic ,(parse-2 func) ,(map parse-2 rest))
+						`(applic ,(parse func) ,(map parse rest))
 						))
 				;;;;;;;;;;;empty letrec ;;;;;;;;;
 				(pattern-rule
 					`(letrec ,(? 'vars list? null?) ,(? 'expr) . ,(? 'exprs list?))
 						(lambda (vars expr exprs) 
-							(parse-2
+							(parse 
 								`((lambda ()
 										((lambda () ,(beginify (cons expr exprs)))
 										 ,@vars))	
@@ -1193,7 +1189,7 @@
 													 vars vals))
 								(emptylst (list))
 								(falsevars (map (lambda (val) '#f) vals)))
-							(parse-2
+							(parse 
 								`((lambda (,@vars)
 									,(beginify 
 										`(,@sets ((lambda () ,@exprs) ,@emptylst))	
@@ -1204,7 +1200,7 @@
 				(pattern-rule
 					`(let ,(? 'vars list? null?) ,(? 'expr) . ,(? 'exprs list?))
 						(lambda (vars expr exprs) 
-							(parse-2 
+							(parse 
 								`((lambda () ,(beginify (cons expr exprs)))
 								,@vars))))
 				;;;;;;;;;;;let ;;;;;;;;;
@@ -1213,14 +1209,14 @@
 					(lambda (var val rest exprs)
 						(let ((vals (cons val (vals-getter rest)))
 								(vars (vars-getter var rest)))
-							(parse-2
+							(parse 
 								`((lambda (,@vars)
 									,@exprs) ,@vals)))))
 				;;;;; empty let* ;;;;;;;;;;;
 				(pattern-rule
 					`(let* ,(? 'vars list? null?) ,(? 'expr) . ,(? 'exprs list?))
 						(lambda (vars expr exprs) 
-							(parse-2 
+							(parse 
 								`((lambda () ,(beginify (cons expr exprs)))
 								,@vars))))
 				;;;;; let * ;;;;;;;
@@ -1228,21 +1224,21 @@
 					`(let* ((,(? 'var var?) ,(? 'val)) . ,(? 'rest)) . ,(? 'exprs))
 					(lambda (var val rest exprs) 
 						(if (not (null? rest))
-							(parse-2 `(let ((,var ,val)) 
+							(parse `(let ((,var ,val)) 
 								(let* ,rest . ,exprs)))
-							(parse-2 `(let ((,var ,val)) 
+							(parse `(let ((,var ,val)) 
 								,@exprs)))))
 
 				;;;;;;;;; and ;;;;;;;
 				(pattern-rule
 					`(and . ,(? 'vals))
 					(lambda (vals) 
-						(cond ((null? vals) (parse-2 #t))
-							((equal? (length vals) 1) (parse-2 (car vals)))
+						(cond ((null? vals) (parse #t))
+							((equal? (length vals) 1) (parse (car vals)))
 							((equal? (length vals) 2)
-								(parse-2 `(if ,(car vals) ,(cadr vals) #f)))
+								(parse `(if ,(car vals) ,(cadr vals) #f)))
 							(else
-								(parse-2 `(if ,(car vals) (and ,@(cdr vals)) #f))))))
+								(parse `(if ,(car vals) (and ,@(cdr vals)) #f))))))
 				;;;;;;;;; cond ;;;;;;;
 				(pattern-rule
 					`(cond . ,(? 'vals))
@@ -1253,17 +1249,17 @@
 													(cadar vals)))
 									(elseseq (if (> (length (cdadr vals)) 1) (beginify (cdadr vals))
 													(cadadr vals))))
-								(parse-2 
+								(parse 
 									`(if ,(caar vals) ,conseq ,elseseq)
 									)))
 							((equal? (length vals) 1)
 								(let ((conseq (if (> (length (cdar vals)) 1) (beginify (cdar vals))
 													(cadar vals))))
-							 			(parse-2 `(if ,(caar vals) ,conseq))))
+							 			(parse `(if ,(caar vals) ,conseq))))
 							(else 
 								(let ((conseq (if (> (length (cdar vals)) 1) (beginify (cdar vals))
 													(cadar vals))))
-									(parse-2 `(if ,(caar vals) ,conseq
+									(parse `(if ,(caar vals) ,conseq
 														(cond ,@(cdr vals))
 									)))
 								)

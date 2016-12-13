@@ -1,54 +1,69 @@
-(load "pattern-matcher.scm")
+
+
+
 
 (define isMember?
 	(lambda (var exp)
 		(letrec 
 			((counter2 0)
 			(loop (lambda (exp2)
-			(cond 
-				((or (not (list? exp2)) (null? exp2)) counter2)
-				(else 
-					(if (equal? var exp2) 
-						(begin 
-							(set! counter2 (+ counter2 1))
-							(loop (car exp2) )
-							(loop (cdr exp2) ) )
-						(begin 
-							(loop (car exp2))
-							(loop (cdr exp2)))
-						))))))
+				(if (or (not (list? exp2)) (null? exp2)) counter2
+					(let ((varCar (car exp2))
+						 (rest (cdr exp2)))
+						(cond 
+							((or (not (list? varCar)) (null? varCar)) (loop rest))
+							(else 
+								(if (equal? var varCar) 
+									(begin 
+										(set! counter2 (+ counter2 1))
+										(loop rest))
+									(begin 
+										(loop varCar)
+										(loop rest))
+									))))))))
 		(begin (loop exp)
 		(>= counter2 2)))))
+
+
+
+
+
+(define const?
+  (lambda (exp)
+    (cond ((not (list? exp)) #t)
+          ((and (list? exp) (not (> (length exp) 1))) #f)
+            ((and (list? exp) (> (length exp) 1) (not (equal? (car exp) 'quote))) #f)
+             (else #t))))
+              
+
+
 
 
 (define recurringList
 	(lambda (exp)
 		(letrec ((rlist (list))
 			(loop (lambda (exp2 rest)
-				(if (list? exp2)
+				(if (and (list? exp2) (not (null? exp2)) (not (const? exp2)))
 					(let ((var (car exp2))
 						(newRest (cdr exp2)))
-					(if (list? var)
-							(if (and (isMember? var (list newRest rest)) (not (member var rlist)))
-									(begin (set! rlist (append rlist (list var)))
-									(loop (car var) newRest)
-									(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
-									(if (null? newRest) rlist (loop newRest newRest))
-									)
-								(begin
-								(loop var newRest)
-								(if (null? (cdr var)) rlist (loop (cdr var) (cdr var)))
-								(if (null? newRest) rlist (loop newRest newRest))))
-							(if (null? newRest) rlist (loop newRest (list newRest rest)))))
-					rlist))))
+						(if (and (list? var) (not (null? var)) (not (const? var))) 
+							 (if (and (isMember? var  rest) (not (member var rlist)))
+											(begin (set! rlist (append rlist (list var)))
+													(loop newRest rest))
+											(if (not (member var rlist)) 
+												(begin
+												(loop var rest) 
+												(loop newRest rest))
+												(loop newRest rest)))
+							(loop newRest rest)))
+				rlist))))
 			(loop exp exp))))
-
 
 
 (define gensymVars
 	(lambda (rlst)
 		(map (lambda (var)
-			(let ((newVar (string->symbol (symbol->string (gensym)))))
+			(let ((newVar  (gensym)))
 				(list newVar var)))
 			 rlst)
 		))
@@ -78,31 +93,19 @@
 					(if (null? lst2) (append newLst lst2)
 						(let ((minf (minFinder lst2)))
 						(loop (append newLst (list minf)) (remove minf lst2))
-				))))
-			)
+				)))))
 		(loop (list) lst))
-		)
-	)
-
-(define simple-const?
-	(lambda (var)
-		(cond 
-			((null? var) var)
-			((vector? var) var)
-			((equal? var #t) var)
-			((equal? var #f) #t) ;;;check how boolean is received and parse-2d
-			((char? var) var)
-			((number? var) var)
-			((string? var) var)
-			(else #f)
-			)
 		))
+
+
+
+
 
 (define swap 
 	(lambda (oldVar newVar lst)
 		(cond 
 			((not (list? lst)) lst)
-			((or (simple-const? lst) (qoute-pattern lst)) lst )
+			((const? lst) lst)
 			((null? lst) lst)
 			((equal? lst oldVar) newVar)
 			(else
@@ -147,48 +150,20 @@
 
 (define *void-object* (void))
 
-(define qoute-pattern
-	(let ((run 
-			(compose-patterns
-				(pattern-rule
-					`(quote ,(? 'c))
-					(lambda (c) `(const ,c)))
-				)))
-			(lambda (e)
-				(run e
-						(lambda ()
-							#f)))))
-
 
 (define constEliminator
 	(lambda (lst)
 		(let ((noConstLst (map
 					(lambda (var)
-						(if (and (not (simple-const? var)) (not (qoute-pattern var)) ) var)
+						(if (not (const? var)) var)
 						) lst)))
 			(remove *void-object* noConstLst))
 		))
 
 
 
-(define cse1
-	(lambda (exp)
-		(let* (
-				(rlist (recurringList exp))
-				(lstNoConst (constEliminator rlist))
-				(srlist (sortLst lstNoConst))
-				(letVars (gensymVars srlist))
-				(swapedVars  (swapped  letVars))
-				(swapedBody (swapped-body swapedVars exp)))
-		(display 
-			`(let* 
-			,"\n" 
-			,swapedVars 
-			,"\n" 
-			,swapedBody))
-		)))
 
-(define cse2
+(define cse
 	(lambda (exp)
 		(let* (
 				(rlist (recurringList exp)))
@@ -202,7 +177,7 @@
 						(swapedBody (swapped-body swapedVars exp)))
 				(if (equal? (length swapedVars) 1) 
 					`(let  ,swapedVars  ,swapedBody)
-				 
 					`(let* ,swapedVars ,swapedBody)))))
 		))
+
 
