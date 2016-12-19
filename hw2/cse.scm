@@ -80,11 +80,7 @@
 		 (if (null? (cdr lst)) (car lst)
 		 	(let ((lr (minFinder (cdr lst))))
 		 		(cond 
-		          ((< (length (car lst)) (length lr)) (car lst))
-		          ((= (length (car lst)) (length lr))
-		          	(if (< (length (flatten (car lst))) (length (flatten lr)))
-		          		(car lst)
-		          		(minFinder (cdr lst))))
+		          ((< (length (flatten (car lst))) (length (flatten lr))) (car lst))
 		          (else (minFinder (cdr lst)))) ))))
 
 
@@ -167,18 +163,19 @@
 (define cse
 	(lambda (exp)
 		(let* (
-				(rlist (recurringList exp)))
+				(rlist (recurringList exp))
+				(rlist3 (append (recurringList rlist) rlist)))
 				(if (null? rlist)
 					 exp
 				(let* (
-						(lstNoConst (constEliminator rlist))
-						(srlist (sortLst lstNoConst))
-						(letVars (gensymVars srlist))
+						(lstNoConst (constEliminator rlist3))
+						(rlist2 (sortLst lstNoConst))
+						(letVars (gensymVars rlist2))
 						(swapedVars (swapped letVars))
 						(swapedBody (swapped-body swapedVars exp)))
 				(if (equal? (length swapedVars) 1) 
 					`(let  ,swapedVars  ,swapedBody)
-					`(let* ,swapedVars ,swapedBody)))))
+					 `(let* ,swapedVars ,swapedBody)))))
 		))
 
 
