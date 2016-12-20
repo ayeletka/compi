@@ -31,18 +31,18 @@
 	(lambda (exp)
 		(map (lambda (exp2) '(const #f)) exp)))
 
-
+(void)
 
 (define noDefines
 	(lambda (exp)
 		(letrec ((isValidNoDefList #t)
 				(loop (lambda (exp2)
 						(cond 
-							((not (list? exp)) isValidNoDefList)
-							((null? exp) isValidNoDefList)
-							((equal? (car exp) 'def) (set! isValidNoDefList #f))
-							(else (loop (car exp)) (loop (cdr exp)))))))
-		(loop exp) isValidNoDefList)))
+							((not (list? exp2)) (void))
+							((null? exp2) (void))
+							((equal? (car exp2) 'def) (set! isValidNoDefList #f))
+							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
+		(begin (loop exp) isValidNoDefList ))))
 
 
 (define inLambda 
@@ -51,7 +51,7 @@
 				;;;;def
 				(pattern-rule
 				`(def ,(? 'var) ,(? 'val) )
-					(lambda (var val)  `(seq (set ,var ,val)) ))
+					(lambda (var val)  `(seq (set ,var ,(eliminate-nested-defines-helper val))) ))
 				;;;;seq
 				(pattern-rule
 				`(seq ,(? 'exp))
@@ -106,30 +106,93 @@
 (define eliminate-nested-defines
 	(lambda (exp)
 		(let ((noNestedDefines (eliminate-nested-defines-helper exp)))
-			;(if (noDefines (cdr noNestedDefines))
+			(if (noDefines (cdr noNestedDefines))
 				noNestedDefines
-				;(error 'define "inapropriate defines ~s" ))
+				(error 'define "tibeten calender ~s" ))
 			)
 		))
 
+(define boundHelper 
+	(lambda (var exp) 
+		(letrec ((isBoundOccurence #f)
+				(loop (lambda (exp2)
+						(cond 
+							((and (not (list? exp2)) (equal? var exp2)) (set! isBoundOccurence #t))
+							((not (list? exp2)) (void))
+							((null? exp2) (void))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+									(not (member var (cadr exp2))))
+								 			(loop (caddr exp2)))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+									 (member var (cadr exp2)))
+											(void))
+							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
+		(begin (loop exp) isBoundOccurence ))))
 
-(eliminate-nested-defines '(def (var my-even?)
-(lambda-simple
-(e)
-(seq ((def (var even?)
-(lambda-simple
-(n)
-(or ((applic (var zero?) ((var n)))
-(applic
-(var odd?)
-((applic (var -) ((var n) (const 1)))))))))
-(def (var odd?)
-(lambda-simple
-(n)
-(if3 (applic (var positive?) ((var n)))
-(applic
-(var even?)
-((applic (var -) ((var n) (const 1)))))
-(const #f))))
-(applic (var even?) ((var e)))))))))
+(define boundOccurence 
+	(lambda (var exp) 
+		(letrec ((isBoundOccurence #f)
+				(loop (lambda (exp2)
+						(cond 
+							((not (list? exp2)) (void))
+							((null? exp2) (void))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+									(not (member var (cadr exp2))))
+								 			(if (boundHelper var (caddr exp2)) (set! isBoundOccurence #t) (void)))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+									 (member var (cadr exp2)))
+											(void))
+							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
+		(begin (loop exp) isBoundOccurence ))))
 
+
+(define setExpression 	
+	(lambda (var exp) 
+		(letrec ((isSetOccurence #f)
+				(loop (lambda (exp2)
+						(cond 
+							((not (list? exp2)) (void))
+							((null? exp2) (void))
+							((and (equal? (car exp2) 'set) (equal? (cadadr exp2) var)) 
+								 			(set! isSetOccurence #t))
+							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
+		(begin (loop exp) isSetOccurence ))))
+
+
+(define getOccurence 
+	(lambda (var exp) 
+		(letrec ((isGetOccurence #f)
+				(loop (lambda (exp2)
+						(cond 
+							((and (not (list? exp2)) (equal? var exp2)) (set! isGetOccurence #t))
+							((not (list? exp2)) (void))
+							((null? exp2) (void))
+							((and (equal? (car exp2) 'set) (equal? (cadadr exp2) var)) (loop (cddr exp2)))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+									(not (member var (cadr exp2))))
+								 			(loop (caddr exp2)))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+									 (member var (cadr exp2)))
+											(void))
+							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
+		(begin (loop exp) isGetOccurence ))))
+
+
+
+(define createBoxingLst
+	(lambda (exp) ;assuming we recieve a lambda
+		(let ((varsToBox (map 
+							(lambda (var) 
+									(if (and (boundOccurence (cadr var) (caddr exp)) (setExpression (cadr var) (caddr exp)) (getOccurence (cadr var) (caddr exp))) 
+										var
+										(void))) 	
+							(cadr exp))
+				))
+		(remove (void) varsToBox)))
+	)
+
+
+(createBoxingLst '(lambda-simple ((var x) (var y) (var z)) (seq (set (var x) y) (lambda-simple (y) (var z)) (lambda-simple () (seq (var y) (set (var y) (var z)))))))
+
+;(getOccurence 'x '(seq (set (var x) y) (lambda-simple (y) (var x))))
+;;;;;;;;fix lambda 
