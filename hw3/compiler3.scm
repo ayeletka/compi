@@ -123,30 +123,17 @@
 							((and (not (list? exp2)) (equal? var exp2)) (set! isBoundOccurence #t))
 							((not (list? exp2)) (void))
 							((null? exp2) (void))
-							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+							((and (or (equal? (car exp2) 'lambda-simple)  (equal? (car exp2) 'lambda-var))
 									(not (member var (cadr exp2))))
 								 			(loop (caddr exp2)))
-							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+							((and (equal? (car exp2) 'lambda-opt) (not (member var (append (cadr exp2) (list (caddr exp2)))))) (loop (cadddr exp2)))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-var))
 									 (member var (cadr exp2)))
 											(void))
+							((and (equal? (car exp2) 'lambda-opt) (member var (append (cadr exp2) (list (caddr exp2))))) (void))
 							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
 		(begin (loop exp) isBoundOccurence ))))
 
-;(define boundOccurence 
-;	(lambda (var exp) 
-;		(letrec ((isBoundOccurence #f)
-;				(loop (lambda (exp2)
-;						(cond 
-;							((not (list? exp2)) (void))
-;							((null? exp2) (void))
-;							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
-;									(not (member var (cadr exp2))))
-;								 			(if (boundHelper var (caddr exp2)) (set! isBoundOccurence #t) (void)))
-;							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
-;									 (member var (cadr exp2)))
-;											(void))
-;							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
-;		(begin (loop exp) isBoundOccurence ))))
 
 
 (define setExpression 	
@@ -171,26 +158,38 @@
 							((not (list? exp2)) (void))
 							((null? exp2) (void))
 							((and (equal? (car exp2) 'set) (equal? (cadadr exp2) var)) (loop (cddr exp2)))
-							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+							((and (or (equal? (car exp2) 'lambda-simple)  (equal? (car exp2) 'lambda-var))
 									(not (member var (cadr exp2))))
 								 			(loop (caddr exp2)))
-							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+							((and (equal? (car exp2) 'lambda-opt) (not (member var (append (cadr exp2) (list (caddr exp2)))))) (loop cadddr exp2))
+							((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-var))
 									 (member var (cadr exp2)))
 											(void))
+							((and (equal? (car exp2) 'lambda-opt)  (member var (append (cadr exp2) (list (caddr exp2))))) (void))
 							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
 		(begin (loop exp) isGetOccurence ))))
 
-
+(define exp3 '(lambda-opt (a) z (lambda-simple () (var a) b)))
+(append (cadr exp3) (list (caddr exp3)))
+(cadddr exp3)
+(getOccurence 'a exp3)
 
 (define createBoxingLst
 	(lambda (exp) ;assuming we recieve a lambda
-		(let ((varsToBox (map 
+		(let* (
+				(body (if (equal? (car exp) 'lambda-opt)
+								(cadddr exp)
+							 	(caddr exp)))
+				(varsToBox (map 
 							(lambda (var) 
-									(if (and (boundOccurence  var (caddr exp)) (setExpression  var (caddr exp)) (getOccurence  var (caddr exp))) 
+									(if (and (boundOccurence  var body) (setExpression  var body) (getOccurence  var body)) 
 										`(var ,var)
 										(void))) 	
-							(cadr exp))
+							(if (equal? (car exp) 'lambda-opt)
+								(append (cadr exp) (list (caddr exp)))
+							 	(cadr exp))
 				))
+		)
 		(remove (void) varsToBox)))
 	)
 
@@ -201,7 +200,7 @@
 		(cond 
 			((null? lstOfVars) (void))
 			((null? (cdr lstOfVars)) `((set ,(car lstOfVars) (box ,(car lstOfVars))) ))
-			(else `( (set ,(car lstOfVars) (box ,(car lstOfVars))) ,@(createSetBoxExp (cdr lstOfVars))))
+			(else `( (set ,(car lstOfVars) (box ,(car lstOfVars))) ,@(createSetBoxExpHelper (cdr lstOfVars))))
 		)
 	)
 )
@@ -216,27 +215,22 @@
 ))
 
 
-;(if (null? (cdr (createSetBoxExp '(  (var k) (var k)))))
-;	(car (createSetBoxExp '( (var k) (var k))))
-;(createSetBoxExp '( (var k) (var k))))
-
-
-
 (define createBodyBoxWithOneVar 
 	(lambda (var body)
 		(cond 
 				((not (list? body)) body)
 				((null? body) body)
-				((and (or (equal? (car body) 'lambda-simple) (equal? (car body) 'lambda-opt) (equal? (car body) 'lambda-var))
+				((and (or (equal? (car body) 'lambda-simple)  (equal? (car body) 'lambda-var))
 						(member (cadr var) (cadr body)))
 					 			body)
+				((and (equal? (car body) 'lambda-opt) (member (cadr var) (append (cadr body) (list (caddr body)))))  body)
+
 				((and (equal? (car body) 'set) (equal? (cadr body) var)) `(box-set ,var ,@(createBodyBoxWithOneVar var (cddr body))))
 
 				((equal? body var) `(box-get ,var))
 				(else (cons (createBodyBoxWithOneVar var (car body)) (createBodyBoxWithOneVar var (cdr body)))))
 	)
 	)
-;(createBodyBoxWithOneVar '(var x)  '(seq (set (var x) y) (lambda-simple (x) (var x)) (lambda-simple () (seq (var y) (set (var y) (var x))))))
 
 (define createBodyBoxExp
 	(lambda (lstVars body)
@@ -246,32 +240,23 @@
 				bodyExp
 			))))
 
-;(createBodyBoxExp '((var x) (var y))  '(seq (set (var x) y) (lambda-simple (y) (var x)) (lambda-simple () (seq (var y) (set (var y) (var x))))))
 
 
 (define changingLambdaWithBoxing
 	(lambda (exp)
-	`( ,(car exp) ,(cadr exp)
-		 ,(list 'seq (list (createSetBoxExp (createBoxingLst exp)) (car (createBodyBoxExp (createBoxingLst exp) (cddr exp))))))
+		(let* 
+			((params (if (equal? (car exp) 'lambda-opt) 
+						(append (cadr exp) (list (caddr exp)))
+						(cadr exp)))
+			(body (if (equal? (car exp) 'lambda-opt)
+					(cadddr exp)
+				 	(caddr exp))))
+	`( ,(car exp) ,params
+		 ,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body)))))
 	)
 )
-(list '(var x) '(var y))
 
-(changingLambdaWithBoxing '(lambda-simple (x y z) (seq (set (var x) y) (lambda-simple (y) (var x)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
-;(equal? '(var a) '(var a))
-(changingLambdaWithBoxing '
-(lambda-simple
-(a)
-(applic
-(var list)
-((lambda-simple () (var a))
-(lambda-simple
 
-()
-(set (var a) (applic (var +) ((var a) (const 1)))))
-(lambda-simple (b) (set (var a) (var b))))))
-
-)
 
 (define boxingOfVariables
 	(lambda (exp)
@@ -282,6 +267,25 @@
 		      (else (cons (if (list? (car exp)) (boxingOfVariables (car exp)) (car exp)) (boxingOfVariables (cdr exp))))
 		  )
 	)
+)
+
+(boxingOfVariables '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
+
+(boxingOfVariables '(seq (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))) (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x))))))))
+
+(boxingOfVariables '
+(applic
+(lambda-opt
+(z)
+a
+(applic
+(var list)
+((lambda-simple () (var a))
+(lambda-simple
+()
+(set (var a) (applic (var +) ((var a) (const 1)))))
+(lambda-simple (b) (set (var a) (var b))))))
+((const 0)))
 )
 
 (boxingOfVariables '
@@ -295,7 +299,8 @@
 ()
 (set (var a) (applic (var +) ((var a) (const 1)))))
 (lambda-simple (b) (set (var a) (var b))))))
-((const 0))))
+((const 0)))
+)
 
 
 ;(getOccurence 'x '(seq (set (var x) y) (lambda-simple (y) (var x))))
