@@ -169,10 +169,6 @@
 							(else (begin (loop (car exp2)) (loop (cdr exp2))))))))
 		(begin (loop exp) isGetOccurence ))))
 
-(define exp3 '(lambda-opt (a) z (lambda-simple () (var a) b)))
-(append (cadr exp3) (list (caddr exp3)))
-(cadddr exp3)
-(getOccurence 'a exp3)
 
 (define createBoxingLst
 	(lambda (exp) ;assuming we recieve a lambda
@@ -240,8 +236,6 @@
 				bodyExp
 			))))
 
-
-
 (define changingLambdaWithBoxing
 	(lambda (exp)
 		(let* 
@@ -269,40 +263,43 @@
 	)
 )
 
-(boxingOfVariables '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
+;;;; tests
+;(boxingOfVariables '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
+;(boxingOfVariables '(seq (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))) (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x))))))))
+;(boxingOfVariables '(applic (lambda-opt (z) a (applic (var list) ((lambda-simple () (var a)) (lambda-simple () (set (var a) (applic (var +) ((var a) (const 1))))) (lambda-simple (b) (set (var a) (var b))))))  ((const 0))))
+;(boxingOfVariables ' (applic (lambda-simple (a)  (applic (var list)
+;((lambda-simple () (var a)) (lambda-simple () 
+;(set (var a) (applic (var +) ((var a) (const 1)))))
+;(lambda-simple (b) (set (var a) (var b))))))
+;((const 0))))
 
-(boxingOfVariables '(seq (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))) (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x))))))))
 
-(boxingOfVariables '
-(applic
-(lambda-opt
-(z)
-a
-(applic
-(var list)
-((lambda-simple () (var a))
-(lambda-simple
-()
-(set (var a) (applic (var +) ((var a) (const 1)))))
-(lambda-simple (b) (set (var a) (var b))))))
-((const 0)))
-)
 
-(boxingOfVariables '
-(applic
-(lambda-simple
-(a)
-(applic
-(var list)
-((lambda-simple () (var a))
-(lambda-simple
-()
-(set (var a) (applic (var +) ((var a) (const 1)))))
-(lambda-simple (b) (set (var a) (var b))))))
-((const 0)))
+;;;;;;;;;;;;;;;;;;;;; Removing redundant applications ;;;;;;;;;;;;;;;;;;;;
+
+(define changingApplicLambdaNil
+	(lambda (exp)
+		 (car (cddadr exp))
+	)
 )
 
 
-;(getOccurence 'x '(seq (set (var x) y) (lambda-simple (y) (var x))))
-;;;;;;;;fix lambda 
- 
+(define remove-applic-lambda-nil
+	(lambda (exp)
+	(cond ((not (list exp)) exp)
+		      ((null? exp) exp)
+		      ((and (equal? (car exp) 'applic) (equal? (caadr exp) 'lambda-simple) (null? (cadadr exp)))
+						(changingApplicLambdaNil exp))
+		      (else (cons (if (list? (car exp)) (remove-applic-lambda-nil (car exp)) (car exp)) (remove-applic-lambda-nil (cdr exp))))
+		  )
+	)
+)
+
+;(define exp '(applic (lambda-simple (fact) (seq ((set (var fact) (box (var fact))) (box-set (var fact)
+;	(lambda-simple (n) (if3 (applic (var zero?) ((var n))) (const 1)
+;	(applic (var *) ((var n) (applic (box-get (var fact)) ((applic (var -) ((var n) (const 1))))))))))
+;	(applic (lambda-simple () (applic (box-get (var fact)) ((const 5)))) ())))) ((const #f))))
+
+;(remove-applic-lambda-nil exp)
+
+
