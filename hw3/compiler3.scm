@@ -85,8 +85,8 @@
 				`(lambda-var ,(? 'vars) ,(? 'body) )
 					(lambda (vars body) `(lambda-var ,vars ,(inLambda  body ))))
 				(pattern-rule
-				`(lambda-opt ,(? 'vars) ,(? 'body) )
-					(lambda (vars body) `(lambda-opt ,vars ,(inLambda  body ))))
+				`(lambda-opt ,(? 'vars) ,(? 'var) ,(? 'body) )
+					(lambda (vars var body) `(lambda-opt ,vars ,var ,(inLambda  body ))))
 				(pattern-rule
 				(? 'exp)
 					(lambda (exp)  
@@ -251,8 +251,6 @@
 	)
 )
 
-
-
 (define boxingOfVariables
 	(lambda (exp)
 		(cond ((not (list exp)) exp)
@@ -273,7 +271,7 @@
 ;(set (var a) (applic (var +) ((var a) (const 1)))))
 ;(lambda-simple (b) (set (var a) (var b))))))
 ;((const 0))))
-(boxingOfVariables '(applic (lambda-var args (applic (var list) ((lambda-simple () (var args)) (lambda-simple () (set (var args) (applic (var +) ((var args) (const 1))))) (lambda-simple (b) (set (var args) (var b))))))  ((const 0))))
+;(boxingOfVariables '(applic (lambda-var args (applic (var list) ((lambda-simple () (var args)) (lambda-simple () (set (var args) (applic (var +) ((var args) (const 1))))) (lambda-simple (b) (set (var args) (var b))))))  ((const 0))))
 
 
 
@@ -305,3 +303,49 @@
 ;(remove-applic-lambda-nil exp)
 
 
+;;;;;;;;;;;;;;;annotating Variables with their Lexical address;;;;;;;;;
+
+(define pvarLstMaker
+	(lambda (exp) ;assuming is a lambda
+		(letrec ((pvars (cond ((equal? (car exp) 'lambda-var) (list (list 'var (cadr exp))))
+							((equal? (car exp) 'lambda-opt) (cadr exp)) ;;;;;check!!! is probably wrong both for empty lambda and opt and variadic 
+							(else (cadr exp))))
+				(loop (lambda (var rest num)
+					(if (null? rest) (list `(pvar ,(cadr var) ,num))
+						(cons `(pvar ,(cadr var) ,num) (loop (car rest) (cdr rest) (+ num 1))))
+					)))
+			(loop (car pvars) (cdr pvars) 0))
+			))
+
+
+(define bvarLstMaker
+	(lambda (exp pvars bvars) ;assuming is a lambda
+		(letrec ((bvarsnew (cond ((equal? (car exp) 'lambda-var) (list (cadr exp)))
+							((equal? (car exp) 'lambda-opt) (cadr exp)) ;;;;;check!!! is probably wrong
+							(else (cadr exp))))
+				(loop (lambda (var rest num)
+					(cond 
+						((ormap (lambda (pvar) (equal? (cadr var) (cadr pvar))) pvars)
+							(if (null? rest) (list `(bvar ,(cadr var) 0 ,num))
+								(cons `(bvar ,(cadr var) 0 ,num) (loop (car rest) (cdr rest) (+ num 1)))))
+						;;;;compare to bvars! and attach to it + give them bigger number... 
+						(else '())
+					))))
+			(loop (car bvarsnew) (cdr bvarsnew) 0))
+			))
+
+
+(define pvar '((pvar a 0) (pvar b 1) (pvar c 2)))
+
+
+(define pe->lex-pe
+	(lambda (exp)
+		;(bvarLstMaker exp pvar '())
+		(pvarLstMaker exp)
+		))
+
+
+
+;(pe->lex-pe '(lambda-simple ((var a) (var b) (var c) (var d))	 ()))
+
+;;;;;check all possible  of previous calls 
