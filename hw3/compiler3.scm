@@ -365,6 +365,9 @@
 
 ;;;;;;;;;;;;;;;annotating Variables with their Lexical address;;;;;;;;;
 
+
+
+;;;;;;;;;;;assumption on variables is wrong - not (var b) only b, make changes accordingly
 (define pvarLstMaker
 	(lambda (exp) ;assuming is a lambda
 		(letrec ((pvars (cond ((equal? (car exp) 'lambda-var) (list (list 'var (cadr exp))))
