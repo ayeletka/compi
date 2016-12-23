@@ -303,6 +303,63 @@
 ;(remove-applic-lambda-nil exp)
 
 
+;;;;;;;;;;;;;;;;;;;;;  Annotating tail calls ;;;;;;;;;;;;;;;;;;;;
+
+;; to add seq and or
+
+(define annotate-tc
+	(lambda (exp)
+		(letrec ((loop
+                (lambda (expr tail?)
+                    (cond
+                    	((not (list? expr)) expr)
+                    	((null? expr) expr)
+                    	((equal? (car expr) 'applic) 
+                    		(if tail?
+                    			(list 'tc-applic (loop (cadr expr) #f) (loop (caddr expr) #f))
+                    			(list 'applic (loop (cadr expr) #f) (loop (caddr expr) #f))
+                    		)
+                    	)
+                    	((equal? (car expr) 'lambda-simple) (list 'lambda-simple (cadr expr) (loop (caddr expr) #t))) 
+                    	((equal? (car expr) 'lambda-opt) (list 'lambda-opt (cadr expr) (caddr expr) (loop (cadddr expr) #t))) 
+                    	((equal? (car expr) 'lambda-var) (list 'lambda-var (cadr expr) (loop (caddr expr) #t)))
+                    	((equal? (car expr) 'if3) 
+								(list 'if3 (loop (cadr expr) #f) (loop (caddr expr) tail?) (loop (cadddr expr) tail?)))
+                    	(else (cons (loop (car expr) tail?) (loop (cdr expr) tail?))) 
+                    )
+                    )))
+       (loop exp #t))
+	))
+
+
+;;; tests
+(define exp1 '(lambda-simple (x) (applic (var x) (var x))))
+(define exp2 '(def (var fact)
+	(lambda-simple (n)
+(if3 (applic (var zero?) ((var n)))
+(const 1)
+(applic
+(var *)
+((var n)
+(applic
+(var fact)
+((applic (var -) ((var n) (const 1)))))))))))
+
+
+(define exp3 '(applic (var x) ((lambda-simple (x) (applic (var x)
+((lambda-simple () (applic (var x) ((lambda-simple () (applic (var x) ((var x)))))))))))))
+(define exp4 '(lambda-simple (f) (applic (lambda-simple (x)
+(applic (var f) ((lambda-var s (applic (var apply)
+((applic (var x) ((var x))) (var s))))))) ((lambda-simple (x) (applic (var f) ((lambda-var s
+(applic (var apply) ((applic (var x) ((var x))) (var s)))))))))))
+
+;(annotate-tc exp1)
+;(annotate-tc exp2)
+;(annotate-tc exp3)
+;(annotate-tc exp4)
+
+
+
 ;;;;;;;;;;;;;;;annotating Variables with their Lexical address;;;;;;;;;
 
 (define pvarLstMaker
