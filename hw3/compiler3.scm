@@ -20,7 +20,8 @@
 
 (define validSeq?
 	(lambda (exp)
-		(andmap (lambda (shit) (not (equal? (car shit) 'def))) exp)
+		(if (null? exp) #f
+		(andmap (lambda (shit) (not (equal? (car shit) 'def))) exp))
 	))
 
 (define varsGetter
@@ -62,7 +63,9 @@
 											(falseLst (falseMaker vars)))
 											`(applic (lambda-simple ,vars (seq (,@(eliminate-nested-defines-helper (car defExp)) ,@(eliminate-nested-defines-helper (cdr defExp)))))
 												,falseLst))
-													(error 'inLambda "Seq in not a valid seq: ~s" )))))
+									(if (null? (car defExp)) 
+										(eliminate-nested-defines-helper exp)
+													(error 'inLambda "Seq in not a valid seq: ~s" ))))))
 				(pattern-rule
 				(? 'exp)
 					(lambda (exp)  (eliminate-nested-defines-helper exp)))

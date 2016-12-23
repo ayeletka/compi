@@ -13,6 +13,13 @@
 (define test-parsed (parse test4))
 
 (display test-parsed)
+
 (display "\n")
 
-(remove-applic-lambda-nil (eliminate-nested-defines test-parsed))
+(define end (eliminate-nested-defines test-parsed))
+
+(display end)
+
+(display "\n")
+
+(remove-applic-lambda-nil end)
