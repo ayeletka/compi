@@ -466,6 +466,9 @@
 			(cond 
 				((null? exp2) exp2)
 				((not (list? exp2)) exp2)
+				((equal? (car exp2) 'var)
+					(let ((replacement (findNewVar (cadr exp2) oldPvars oldBvars)))
+						replacement))
 				((or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
 					(let* 
 						((pvars (pvarLstMaker exp2))
