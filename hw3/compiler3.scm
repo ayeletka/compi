@@ -310,12 +310,12 @@
 
 ;; to add seq and or
 
- ((equal? 'or tag)
-						(with (cdr pe)
-							(lambda (items)
-								(let ((last-item (car (reverse items)))
-									  (first-items (reverse (cdr (reverse items)))))
-									`(or ,(map atp first-items (make-list (length first-items) #f)) ,(atp last-item tp?))))))
+ ;((equal? 'or tag)
+;						(with (cdr pe)
+;							(lambda (items)
+;								(let ((last-item (car (reverse items)))
+;									  (first-items (reverse (cdr (reverse items)))))
+;									`(or ,(map atp first-items (make-list (length first-items) #f)) ,(atp last-item tp?))))))
 
 (define annotate-tc
 	(lambda (exp)
@@ -379,7 +379,6 @@
 ;;;;;;;;;;;;;;;annotating Variables with their Lexical address;;;;;;;;;
 
 
-
 (define pvarLstMaker
 	(lambda (exp) ;assuming is a lambda
 		(letrec ((pvars (cond ((equal? (car exp) 'lambda-var) (list (cadr exp)))
@@ -389,7 +388,8 @@
 					(if (null? rest) (list `(pvar ,var ,num))
 						(cons `(pvar ,var ,num) (loop (car rest) (cdr rest) (+ num 1))))
 					)))
-			(loop (car pvars) (cdr pvars) 0))
+			(if (null? pvars) '()
+			(loop (car pvars) (cdr pvars) 0)))
 			))
 
 (define getPvarLocation
@@ -406,7 +406,7 @@
 		(letrec ((loopOldPvars (lambda (var rest)
 					(cond 
 						((ormap (lambda (pvar) (equal? (cadr var) (cadr pvar))) currentPvars)
-							(if (null? rest) '()
+							(if (null? rest) rest
 								(loopOldPvars (car rest) (cdr rest))))
 						(else 
 							(let ((oldPvarLocation (getPvarLocation (cadr var) oldPvars)))
@@ -418,12 +418,12 @@
 				(loopOldBvars (lambda (var rest)
 							(cond 
 								((ormap (lambda (pvar) (equal? (cadr var) (cadr pvar))) currentPvars)
-									(if (null? rest) '()
+									(if (null? rest) rest
 										(loopOldBvars (car rest) (cdr rest))))
 								(else 
 										(if (null? rest)
 											(list `(bvar ,(cadr var) ,(+ 1 (caddr var)) ,(cadddr var)))
-											(cons `(bvar ,(cadr var) ,(+ 1 (caddr var)) ,(cadddr var)) (loopOldPvars (car rest) (cdr rest))))))
+											(cons `(bvar ,(cadr var) ,(+ 1 (caddr var)) ,(cadddr var)) (loopOldBvars (car rest) (cdr rest))))))
 							)))
 			(cond (( and (null? oldPvars) (null? oldBvars)) '())
 				((null? oldBvars) (loopOldPvars (car oldPvars) (cdr oldPvars)))
@@ -451,8 +451,8 @@
 (define switchVars
 	(lambda (exp pvars bvars) ;no lambda, only body
 		(cond 
-			((null? exp) exp)
 			((not (list? exp)) exp)
+			((null? exp) exp)
 			((or (equal? (car exp) 'lambda-simple) (equal? (car exp) 'lambda-opt) (equal? (car exp) 'lambda-var))
 				(peFindLambdas exp pvars bvars))
 			((equal? (car exp) 'var)
@@ -476,14 +476,11 @@
 				(else `(,(peFindLambdas (car exp2) oldPvars oldBvars) ,@(peFindLambdas (cdr exp2) oldPvars oldBvars))))))
 
 
-
-
 (define pe->lex-pe
 	(lambda (exp)
 			(peFindLambdas exp '() '())
 			))
 
-;(pe->lex-pe '(lambda-var a ((applic (var +) ((var a) (const 2))) (lambda-simple () (var a)))))
 
 
 ;;;;;check all possible  of previous calls 

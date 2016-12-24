@@ -24,15 +24,15 @@
 
 (display "\n")	
 
-(define test-parsed (parse test1))
+(define test-parsed (parse test8))
 
-(display test-parsed)
+;(display test-parsed)
 
 ;(display "\n")
 
 (define end (eliminate-nested-defines test-parsed))
 
-(display end)
+;(display end)
 
 ;(display "\n")
 
@@ -40,8 +40,8 @@
 
 ;(display "\n")
 
-(display raln)
-
+;(display raln)
+(display "\n")
 ;(boxingOfVariables raln)
 
-;(pe->lex-pe raln)
+(pe->lex-pe raln)
