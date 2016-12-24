@@ -193,7 +193,7 @@
 		(remove (void) varsToBox)))
 	)
 
-;;;;
+
 
 (define createSetBoxExpHelper
 	(lambda (lstOfVars)
@@ -275,14 +275,7 @@
 )
 
 
-;;;; tests
-(box-set '(applic (lambda-opt (z) a (applic (var list) ((lambda-simple () (var a)) (lambda-simple () (set (var a) (applic (var +) ((var a) (const 1))))) (lambda-simple (b) (set (var a) (var b))))))  ((const 0))))
-;(boxingOfVariables ' (applic (lambda-simple (a)  (applic (var list)
-;((lambda-simple () (var a)) (lambda-simple () 
-;(set (var a) (applic (var +) ((var a) (const 1)))))
-;(lambda-simple (b) (set (var a) (var b))))))
-;((const 0))))
-;(boxingOfVariables '(applic (lambda-var args (applic (var list) ((lambda-simple () (var args)) (lambda-simple () (set (var args) (applic (var +) ((var args) (const 1))))) (lambda-simple (b) (set (var args) (var b))))))  ((const 0))))
+
 
 
 
