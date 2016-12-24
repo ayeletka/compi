@@ -207,12 +207,12 @@
 
 (define createSetBoxExp
 	(lambda (lstOfVars)
-		(let ((setBoxLst (createSetBoxExpHelper lstOfVars)))
-			(if (null? (cdr setBoxLst))
-				(car setBoxLst)
-			setBoxLst)
-			)
-))
+		(if (null? lstOfVars) lstOfVars
+			(let ((setBoxLst (createSetBoxExpHelper lstOfVars)))
+				(if (null? (cdr setBoxLst))
+					(car setBoxLst)
+				setBoxLst)
+			))	))
 
 
 (define createBodyBoxWithOneVar 
@@ -244,26 +244,35 @@
 	(lambda (exp)
 		(let* 
 			((params (if (equal? (car exp) 'lambda-opt) 
-						(append (cadr exp) (list (caddr exp)))
-						(if (list? (cadr exp)) (cadr exp) (list (cadr exp)))))
+						(list (cadr exp) (caddr exp))	
+						(if (list? (cadr exp)) (cadr exp) (cadr exp))))
 			(body (if (equal? (car exp) 'lambda-opt)
 					(cadddr exp)
-				 	(caddr exp))))
-	`( ,(car exp) ,params
-		 ,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body)))))
+				 	(caddr exp)))
+			(lstToBox (createBoxingLst exp)))
+			(if (null? lstToBox) 
+				(if (equal? (car exp) 'lambda-opt) `(,(car exp) ,@params ,(box-set body))
+					`(,(car exp) ,params ,(box-set body)))
+				(if (equal? (car exp) 'lambda-opt)
+					`(,(car exp) ,@params ;probably an issue with params... 
+		 				,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body))))
+					`(,(car exp) ,params ;probably an issue with params... 
+		 				,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body)))))))
 	)
 )
 
-(define boxingOfVariables
+(define box-set
 	(lambda (exp)
 		(cond ((not (list exp)) exp)
 		      ((null? exp) exp)
 		      ((or (equal? (car exp) 'lambda-simple) (equal? (car exp) 'lambda-opt) (equal? (car exp) 'lambda-var))
 						(changingLambdaWithBoxing exp))
-		      (else (cons (if (list? (car exp)) (boxingOfVariables (car exp)) (car exp)) (boxingOfVariables (cdr exp))))
+		      (else (cons (if (list? (car exp)) (box-set (car exp)) (car exp)) (box-set (cdr exp))))
 		  )
 	)
 )
+
+(changingLambdaWithBoxing '(lambda-simple (a) (seq ((applic (var +) ((var a) (const 2))) (lambda-simple () (var a))))))
 
 ;;;; tests
 ;(boxingOfVariables '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
