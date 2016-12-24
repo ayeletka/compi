@@ -310,6 +310,13 @@
 
 ;; to add seq and or
 
+ ((equal? 'or tag)
+						(with (cdr pe)
+							(lambda (items)
+								(let ((last-item (car (reverse items)))
+									  (first-items (reverse (cdr (reverse items)))))
+									`(or ,(map atp first-items (make-list (length first-items) #f)) ,(atp last-item tp?))))))
+
 (define annotate-tc
 	(lambda (exp)
 		(letrec ((loop
@@ -328,6 +335,8 @@
                     	((equal? (car expr) 'lambda-var) (list 'lambda-var (cadr expr) (loop (caddr expr) #t)))
                     	((equal? (car expr) 'if3) 
 								(list 'if3 (loop (cadr expr) #f) (loop (caddr expr) tail?) (loop (cadddr expr) tail?)))
+                    	((equal? (car expr) 'seq) `(seq ,@(map (lambda (seqExp) (loop seqExp #f)) (reverse (cdr (reverse (cdr expr))))) ,(loop (car (reverse expr)) tail?)))
+                    	((equal? (car expr) 'or) `(or ,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cdr expr))))) ,(loop (car (reverse expr)) tail?)))
                     	(else (cons (loop (car expr) tail?) (loop (cdr expr) tail?))) 
                     )
                     )))
@@ -355,11 +364,14 @@
 (applic (var f) ((lambda-var s (applic (var apply)
 ((applic (var x) ((var x))) (var s))))))) ((lambda-simple (x) (applic (var f) ((lambda-var s
 (applic (var apply) ((applic (var x) ((var x))) (var s)))))))))))
+(define exp5 '(lambda-simple (x y) (seq (applic (var x) (var x)) (applic (var y) (var y)) )))
+(define exp6 '(lambda-simple (x y) (or (applic (var x) (var x)) #t (applic (var y) (var y)) )))
 
 ;(annotate-tc exp1)
 ;(annotate-tc exp2)
 ;(annotate-tc exp3)
-;(annotate-tc exp4)
+;(annotate-tc exp5)
+;(annotate-tc exp6)
 
 
 
