@@ -251,15 +251,17 @@
 				 	(caddr exp)))
 			(lstToBox (createBoxingLst exp)))
 			(if (null? lstToBox) 
-				(if (equal? (car exp) 'lambda-opt) `(,(car exp) ,@params ,(box-set body))
+				(if (equal? (car exp) 'lambda-opt) `(,(car exp) ,(cadr exp) ,(caddr exp) ,(box-set body))
 					`(,(car exp) ,params ,(box-set body)))
 				(if (equal? (car exp) 'lambda-opt)
-					`(,(car exp) ,@params ;probably an issue with params... 
+					`(,(car exp) ,(cadr exp) ,(caddr exp) ;probably an issue with params... 
 		 				,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body))))
 					`(,(car exp) ,params ;probably an issue with params... 
 		 				,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body)))))))
 	)
 )
+
+
 
 (define box-set
 	(lambda (exp)
@@ -272,12 +274,9 @@
 	)
 )
 
-(changingLambdaWithBoxing '(lambda-simple (a) (seq ((applic (var +) ((var a) (const 2))) (lambda-simple () (var a))))))
 
 ;;;; tests
-;(boxingOfVariables '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
-;(boxingOfVariables '(seq (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))) (lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x))))))))
-;(boxingOfVariables '(applic (lambda-opt (z) a (applic (var list) ((lambda-simple () (var a)) (lambda-simple () (set (var a) (applic (var +) ((var a) (const 1))))) (lambda-simple (b) (set (var a) (var b))))))  ((const 0))))
+(box-set '(applic (lambda-opt (z) a (applic (var list) ((lambda-simple () (var a)) (lambda-simple () (set (var a) (applic (var +) ((var a) (const 1))))) (lambda-simple (b) (set (var a) (var b))))))  ((const 0))))
 ;(boxingOfVariables ' (applic (lambda-simple (a)  (applic (var list)
 ;((lambda-simple () (var a)) (lambda-simple () 
 ;(set (var a) (applic (var +) ((var a) (const 1)))))
@@ -306,81 +305,6 @@
 		  )
 	)
 )
-
-;(define exp '(applic (lambda-simple (fact) (seq ((set (var fact) (box (var fact))) (box-set (var fact)
-;	(lambda-simple (n) (if3 (applic (var zero?) ((var n))) (const 1)
-;	(applic (var *) ((var n) (applic (box-get (var fact)) ((applic (var -) ((var n) (const 1))))))))))
-;	(applic (lambda-simple () (applic (box-get (var fact)) ((const 5)))) ())))) ((const #f))))
-
-;(remove-applic-lambda-nil exp)
-
-
-;;;;;;;;;;;;;;;;;;;;;  Annotating tail calls ;;;;;;;;;;;;;;;;;;;;
-
-;; to add seq and or
-
- ;((equal? 'or tag)
-;						(with (cdr pe)
-;							(lambda (items)
-;								(let ((last-item (car (reverse items)))
-;									  (first-items (reverse (cdr (reverse items)))))
-;									`(or ,(map atp first-items (make-list (length first-items) #f)) ,(atp last-item tp?))))))
-
-(define annotate-tc
-	(lambda (exp)
-		(letrec ((loop
-                (lambda (expr tail?)
-                    (cond
-                    	((not (list? expr)) expr)
-                    	((null? expr) expr)
-                    	((equal? (car expr) 'applic) 
-                    		(if tail?
-                    			(list 'tc-applic (loop (cadr expr) #f) (loop (caddr expr) #f))
-                    			(list 'applic (loop (cadr expr) #f) (loop (caddr expr) #f))
-                    		)
-                    	)
-                    	((equal? (car expr) 'lambda-simple) (list 'lambda-simple (cadr expr) (loop (caddr expr) #t))) 
-                    	((equal? (car expr) 'lambda-opt) (list 'lambda-opt (cadr expr) (caddr expr) (loop (cadddr expr) #t))) 
-                    	((equal? (car expr) 'lambda-var) (list 'lambda-var (cadr expr) (loop (caddr expr) #t)))
-                    	((equal? (car expr) 'if3) 
-								(list 'if3 (loop (cadr expr) #f) (loop (caddr expr) tail?) (loop (cadddr expr) tail?)))
-                    	((equal? (car expr) 'seq) `(seq ,@(map (lambda (seqExp) (loop seqExp #f)) (reverse (cdr (reverse (cdr expr))))) ,(loop (car (reverse expr)) tail?)))
-                    	((equal? (car expr) 'or) `(or ,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cdr expr))))) ,(loop (car (reverse expr)) tail?)))
-                    	(else (cons (loop (car expr) tail?) (loop (cdr expr) tail?))) 
-                    )
-                    )))
-       (loop exp #t))
-	))
-
-
-;;; tests
-(define exp1 '(lambda-simple (x) (applic (var x) (var x))))
-(define exp2 '(def (var fact)
-	(lambda-simple (n)
-(if3 (applic (var zero?) ((var n)))
-(const 1)
-(applic
-(var *)
-((var n)
-(applic
-(var fact)
-((applic (var -) ((var n) (const 1)))))))))))
-
-
-(define exp3 '(applic (var x) ((lambda-simple (x) (applic (var x)
-((lambda-simple () (applic (var x) ((lambda-simple () (applic (var x) ((var x)))))))))))))
-(define exp4 '(lambda-simple (f) (applic (lambda-simple (x)
-(applic (var f) ((lambda-var s (applic (var apply)
-((applic (var x) ((var x))) (var s))))))) ((lambda-simple (x) (applic (var f) ((lambda-var s
-(applic (var apply) ((applic (var x) ((var x))) (var s)))))))))))
-(define exp5 '(lambda-simple (x y) (seq (applic (var x) (var x)) (applic (var y) (var y)) )))
-(define exp6 '(lambda-simple (x y) (or (applic (var x) (var x)) #t (applic (var y) (var y)) )))
-
-;(annotate-tc exp1)
-;(annotate-tc exp2)
-;(annotate-tc exp3)
-;(annotate-tc exp5)
-;(annotate-tc exp6)
 
 
 
@@ -496,3 +420,33 @@
 
 
 ;;;;;check all possible  of previous calls 
+
+
+;;;;;;;;;;;;;;;;;;;;;  Annotating tail calls ;;;;;;;;;;;;;;;;;;;;
+
+
+(define annotate-tc
+	(lambda (exp)
+		(letrec ((loop
+                (lambda (expr tail?)
+                    (cond
+                    	((not (list? expr)) expr)
+                    	((null? expr) expr)
+                    	((equal? (car expr) 'lambda-simple) (list 'lambda-simple (cadr expr) (loop (caddr expr) #t))) 
+                    	((equal? (car expr) 'lambda-opt) (list 'lambda-opt (cadr expr) (caddr expr) (loop (cadddr expr) #t))) 
+                    	((equal? (car expr) 'lambda-var) (list 'lambda-var (cadr expr) (loop (caddr expr) #t)))
+                    	((equal? (car expr) 'if3) 
+								(list 'if3 (loop (cadr expr) #f) (loop (caddr expr) tail?) (loop (cadddr expr) tail?)))
+                    	((equal? (car expr) 'seq) `(seq ,@(map (lambda (seqExp) (loop seqExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr))) tail?)))
+                    	((equal? (car expr) 'or) `(or ,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cdr expr))))) ,(loop (car (reverse expr)) tail?)))
+                    	((equal? (car expr) 'applic) 
+                    		(if tail?
+                    			(list 'tc-applic (loop (cadr expr) #f) (loop (caddr expr) #f))
+                    			(list 'applic (loop (cadr expr) #f) (loop (caddr expr) #f))
+                    		)
+                    	)
+                    	(else (cons (loop (car expr) tail?) (loop (cdr expr) tail?))) 
+                    )
+                    )))
+       (loop exp #t))
+	))

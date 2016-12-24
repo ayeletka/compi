@@ -23,38 +23,49 @@
 (define test7 '(lambda x (begin (define x y) (lambda (y) y) (lambda () (begin y (set! y x)))))) ;what happens with seq after seq? should we eliminate secnd seq? from boxing
 (define test8 '(lambda (x . y) (begin (define x y) (lambda (y) y) (lambda () (begin y (set! y x))))))
 
+;;;;;;;;;;Removing redundant applications;;;;;;;;;;
+(define test12 '(lambda (fact) (letrec ((x 1) (y 2) (a 5)) b1 b2 (or 1 2 3) (if 1 2 3) #t))) ;;V
 
+;;;;;;;;;;boxing tests;;;;;;;;;;
+(define test13 '(let ((a 0)) (list (lambda () a) (lambda () (set! a (+ a 1))) (lambda (b) (set! a b)))))
+(define test13 '(let ((a 0)) (list (lambda () a) (lambda () (set! a (+ a 1))) (lambda (b) (set! a b)))))
+(define test14 '(lambda (x y z) (begin (set! x y) (lambda (y)  y) (lambda () (begin y (set! y x))))))
+
+;;;;;;;;;;annotate-tc tests;;;;;;;;;;
+(define test9 '(x (lambda (x) (x (lambda () (x (lambda () (x x)))))))) ;; V
+(define test11 '(lambda (x y) (begin #t (x x) (y y)))) ;; V
 
 ;(display '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
 
-(display "\n")	
+(display "\n\n parsed: \n\n")	
 
-(define test-parsed (parse test8))
+(define test-parsed (parse test14))
 
 (display test-parsed)
 
-(display "\n\n")
+(display "\n\n eliminate-nested-defines: \n\n")
 
 (define end (eliminate-nested-defines test-parsed))
 
 (display end)
 
-(display "\n\n")
+(display "\n\n remove-applic-lambda-nil: \n\n")
 
 (define raln (remove-applic-lambda-nil end))
 
-(display "\n\n")
-
 (display raln)
 
-(display "\n\n")
+(display "\n\n boxing: \n\n")
 
 (define bs (box-set raln))
 
-(display "\n\n")
-
 (display bs)
 
-(display "\n\n")
+(display "\n\n lexing: \n\n")
 
-(pe->lex-pe bs)
+(define lex (pe->lex-pe bs))
+(display lex)
+
+(display "\n\n tail: \n\n")
+
+(annotate-tc lex)
