@@ -64,7 +64,7 @@
 											`(applic (lambda-simple ,vars (seq (,@(eliminate-nested-defines-helper (car defExp)) ,@(eliminate-nested-defines-helper (cdr defExp)))))
 												,falseLst))
 									(if (null? (car defExp)) 
-										(eliminate-nested-defines-helper exp)
+										`(seq ,(eliminate-nested-defines-helper exp))
 													(error 'inLambda "Seq in not a valid seq: ~s" ))))))
 				(pattern-rule
 				(? 'exp)
@@ -375,52 +375,115 @@
 
 
 
+
 ;;;;;;;;;;;;;;;annotating Variables with their Lexical address;;;;;;;;;
 
 
 
-;;;;;;;;;;;assumption on variables is wrong - not (var b) only b, make changes accordingly
 (define pvarLstMaker
 	(lambda (exp) ;assuming is a lambda
-		(letrec ((pvars (cond ((equal? (car exp) 'lambda-var) (list (list 'var (cadr exp))))
-							((equal? (car exp) 'lambda-opt) (cadr exp)) ;;;;;check!!! is probably wrong both for empty lambda and opt and variadic 
+		(letrec ((pvars (cond ((equal? (car exp) 'lambda-var) (list (cadr exp)))
+							((equal? (car exp) 'lambda-opt) `(,@(cadr exp) ,(caddr exp))) 
 							(else (cadr exp))))
 				(loop (lambda (var rest num)
-					(if (null? rest) (list `(pvar ,(cadr var) ,num))
-						(cons `(pvar ,(cadr var) ,num) (loop (car rest) (cdr rest) (+ num 1))))
+					(if (null? rest) (list `(pvar ,var ,num))
+						(cons `(pvar ,var ,num) (loop (car rest) (cdr rest) (+ num 1))))
 					)))
 			(loop (car pvars) (cdr pvars) 0))
 			))
 
+(define getPvarLocation
+	(lambda (var pvarsLst)
+		(letrec ((loop (lambda (pvar restPvars)
+			(if (equal? var (cadr pvar))
+				(caddr pvar)
+				(loop (car restPvars) (cdr restPvars))
+				))))
+		(loop (car pvarsLst) (cdr pvarsLst)))))
 
 (define bvarLstMaker
-	(lambda (exp pvars bvars) ;assuming is a lambda
-		(letrec ((bvarsnew (cond ((equal? (car exp) 'lambda-var) (list (cadr exp)))
-							((equal? (car exp) 'lambda-opt) (cadr exp)) ;;;;;check!!! is probably wrong
-							(else (cadr exp))))
-				(loop (lambda (var rest num)
+	(lambda (currentPvars oldPvars oldBvars) ;assuming in a lambda and already has pvars list, pvars are the given pvars, and potentialbvars are the oldPvars
+		(letrec ((loopOldPvars (lambda (var rest)
 					(cond 
-						((ormap (lambda (pvar) (equal? (cadr var) (cadr pvar))) pvars)
-							(if (null? rest) (list `(bvar ,(cadr var) 0 ,num))
-								(cons `(bvar ,(cadr var) 0 ,num) (loop (car rest) (cdr rest) (+ num 1)))))
+						((ormap (lambda (pvar) (equal? (cadr var) (cadr pvar))) currentPvars)
+							(if (null? rest) '()
+								(loopOldPvars (car rest) (cdr rest))))
+						(else 
+							(let ((oldPvarLocation (getPvarLocation (cadr var) oldPvars)))
+								(if (null? rest)
+									(list `(bvar ,(cadr var) 0 ,oldPvarLocation))
+									(cons `(bvar ,(cadr var) 0 ,oldPvarLocation) (loopOldPvars (car rest) (cdr rest))))))
 						;;;;compare to bvars! and attach to it + give them bigger number... 
-						(else '())
-					))))
-			(loop (car bvarsnew) (cdr bvarsnew) 0))
+					)))
+				(loopOldBvars (lambda (var rest)
+							(cond 
+								((ormap (lambda (pvar) (equal? (cadr var) (cadr pvar))) currentPvars)
+									(if (null? rest) '()
+										(loopOldBvars (car rest) (cdr rest))))
+								(else 
+										(if (null? rest)
+											(list `(bvar ,(cadr var) ,(+ 1 (caddr var)) ,(cadddr var)))
+											(cons `(bvar ,(cadr var) ,(+ 1 (caddr var)) ,(cadddr var)) (loopOldPvars (car rest) (cdr rest))))))
+							)))
+			(cond (( and (null? oldPvars) (null? oldBvars)) '())
+				((null? oldBvars) (loopOldPvars (car oldPvars) (cdr oldPvars)))
+				((null? oldPvars) (loopOldBvars (car oldBvars) (cdr oldBvars)))
+				(else `(,@(loopOldPvars (car oldPvars) (cdr oldPvars)) ,@(loopOldBvars (car oldBvars) (cdr oldBvars))))))
 			))
 
+(define findNewVar
+	(lambda (var pvars bvars)
+		(letrec ((getNewVar (lambda (newvar rest)
+					(if (equal? var (cadr newvar)) newvar
+						(getNewVar (car rest) (cdr rest)))))
+				(findVar (lambda (pvars bvars)
+					(cond 
+						((ormap (lambda (pvar) (equal? var (cadr pvar))) pvars)
+							(getNewVar (car pvars) (cdr pvars)))
+						((ormap (lambda (bvar) (equal? var (cadr bvar))) bvars)
+							(getNewVar (car bvars) (cdr bvars)))
+						(else `(fvar ,var))
+					)
+			)))
+		(findVar pvars bvars))))
 
-(define pvar '((pvar a 0) (pvar b 1) (pvar c 2)))
+
+(define switchVars
+	(lambda (exp pvars bvars) ;no lambda, only body
+		(cond 
+			((null? exp) exp)
+			((not (list? exp)) exp)
+			((or (equal? (car exp) 'lambda-simple) (equal? (car exp) 'lambda-opt) (equal? (car exp) 'lambda-var))
+				(peFindLambdas exp pvars bvars))
+			((equal? (car exp) 'var)
+				(let ((replacement (findNewVar (cadr exp) pvars bvars)))
+					replacement))
+			(else `(,(switchVars (car exp) pvars bvars) ,@(switchVars (cdr exp) pvars bvars))))
+	))
+
+(define peFindLambdas
+	(lambda (exp2 oldPvars oldBvars)
+			(cond 
+				((null? exp2) exp2)
+				((not (list? exp2)) exp2)
+				((or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-opt) (equal? (car exp2) 'lambda-var))
+					(let* 
+						((pvars (pvarLstMaker exp2))
+						(bvars (bvarLstMaker pvars oldPvars oldBvars)))
+						(if (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-var)) 
+								`(,(car exp2) ,(cadr exp2) ,(switchVars (caddr exp2) pvars bvars))
+							`(,(car exp2) ,(cadr exp2) ,(caddr exp2) ,(switchVars (cadddr exp2) pvars bvars)))))
+				(else `(,(peFindLambdas (car exp2) oldPvars oldBvars) ,@(peFindLambdas (cdr exp2) oldPvars oldBvars))))))
+
+
 
 
 (define pe->lex-pe
 	(lambda (exp)
-		;(bvarLstMaker exp pvar '())
-		(pvarLstMaker exp)
-		))
+			(peFindLambdas exp '() '())
+			))
 
+;(pe->lex-pe '(lambda-var a ((applic (var +) ((var a) (const 2))) (lambda-simple () (var a)))))
 
-
-;(pe->lex-pe '(lambda-simple ((var a) (var b) (var c) (var d))	 ()))
 
 ;;;;;check all possible  of previous calls 
