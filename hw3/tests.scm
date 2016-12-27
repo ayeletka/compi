@@ -1,5 +1,4 @@
 (load "compiler.scm")
-(load "compiler3.scm")
 
 (define test1 '(lambda a (begin (+ a 2) (lambda () a)))) ;basic lambda var
 (define test2 '(lambda (a b . c) (begin (define d a) (begin (+ 1 2))))) 
@@ -36,12 +35,24 @@
 (define test15 '(lambda (z . a) (list (lambda ()  a) (lambda () (set! a 1 ) (lambda (b) a))))) ;;V
 (define test16 '(lambda expr (list (lambda ()  expr) (lambda () (set! expr 1 ) (lambda (b) expr))))) ;;V
 
-
+;;;;;;;;;Gilad Tests;;;;;;;;;;;
+(define test17 '(lambda (x y) (lambda () y x (set! x 1))))
+(define test18 '(lambda (f) ((lambda (x) (f (lambda s (apply (x x) s)))) (lambda (x) (f (lambda s (apply (x x) s)))))))
+(define test19 '(x (lambda (x) (x (lambda () (x (lambda () (x x))))))))
+(define test20 '(define fact (lambda (n) (if (zero? n) 1 (* n (fact (- n 1)))))))
+(define test21 '(lambda (x) (x x)))
+(define test22 '(define fact (lambda (n) (if (zero? n) 1 (* n (fact (- n 1)))))))
+(define test23 '(lambda (a  b) (lambda (c) (+ a b c))))
+(define test24 '(x (lambda (x) (x (lambda () (x (lambda () (x x))))))))
+(define test25 '(let ((a 0)) (list (lambda () a) (lambda () (set! a (+ a 1))) (lambda (b) (set! a b)))))
+(define test26 '(lambda (x) (define a (list? x)) (set! a b)))
+(define test27 '(letrec ((a (list? x))) (lambda () a)))
+(define test28  '(define my-even? (lambda (e) (define even? (lambda (n) (or (zero? n) (odd? (- n 1))))) (define odd? (lambda (n) (and (positive? n) (even? (- n 1))))) (even? e))))
 ;(display '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
 
 (display "\n\n parsed: \n\n")	
 
-(define test-parsed (parse test16))
+(define test-parsed (parse test28))
 
 (display test-parsed)
 

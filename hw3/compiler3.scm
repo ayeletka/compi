@@ -432,6 +432,7 @@
 								(list 'if3 (loop (cadr expr) #f) (loop (caddr expr) tail?) (loop (cadddr expr) tail?)))
                     	((equal? (car expr) 'seq) `(seq ,@(map (lambda (seqExp) (loop seqExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr))) tail?)))
                     	((equal? (car expr) 'or) `(or ,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cdr expr))))) ,(loop (car (reverse expr)) tail?)))
+                    	((equal? (car expr) 'box-set) `(,(car expr) ,(cadr expr) (loop (caddr expr) #f)))
                     	((equal? (car expr) 'applic) 
                     		(if tail?
                     			(list 'tc-applic (loop (cadr expr) #f) (loop (caddr expr) #f))
@@ -441,5 +442,5 @@
                     	(else (cons (loop (car expr) tail?) (loop (cdr expr) tail?))) 
                     )
                     )))
-       (loop exp #t))
+       (loop exp #f))
 	))
