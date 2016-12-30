@@ -175,7 +175,7 @@
         '(lambda (a) (define p (lambda (ab) (define s 1) a)) b)
         
         ;;test29
-        '(if (lambda (a . a) (define a (lambda z (define z 1) 2)) 3) (+ (begin (+ 4) (lambda (c t) (define r 1) (define g 2) ((lambda() 'hello))))) (lambda () (or (+ 5) (+ (- 6)) (if (+ 6) (set! a (+ 4)) (or ( + 7) (+ ( - 8)))))))
+        '(if (lambda (a . rr) (define a (lambda z (define z 1) 2)) 3) (+ (begin (+ 4) (lambda (c t) (define r 1) (define g 2) ((lambda() 'hello))))) (lambda () (or (+ 5) (+ (- 6)) (if (+ 6) (set! a (+ 4)) (or ( + 7) (+ ( - 8)))))))
 
         ;;test30
         '(lambda () (define (a x) x) b)
@@ -634,7 +634,7 @@
             ;;test29
             '(if3 (lambda-opt
                 (a)
-                a
+                rr
                 (tc-applic
                     (lambda-simple
                     (a)
