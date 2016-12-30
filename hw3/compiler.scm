@@ -1515,9 +1515,7 @@
   (lambda (lstOfVars)
     (if (null? lstOfVars) lstOfVars
       (let ((setBoxLst (createSetBoxExpHelper lstOfVars)))
-        (if (null? (cdr setBoxLst))
-          (car setBoxLst)
-        setBoxLst)
+           setBoxLst
       ))  ))
 
 
@@ -1534,7 +1532,8 @@
         ((and (equal? (car body) 'set) (equal? (cadr body) var)) `(box-set ,var ,@(createBodyBoxWithOneVar var (cddr body))))
 
         ((equal? body var) `(box-get ,var))
-        (else (cons (createBodyBoxWithOneVar var (car body)) (createBodyBoxWithOneVar var (cdr body)))))
+        (else  
+              (cons (createBodyBoxWithOneVar var (car body)) (createBodyBoxWithOneVar var (cdr body)))))
   )
   )
 
@@ -1559,11 +1558,21 @@
       (if (null? lstToBox) 
         (if (equal? (car exp) 'lambda-opt) `(,(car exp) ,(cadr exp) ,(caddr exp) ,(box-set body))
           `(,(car exp) ,params ,(box-set body)))
-        (if (equal? (car exp) 'lambda-opt)
-          `(,(car exp) ,(cadr exp) ,(caddr exp) 
-            ,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body))))
-          `(,(car exp) ,params 
-            ,(list 'seq (list (createSetBoxExp (createBoxingLst exp))  (createBodyBoxExp (createBoxingLst exp) body)))))))
+        (let ((body2 (if (equal? (car body) 'seq) (cadr body) body)))
+              (cond 
+                ((and (equal? (car exp) 'lambda-opt) (equal? (car body) 'seq))
+                    `(,(car exp) ,(cadr exp) ,(caddr exp) 
+                      (seq (,@(createSetBoxExp (createBoxingLst exp)) ,@(createBodyBoxExp (createBoxingLst exp) body2)))))
+                ((equal? (car exp) 'lambda-opt) 
+                  `(,(car exp) ,(cadr exp) ,(caddr exp) 
+                    (seq (,@(createSetBoxExp (createBoxingLst exp)) ,(createBodyBoxExp (createBoxingLst exp) body2)))))
+                ((equal? (car body) 'seq) 
+                  `(,(car exp) ,params 
+                    (seq (,@(createSetBoxExp (createBoxingLst exp))  ,@(createBodyBoxExp (createBoxingLst exp) body2)))))
+                (else 
+                  `(,(car exp) ,params 
+                    (seq (,@(createSetBoxExp (createBoxingLst exp))  ,(createBodyBoxExp (createBoxingLst exp) body2)))))
+                ))))
   )
 )
 
@@ -1581,13 +1590,6 @@
 )
 
 
-
-
-
-         
-
-
-
 ;;;;;;;;;;;;;;;;;;;;; Removing redundant applications ;;;;;;;;;;;;;;;;;;;;
 
 (define changingApplicLambdaNil
@@ -1602,14 +1604,11 @@
   (cond ((not (list exp)) exp)
           ((null? exp) exp)
           ((and (equal? (car exp) 'applic) (equal? (caadr exp) 'lambda-simple) (null? (cadadr exp)))
-            (changingApplicLambdaNil exp))
+            (remove-applic-lambda-nil (changingApplicLambdaNil exp))) 
           (else (cons (if (list? (car exp)) (remove-applic-lambda-nil (car exp)) (car exp)) (remove-applic-lambda-nil (cdr exp))))
       )
   )
 )
-
-
-
 
 ;;;;;;;;;;;;;;;annotating Variables with their Lexical address;;;;;;;;;
 
@@ -1741,7 +1740,7 @@
 
                       ((equal? (car expr) 'seq) `(seq (,@(map (lambda (seqExp) (loop seqExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr))) tail?))))
 
-                      ((equal? (car expr) 'or) `(or ,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cdr expr))))) ,(loop (car (reverse expr)) tail?)))
+                      ((equal? (car expr) 'or) `(or (,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr) )) tail?))))
                       ((or (equal? (car expr) 'box-set) (equal? (car expr) 'set)) `(,(car expr) ,(cadr expr) ,(loop (caddr expr) #f)))
                       ((equal? (car expr) 'applic) 
                         (if tail?
@@ -1754,7 +1753,3 @@
                     )))
        (loop exp #f))
   ))
-
-
-
-

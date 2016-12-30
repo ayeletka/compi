@@ -47,15 +47,21 @@
 (define test25 '(let ((a 0)) (list (lambda () a) (lambda () (set! a (+ a 1))) (lambda (b) (set! a b)))))
 (define test26 '(lambda (x) (define a (list? x)) (set! a b)))
 (define test27 '(letrec ((a (list? x))) (lambda () a)))
-(define test28  '(define my-even? (lambda (e) (define even? (lambda (n) (or (zero? n) (odd? (- n 1))))) (define odd? (lambda (n) (and (positive? n) (even? (- n 1))))) (even? e)))) ;;;many bugs - come back later
 (define test29 '(or (+ 1) (or (+ 2) (+ 3)) (+ 4)))
 ;(display '(lambda-simple (x y z) (seq (set (var x) (var y)) (lambda-simple (y) (var y)) (lambda-simple () (seq (var y) (set (var y) (var x)))))))
 
+(define test30 '(lambda (x) x (lambda (a b) (set! x 1))))
+(define test31 '(lambda () (or (+ 1) (or (+ 2) (+ 3)) (+ 4))))
+(define test31 '((lambda () (+ ((lambda () a)) ((lambda () b)) ((lambda () ((lambda () c))))))))
+
+
+
+(define test28  '(define my-even? (lambda (e) (define even? (lambda (n) (or (zero? n) (odd? (- n 1))))) (define odd? (lambda (n) (and (positive? n) (even? (- n 1))))) (even? e)))) ;;;many bugs - come back later
 
 
 (display "\n\n parsed: \n\n")	
 
-(define test-parsed (parse test29))
+(define test-parsed (parse test28))
 
 (display test-parsed)
 
