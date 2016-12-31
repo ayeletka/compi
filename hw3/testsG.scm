@@ -209,6 +209,9 @@
         
         ;;test40
         '(or (+ 1) (or ( + 2) (+ 3) ) (+ 4))
+        
+        ;;test41  (negative test)
+        '((lambda () 1) 2 3 4)
 
         
 ))
@@ -791,6 +794,10 @@
                         (applic (fvar +) ((const 3)))))
                 (applic (fvar +) ((const 4)))))
 
+            ;;test41
+            '(applic
+                (lambda-simple () (const 1))
+                ((const 2) (const 3) (const 4)))
 
 
 

@@ -1603,12 +1603,14 @@
   (lambda (exp)
   (cond ((not (list exp)) exp)
           ((null? exp) exp)
-          ((and (equal? (car exp) 'applic) (equal? (caadr exp) 'lambda-simple) (null? (cadadr exp)))
+          ((and (equal? (car exp) 'applic) (equal? (caadr exp) 'lambda-simple) (null? (cadadr exp)) (null? (caddr exp)))
             (remove-applic-lambda-nil (changingApplicLambdaNil exp))) 
           (else (cons (if (list? (car exp)) (remove-applic-lambda-nil (car exp)) (car exp)) (remove-applic-lambda-nil (cdr exp))))
       )
   )
 )
+
+
 
 ;;;;;;;;;;;;;;;annotating Variables with their Lexical address;;;;;;;;;
 

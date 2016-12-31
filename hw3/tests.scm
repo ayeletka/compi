@@ -53,6 +53,7 @@
 (define test30 '(lambda (x) x (lambda (a b) (set! x 1))))
 (define test31 '(lambda () (or (+ 1) (or (+ 2) (+ 3)) (+ 4))))
 (define test31 '((lambda () (+ ((lambda () a)) ((lambda () b)) ((lambda () ((lambda () c))))))))
+(define test32 '((lambda () 1) 2 3 4))
 
 
 
@@ -61,7 +62,7 @@
 
 (display "\n\n parsed: \n\n")	
 
-(define test-parsed (parse test28))
+(define test-parsed (parse test32))
 
 (display test-parsed)
 
