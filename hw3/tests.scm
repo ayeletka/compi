@@ -54,7 +54,7 @@
 (define test31 '(lambda () (or (+ 1) (or (+ 2) (+ 3)) (+ 4))))
 (define test31 '((lambda () (+ ((lambda () a)) ((lambda () b)) ((lambda () ((lambda () c))))))))
 (define test32 '((lambda () 1) 2 3 4))
-
+(define test33 '(lambda (a) a (lambda (b c) (set! a 4) (+ a b) (lambda () (set! b 8)))))
 
 
 (define test28  '(define my-even? (lambda (e) (define even? (lambda (n) (or (zero? n) (odd? (- n 1))))) (define odd? (lambda (n) (and (positive? n) (even? (- n 1))))) (even? e)))) ;;;many bugs - come back later
@@ -62,7 +62,7 @@
 
 (display "\n\n parsed: \n\n")	
 
-(define test-parsed (parse test32))
+(define test-parsed (parse test33))
 
 (display test-parsed)
 

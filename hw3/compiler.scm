@@ -1562,16 +1562,16 @@
               (cond 
                 ((and (equal? (car exp) 'lambda-opt) (equal? (car body) 'seq))
                     `(,(car exp) ,(cadr exp) ,(caddr exp) 
-                      (seq (,@(createSetBoxExp (createBoxingLst exp)) ,@(createBodyBoxExp (createBoxingLst exp) body2)))))
+                      (seq (,@(createSetBoxExp (createBoxingLst exp)) ,@(createBodyBoxExp (createBoxingLst exp) (box-set body2))))))
                 ((equal? (car exp) 'lambda-opt) 
                   `(,(car exp) ,(cadr exp) ,(caddr exp) 
-                    (seq (,@(createSetBoxExp (createBoxingLst exp)) ,(createBodyBoxExp (createBoxingLst exp) body2)))))
+                    (seq (,@(createSetBoxExp (createBoxingLst exp)) ,(createBodyBoxExp (createBoxingLst exp) (box-set body2))))))
                 ((equal? (car body) 'seq) 
                   `(,(car exp) ,params 
-                    (seq (,@(createSetBoxExp (createBoxingLst exp))  ,@(createBodyBoxExp (createBoxingLst exp) body2)))))
+                    (seq (,@(createSetBoxExp (createBoxingLst exp))  ,@(createBodyBoxExp (createBoxingLst exp) (box-set body2))))))
                 (else 
                   `(,(car exp) ,params 
-                    (seq (,@(createSetBoxExp (createBoxingLst exp))  ,(createBodyBoxExp (createBoxingLst exp) body2)))))
+                    (seq (,@(createSetBoxExp (createBoxingLst exp))  ,(createBodyBoxExp (createBoxingLst exp) (box-set body2))))))
                 ))))
   )
 )
@@ -1588,7 +1588,7 @@
       )
   )
 )
-
+(box-set '(lambda-simple (a) (seq ((var a) (lambda-simple (b c) (seq ((set (var a) (const 4)) (applic (var +) ((var a) (var b))) (lambda-simple () (set (var b) (const 8))))))))))
 
 ;;;;;;;;;;;;;;;;;;;;; Removing redundant applications ;;;;;;;;;;;;;;;;;;;;
 
