@@ -55,39 +55,39 @@
 (define test31 '((lambda () (+ ((lambda () a)) ((lambda () b)) ((lambda () ((lambda () c))))))))
 (define test32 '((lambda () 1) 2 3 4))
 (define test33 '(lambda (a) a (lambda (b c) (set! a 4) (+ a b) (lambda () (set! b 8)))))
-
+(define test34 '(lambda (z) (define a 5) (define b 123) (lambda (y) (define x 10) 
+	(define x1 (lambda (abc) (define a 56) (define x1 10) (+ 1 2))) (f 32 45 'a)) (a 5)))
 
 (define test28  '(define my-even? (lambda (e) (define even? (lambda (n) (or (zero? n) (odd? (- n 1))))) (define odd? (lambda (n) (and (positive? n) (even? (- n 1))))) (even? e)))) ;;;many bugs - come back later
 
 
 (display "\n\n parsed: \n\n")	
 
-(define test-parsed (parse test33))
+(define test-parsed (parse test34))
 
-(display test-parsed)
+test-parsed
 
 (display "\n\n eliminate-nested-defines: \n\n")
 
 (define end (eliminate-nested-defines test-parsed))
 
-(display end)
-
+end
 (display "\n\n remove-applic-lambda-nil: \n\n")
 
 (define raln (remove-applic-lambda-nil end))
 
-(display raln)
+ raln
 
 (display "\n\n boxing: \n\n")
 
 (define bs (box-set raln))
 
-(display bs)
+ bs
 
 (display "\n\n lexing: \n\n")
 
 (define lex (pe->lex-pe bs))
-(display lex)
+ lex
 
 (display "\n\n tail: \n\n")
 

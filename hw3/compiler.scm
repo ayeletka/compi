@@ -1407,7 +1407,7 @@
     (letrec ((isBoundOccurence #f)
         (loop (lambda (exp2)
             (cond 
-              ((and (not (list? exp2)) (equal? var exp2)) (set! isBoundOccurence #t))
+              ((and (list? exp2) (equal? `(var ,var) exp2)) (set! isBoundOccurence #t))
               ((not (list? exp2)) (void))
               ((null? exp2) (void))
               ((and (or (equal? (car exp2) 'lambda-simple)  (equal? (car exp2) 'lambda-var))
@@ -1463,7 +1463,7 @@
     (letrec ((isGetOccurence #f)
         (loop (lambda (exp2)
             (cond 
-              ((and (not (list? exp2)) (equal? var exp2)) (set! isGetOccurence #t))
+              ((and (list? exp2) (equal? `(var ,var) exp2)) (set! isGetOccurence #t))
               ((not (list? exp2)) (void))
               ((null? exp2) (void))
               ((and (equal? (car exp2) 'set) (equal? (cadadr exp2) var)) (loop (cddr exp2)))
@@ -1588,7 +1588,8 @@
       )
   )
 )
-(box-set '(lambda-simple (a) (seq ((var a) (lambda-simple (b c) (seq ((set (var a) (const 4)) (applic (var +) ((var a) (var b))) (lambda-simple () (set (var b) (const 8))))))))))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;; Removing redundant applications ;;;;;;;;;;;;;;;;;;;;
 
