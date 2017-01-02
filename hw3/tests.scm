@@ -60,10 +60,11 @@
 
 (define test28  '(define my-even? (lambda (e) (define even? (lambda (n) (or (zero? n) (odd? (- n 1))))) (define odd? (lambda (n) (and (positive? n) (even? (- n 1))))) (even? e)))) ;;;many bugs - come back later
 
+(define test35 '(lambda () (lambda () (lambda (x) (list (lambda () (lambda () x)) (lambda (x) (set! x 1)))))))
 
 (display "\n\n parsed: \n\n")	
 
-(define test-parsed (parse test34))
+(define test-parsed (parse test35))
 
 test-parsed
 

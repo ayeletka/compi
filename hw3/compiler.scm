@@ -1445,7 +1445,7 @@
     (begin (loop exp) isBoundOccurence ))))
 
 
-(define setExpression   
+(define setExpression 
   (lambda (var exp) 
     (letrec ((isSetOccurence #f)
         (loop (lambda (exp2)
@@ -1454,9 +1454,17 @@
               ((null? exp2) (void))
               ((and (equal? (car exp2) 'set) (equal? (cadadr exp2) var)) 
                       (set! isSetOccurence #t))
+              ((and (equal? (car exp2) 'set) (equal? (cadadr exp2) var)) (loop (cddr exp2)))
+              ((and (or (equal? (car exp2) 'lambda-simple)  (equal? (car exp2) 'lambda-var))
+                  (not (member var (if (list? (cadr exp2)) (cadr exp2) (list (cadr exp2))))))
+                      (loop (caddr exp2)))
+              ((and (equal? (car exp2) 'lambda-opt) (not (member var (append (cadr exp2) (list (caddr exp2)))))) (loop (cadr (cddr exp2))))
+              ((and (or (equal? (car exp2) 'lambda-simple) (equal? (car exp2) 'lambda-var))
+                   (member var (if (list? (cadr exp2)) (cadr exp2) (list (cadr exp2)))))
+                      (void))
+              ((and (equal? (car exp2) 'lambda-opt)  (member var (append (cadr exp2) (list (caddr exp2))))) (void))
               (else (begin (loop (car exp2)) (loop (cdr exp2))))))))
     (begin (loop exp) isSetOccurence ))))
-
 
 (define getOccurence 
   (lambda (var exp) 
@@ -1498,8 +1506,6 @@
     )
     (remove (void) varsToBox)))
   )
-
-
 
 (define createSetBoxExpHelper
   (lambda (lstOfVars)
