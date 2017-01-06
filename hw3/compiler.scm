@@ -1750,7 +1750,11 @@
                       ((equal? (car expr) 'seq) `(seq (,@(map (lambda (seqExp) (loop seqExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr))) tail?))))
 
                       ((equal? (car expr) 'or) `(or (,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr) )) tail?))))
-                      ((or (equal? (car expr) 'box-set) (equal? (car expr) 'set)) `(,(car expr) ,(cadr expr) ,(loop (caddr expr) #f)))
+                      ((or (equal? (car expr) 'box-set)(equal? (car expr) 'set))  `(,(car expr) ,(cadr expr) ,(loop (caddr expr) #f)))
+                      ((and (equal? (car expr) 'applic) (equal? (cadr expr) '(fvar set))) 
+                            `(,(if tail? 'tc-applic 'applic) ,(cadr expr) ,(list (caaddr expr) (loop (cadr (caddr expr)) #f))))
+                      ((and (equal? (car expr) 'applic) (equal? (cadr expr) '(fvar box-set))) 
+                            `(,(if tail? 'tc-applic 'applic) ,(cadr expr) ,(list (caaddr expr) (loop (cadr (caddr expr)) #f))))
                       ((equal? (car expr) 'applic) 
                         (if tail?
                           (list 'tc-applic (loop (cadr expr) #f) (loop (caddr expr) #f))
@@ -1762,3 +1766,4 @@
                     )))
        (loop exp #f))
   ))
+

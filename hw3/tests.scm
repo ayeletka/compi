@@ -59,8 +59,7 @@
 	(define x1 (lambda (abc) (define a 56) (define x1 10) (+ 1 2))) (f 32 45 'a)) (a 5)))
 
 (define test28  '(define my-even? (lambda (e) (define even? (lambda (n) (or (zero? n) (odd? (- n 1))))) (define odd? (lambda (n) (and (positive? n) (even? (- n 1))))) (even? e)))) ;;;many bugs - come back later
-
-(define test35 '(lambda () (lambda () (lambda (x) (list (lambda () (lambda () x)) (lambda (x) (set! x 1)))))))
+(define test35 '(lambda (a) (begin 5 (box-set b 2) (box-get a) #t)))
 
 (display "\n\n parsed: \n\n")	
 
@@ -93,3 +92,4 @@ end
 (display "\n\n tail: \n\n")
 
 (annotate-tc lex)
+
