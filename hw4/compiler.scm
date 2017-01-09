@@ -1767,3 +1767,98 @@
        (loop exp #f))
   ))
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; homeWork4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define file->string
+  (lambda (in-file)
+    (let ((in-port (open-input-file in-file)))
+          (letrec ((run
+            (lambda ()
+              (let ((ch (read-char in-port)))
+                (if (eof-object? ch)
+                    (begin
+                      (close-input-port in-port)
+                      '())
+                    (cons ch (run)))))))
+      (list->string
+        (run))))))
+
+
+
+(define string->schemeList 
+  (lambda (str)
+    (letrec ((str-maker 
+                (lambda (sexprLst stringExp)
+                  (let* ((parsedExp (test-string <sexpr> stringExp))
+                          (exp (cadar parsedExp))
+                          (restStr (cadadr parsedExp)))
+                          (if (and (equal? (caar parsedExp) 'match) 
+                                    (not (null? exp)))
+                              (if (equal? (string-length restStr) 0)
+                                `(,@sexprLst ,exp)
+                                (str-maker `(,@sexprLst ,exp) (cadadr parsedExp)))
+                               sexprLst)
+                  )
+                  )))
+    (str-maker '() str))))
+   
+(define total-evaluation 
+  (lambda (sexprLst)
+    (let* 
+      ((parsed (map parse sexprLst))
+      (noNestedDefines (map eliminate-nested-defines parsed))
+      (noLambdaNil (map remove-applic-lambda-nil noNestedDefines))
+      (boxedExps (map box-set noLambdaNil))
+      (lexedExps (map pe->lex-pe boxedExps))
+      (noTailCalls (map annotate-tc lexedExps))
+      )
+      noTailCalls)))
+
+
+(define create-table 
+  (lambda (exp2 varType)
+    (letrec (
+      (table '())
+      (loop 
+      (lambda (exp)
+        (cond 
+          ((not (list? exp)) (void))
+          ((null? exp) (void))
+          ((equal? (car exp) varType) (set! table `(,@table ,exp)))
+          (else (begin (loop (car exp)) (loop (cdr exp))))))))
+    (begin (loop exp2) table)
+    ))
+    )
+
+
+(define code-gen
+  (lambda (parsedEvaledSexpr constant-table free-var-table)
+    parsedEvaledSexpr
+    ))
+
+
+
+(define compile-scheme-file
+  (lambda (scheme_source_file cisc_target_file)
+    (let* ((stringFile (file->string scheme_source_file))
+          (sexprLst (string->schemeList stringFile))
+          (parsedEvaledSexpr (total-evaluation sexprLst))
+          (constant-table (create-table parsedEvaledSexpr 'const)) ;need to check if is correct
+          (free-var-table (create-table parsedEvaledSexpr 'fvar)) ;need to check if is correct - not sure this is even the global variable table...
+          (ciscStr (code-gen parsedEvaledSexpr constant-table free-var-table)) ;code-gen needs to be created
+          ;;add prolog and epilog to the code then write to file
+          )
+     (write ciscStr (open-output-file cisc_target_file)) ;writes to the output file
+      )
+    ))
+
+
+(compile-scheme-file "test-files/test1.scm" "test-files/foo.c")
