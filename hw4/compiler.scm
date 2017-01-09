@@ -1856,7 +1856,8 @@
           (ciscStr (code-gen parsedEvaledSexpr constant-table free-var-table)) ;code-gen needs to be created
           ;;add prolog and epilog to the code then write to file
           )
-     (write ciscStr (open-output-file cisc_target_file)) ;writes to the output file
+     ;(write ciscStr (open-output-file cisc_target_file)) ;writes to the output file
+     (display ciscStr)
       )
     ))
 
