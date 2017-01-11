@@ -1777,6 +1777,103 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; consts table ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define T_VOID  937610)
+(define T_NIL   722689)
+(define T_BOOL  741553)
+(define T_CHAR  181048)
+(define T_INTEGER   945311)
+(define T_STRING  799345)
+(define T_SYMBOL  368031)
+(define T_PAIR  885397)
+(define T_VECTOR  335728)
+(define T_CLOSURE   276405)
+
+
+(define const_table '())
+(define address 10)
+
+
+(define initConstTable
+  (lambda ()
+    (set! const_table 
+      `(,@const_table 
+        (,address ,(void) ,T_VOID)
+      ))
+      (set! address (+ address 1))
+      (set! const_table 
+      `(,@const_table 
+        (,address () ,T_NIL)
+      ))
+      (set! address (+ address 1))
+      (set! const_table 
+      `(,@const_table 
+        (,address ,#f ,T_BOOL)
+      ))
+      (set! address (+ address 1))
+      (set! const_table 
+      `(,@const_table 
+        (,address ,#t ,T_BOOL)
+      ))
+      (set! address (+ address 1))
+    )
+  )
+
+(define getConstAddress
+  (lambda (const)
+    (letrec ((loop 
+            (lambda (const_table)
+              (cond 
+                ((null? const_table) #f)
+                ((equal? (cadar const_table) const) (caar const_table))
+                (else (loop (cdr const_table)))
+              )
+            )
+    ))
+    (loop const_table)
+    )
+  )
+)
+
+(define addToConstTable
+  (lambda (const)
+    (let ((cVar (cadr const)))
+    (cond
+      ((char? cVar) 
+          (set! const_table `(,@const_table (,address ,cVar (,T_CHAR ,(char->integer cVar)))))
+          (set! address (+ address 2)))
+      ((number? cVar) 
+          (set! const_table `(,@const_table (,address ,cVar (,T_INTEGER ,cVar))))
+          (set! address (+ address 2)))
+      ((string? cVar) 
+          (set! const_table `(,@const_table (,address ,cVar (,T_STRING ,(string-length cVar) ,@(map char->integer (string->list cVar))))))
+          (set! address (+ address 2 (string-length cVar))))
+      ((symbol? cVar)
+          (addToConstTable `(const ,(symbol->string cVar)))
+          (set! const_table `(,@const_table (,address ,cVar (,T_SYMBOL ,(getConstAddress (symbol->string cVar))))))
+          (set! address (+ address 2)))
+      ((pair? cVar)
+          (addToConstTable `(const ,(car cVar)))
+          (addToConstTable `(const ,(cdr cVar))) 
+          (set! const_table `(,@const_table (,address ,cVar (,T_PAIR ,(getConstAddress (car cVar)) ,(getConstAddress (cdr cVar))))))
+          (set! address (+ address 3)))
+      ((vector? cVar)
+          (map (lambda (c) (addToConstTable `(const ,c))) (vector->list cVar))
+          (set! const_table `(,@const_table (,address ,cVar (,T_VECTOR ,(length (vector->list cVar)) ,@(map getConstAddress (vector->list cVar))))))
+          (set! address (+ address 2 (length (vector->list cVar)))))
+
+  )))
+)
+
+;(initConstTable)
+;(addToConstTable `(const ,(vector 1 'a)))
+;(display const_table)
+;(getConstAddress (vector 1 'a))
+
+
 (define file->string
   (lambda (in-file)
     (let ((in-port (open-input-file in-file)))
@@ -1851,13 +1948,15 @@
     (let* ((stringFile (file->string scheme_source_file))
           (sexprLst (string->schemeList stringFile))
           (parsedEvaledSexpr (total-evaluation sexprLst))
-          (constant-table (create-table parsedEvaledSexpr 'const)) ;need to check if is correct
-          (free-var-table (create-table parsedEvaledSexpr 'fvar)) ;need to check if is correct - not sure this is even the global variable table...
-          (ciscStr (code-gen parsedEvaledSexpr constant-table free-var-table)) ;code-gen needs to be created
+          (constant-list (create-table parsedEvaledSexpr 'const)) ;need to call the table creator
+         ; (free-var-table (create-table parsedEvaledSexpr 'fvar)) ;need to check if is correct - not sure this is even the global variable table...
           ;;add prolog and epilog to the code then write to file
           )
+            (initConstTable)
+            (code-gen parsedEvaledSexpr constant-table free-var-table);code-gen needs to be created
+
      ;(write ciscStr (open-output-file cisc_target_file)) ;writes to the output file
-     (display ciscStr)
+     ;(display ciscStr)
       )
     ))
 
