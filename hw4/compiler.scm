@@ -1780,7 +1780,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; common ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+(define nl (list->string  (list #\newline)))
+ 
 (define remove_duplicate
   (lambda (lst)
     (letrec ((loop 
@@ -1808,6 +1809,9 @@
     (begin (loop exp2) table)
     ))
     )
+
+(define address 10)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; consts table ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define T_VOID  937610)
@@ -1823,7 +1827,6 @@
 
 
 (define const_table '())
-(define address 10)
 
 
 (define initConstTable
@@ -1864,18 +1867,7 @@
     ))
     (loop const_table))))
 
-(define getGlobalVarAddress
-  (lambda (var)
-    (letrec ((loop 
-            (lambda (global_table)
-              (cond 
-                ((null? global_table) #f)
-                ((equal? (cadar global_table) var) (caar global_table))
-                (else (loop (cdr global_table)))
-              )
-            )
-    ))
-    (loop global_table))))
+
 
 (define addToConstTable
   (lambda (const)
@@ -1932,34 +1924,52 @@
       )))
     (loop fvarList))))
 
+(define getGlobalVarAddress
+  (lambda (var)
+    (letrec ((loop 
+            (lambda (global_table)
+              (cond 
+                ((null? global_table) #f)
+                ((equal? (cadar global_table) var) (caar global_table))
+                (else (loop (cdr global_table)))
+              )
+            )
+    ))
+    (loop global_table))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; generate ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define getInputFileSexpsCompiledCode
+(define codeGenOnAllSexps
   (lambda (sexps)
-        (letrec ( (recFunc
-                (lambda (sexps)
-                  (if
-                    (null? sexps)
-                    nl
-                    (string-append
-                      (code-gen (car sexps) 0 0) nl
-                      "CALL(PRINT_R0);" nl
-                      (recFunc (cdr sexps))
-                    )
-                    )))
-
-
-              )
-            (recFunc at-lexParesedSexprs)
-        )
-    )
-
-)
+        (letrec ((loop
+                (lambda (exps)
+                  (if (null? exps)
+                      ""
+                      (string-append
+                        (code-gen (car exps) 0 0) nl
+                        "CALL(PRINT_R0);" nl
+                        (loop (cdr exps))
+                    )))))
+            (loop sexps)
+        )))
 
 (define code-gen
-  (lambda (parsedEvaledSexpr constant-table free-var-table)
-    parsedEvaledSexpr
-    ))
+  (lambda (sexpr envLevel numberOfParams )
+      (cond
+        ((null? sexpr) (list))
+        ((equal? (car sexpr) 'const) (code-gen-const sexpr envLevel numberOfParams))
+        (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
+    )))
+
+(define code-gen-const
+(lambda (const envLevel numberOfParams)
+          (string-append 
+           "/*const*/" nl
+           "MOV(R0," 
+           (number->string (getConstAddress (cadr const))) 
+           ");" nl
+           )))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; compile-scheme-file ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -1992,8 +2002,7 @@
                                 `(,@sexprLst ,exp)
                                 (str-maker `(,@sexprLst ,exp) (cadadr parsedExp)))
                                sexprLst)
-                  )
-                  )))
+                  ))))
     (str-maker '() str))))
    
 (define total-evaluation 
@@ -2010,10 +2019,6 @@
 
 
 
-
-
-
-
 (define compile-scheme-file
   (lambda (scheme_source_file cisc_target_file)
     (let* ((stringFile (file->string scheme_source_file))
@@ -2021,13 +2026,12 @@
           (parsedEvaledSexpr (total-evaluation sexprLst))
           (constant-list (remove_duplicate (create-list-of-certain-type parsedEvaledSexpr 'const))) ;need to call the table creator
           (fvar-list (create-list-of-certain-type parsedEvaledSexpr 'fvar))
-         ; (free-var-table (create-table parsedEvaledSexpr 'fvar)) ;need to check if is correct - not sure this is even the global variable table...
           ;;add prolog and epilog to the code then write to file
           )
             (initConstTable)
             (map addToConstTable constant-list)
             (addLstToGlobalTable (append saveProcedures fvar-list))
-            ;(code-gen parsedEvaledSexpr constant-table free-var-table);code-gen needs to be created
+            (codeGenOnAllSexps parsedEvaledSexpr)
      ;(write ciscStr (open-output-file cisc_target_file)) ;writes to the output file
      ;(display ciscStr)
       )
