@@ -1778,7 +1778,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; common ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+(define remove_duplicate
+  (lambda (lst)
+    (letrec ((loop 
+      (lambda (lst1 lst2)
+      (if (null? lst1) lst2
+          (if (member (car lst1) lst2)
+              (loop (cdr lst1) lst2)
+              (loop (cdr lst1) `(,@lst2 ,(car lst1)))
+          )
+      )))
+    ) (loop lst (list))
+  )))
+
+(define create-list-of-certain-type
+  (lambda (exp2 varType)
+    (letrec (
+      (table '())
+      (loop 
+      (lambda (exp)
+        (cond 
+          ((not (list? exp)) (void))
+          ((null? exp) (void))
+          ((equal? (car exp) varType) (set! table `(,@table ,(cadr exp))))
+          (else (begin (loop (car exp)) (loop (cdr exp))))))))
+    (begin (loop exp2) table)
+    ))
+    )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; consts table ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define T_VOID  937610)
@@ -1833,14 +1862,24 @@
               )
             )
     ))
-    (loop const_table)
-    )
-  )
-)
+    (loop const_table))))
+
+(define getGlobalVarAddress
+  (lambda (var)
+    (letrec ((loop 
+            (lambda (global_table)
+              (cond 
+                ((null? global_table) #f)
+                ((equal? (cadar global_table) var) (caar global_table))
+                (else (loop (cdr global_table)))
+              )
+            )
+    ))
+    (loop global_table))))
 
 (define addToConstTable
   (lambda (const)
-    (let ((cVar (cadr const)))
+    (let ((cVar const))
     (cond
       ((char? cVar) 
           (set! const_table `(,@const_table (,address ,cVar (,T_CHAR ,(char->integer cVar)))))
@@ -1852,26 +1891,76 @@
           (set! const_table `(,@const_table (,address ,cVar (,T_STRING ,(string-length cVar) ,@(map char->integer (string->list cVar))))))
           (set! address (+ address 2 (string-length cVar))))
       ((symbol? cVar)
-          (addToConstTable `(const ,(symbol->string cVar)))
+          (addToConstTable (symbol->string cVar))
           (set! const_table `(,@const_table (,address ,cVar (,T_SYMBOL ,(getConstAddress (symbol->string cVar))))))
           (set! address (+ address 2)))
       ((pair? cVar)
-          (addToConstTable `(const ,(car cVar)))
-          (addToConstTable `(const ,(cdr cVar))) 
+          (addToConstTable (car cVar))
+          (addToConstTable (cdr cVar))
           (set! const_table `(,@const_table (,address ,cVar (,T_PAIR ,(getConstAddress (car cVar)) ,(getConstAddress (cdr cVar))))))
           (set! address (+ address 3)))
       ((vector? cVar)
-          (map (lambda (c) (addToConstTable `(const ,c))) (vector->list cVar))
+          (map (lambda (c) (addToConstTable c)) (vector->list cVar))
           (set! const_table `(,@const_table (,address ,cVar (,T_VECTOR ,(length (vector->list cVar)) ,@(map getConstAddress (vector->list cVar))))))
           (set! address (+ address 2 (length (vector->list cVar)))))
 
   )))
 )
 
-;(initConstTable)
-;(addToConstTable `(const ,(vector 1 'a)))
-;(display const_table)
-;(getConstAddress (vector 1 'a))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; global table ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define global_table '())
+(define saveProcedures
+  '(+ - * / < > = number? integer? boolean? symbol? char? null? pair? string? zero? vector? procedure? 
+      char->integer integer->char string-length string-ref string-set! make-string 
+      vector-length vector-ref vector-set! make-vector cons car cdr set-cdr! set-car! list vector apply length symbol->string
+      string->symbol eq?)
+)
+
+(define addLstToGlobalTable
+  (lambda (fvarList)
+    (letrec ((loop 
+      (lambda (lst) 
+        (cond 
+        ((null? lst) (void))
+        ((not(getGlobalVarAddress (car lst)))
+           (set! global_table `(,@global_table (,address ,(car lst))))
+           (set! address (+ address 1))
+           (loop (cdr lst)))
+        (else (loop (cdr lst)))
+        )
+      )))
+    (loop fvarList))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; generate ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define getInputFileSexpsCompiledCode
+  (lambda (sexps)
+        (letrec ( (recFunc
+                (lambda (sexps)
+                  (if
+                    (null? sexps)
+                    nl
+                    (string-append
+                      (code-gen (car sexps) 0 0) nl
+                      "CALL(PRINT_R0);" nl
+                      (recFunc (cdr sexps))
+                    )
+                    )))
+
+
+              )
+            (recFunc at-lexParesedSexprs)
+        )
+    )
+
+)
+
+(define code-gen
+  (lambda (parsedEvaledSexpr constant-table free-var-table)
+    parsedEvaledSexpr
+    ))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; compile-scheme-file ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (define file->string
@@ -1920,26 +2009,8 @@
       noTailCalls)))
 
 
-(define create-table 
-  (lambda (exp2 varType)
-    (letrec (
-      (table '())
-      (loop 
-      (lambda (exp)
-        (cond 
-          ((not (list? exp)) (void))
-          ((null? exp) (void))
-          ((equal? (car exp) varType) (set! table `(,@table ,exp)))
-          (else (begin (loop (car exp)) (loop (cdr exp))))))))
-    (begin (loop exp2) table)
-    ))
-    )
 
 
-(define code-gen
-  (lambda (parsedEvaledSexpr constant-table free-var-table)
-    parsedEvaledSexpr
-    ))
 
 
 
@@ -1948,13 +2019,15 @@
     (let* ((stringFile (file->string scheme_source_file))
           (sexprLst (string->schemeList stringFile))
           (parsedEvaledSexpr (total-evaluation sexprLst))
-          (constant-list (create-table parsedEvaledSexpr 'const)) ;need to call the table creator
+          (constant-list (remove_duplicate (create-list-of-certain-type parsedEvaledSexpr 'const))) ;need to call the table creator
+          (fvar-list (create-list-of-certain-type parsedEvaledSexpr 'fvar))
          ; (free-var-table (create-table parsedEvaledSexpr 'fvar)) ;need to check if is correct - not sure this is even the global variable table...
           ;;add prolog and epilog to the code then write to file
           )
             (initConstTable)
-            (code-gen parsedEvaledSexpr constant-table free-var-table);code-gen needs to be created
-
+            (map addToConstTable constant-list)
+            (addLstToGlobalTable (append saveProcedures fvar-list))
+            ;(code-gen parsedEvaledSexpr constant-table free-var-table);code-gen needs to be created
      ;(write ciscStr (open-output-file cisc_target_file)) ;writes to the output file
      ;(display ciscStr)
       )
