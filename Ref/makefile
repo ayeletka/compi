@@ -1,5 +1,5 @@
-out: out.c
-	gcc -o out out.c
+foo: foo.c
+	gcc -o foo foo.c
 .PHONY: clean
 clean:
-	rm -f out
+	rm -f foo

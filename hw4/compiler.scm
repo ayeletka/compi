@@ -1831,26 +1831,14 @@
 
 (define initConstTable
   (lambda ()
-    (set! const_table 
-      `(,@const_table 
-        (,address ,(void) ,T_VOID)
-      ))
-      (set! address (+ address 1))
-      (set! const_table 
-      `(,@const_table 
-        (,address () ,T_NIL)
-      ))
-      (set! address (+ address 1))
-      (set! const_table 
-      `(,@const_table 
-        (,address ,#f ,T_BOOL)
-      ))
-      (set! address (+ address 1))
-      (set! const_table 
-      `(,@const_table 
-        (,address ,#t ,T_BOOL)
-      ))
-      (set! address (+ address 1))
+    (set! const_table `(,@const_table (,address ,(void) ,T_VOID)))
+    (set! address (+ address 1))
+    (set! const_table `(,@const_table (,address () ,T_NIL)))
+    (set! address (+ address 1))
+    (set! const_table `(,@const_table (,address ,#f ,T_BOOL)))
+    (set! address (+ address 1))
+    (set! const_table `(,@const_table (,address ,#t ,T_BOOL)))
+    (set! address (+ address 1))
     )
   )
 
@@ -1899,6 +1887,78 @@
   )))
 )
 
+(define load-void (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_VOID));" nl)))
+(define load-nil (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_NIL));" nl)))
+(define load-bool (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl)))
+
+(define load-char (lambda (idx val) 
+	(string-append "MOV(IND(" (number->string idx) "), IMM(T_CHAR));" nl
+				   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string val) "));" nl))))
+
+(define load-int (lambda (idx val) 
+	(string-append "MOV(IND(" (number->string idx) "), IMM(T_INTEGER));" nl
+				   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string val) "));" nl)))
+
+(define load-string-chars
+	(lambda (idx chars)
+		(if (null? chars) ""
+			(let ((c (number->string (car chars))))
+				(string-append "MOV(IND(" (number->string idx) "), IMM("c"));" nl
+					(load-string-chars (+ idx 1) (cdr chars)))))))
+
+(define load-string 
+	(lambda (idx val) 
+		(let (
+			(len (car val))
+			(chars (cdr val)))
+				(string-append "MOV(IND(" (number->string idx) "), IMM(T_STRING));" nl
+							   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string len) "));" nl
+							   (load-string-chars (+ idx 2) chars)))))
+
+(define load-symbol 
+	(lambda (idx val) 
+		(string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
+					   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string val) "));" nl)))
+
+(define load-pair 
+	(lambda (idx val) 
+		(string-append "MOV(IND(" (number->string idx) "), IMM(T_PAIR));" nl
+					   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string (car val)) "));" nl
+					   "MOV(IND(" (number->string (+ idx 2)) "), IMM(" (number->string (cdr val)) "));" nl)))
+
+(define load-vector 
+	(lambda (idx val) 
+		(let (
+			(len (car val))
+			(chars (cdr val)))
+				(string-append "MOV(IND(" (number->string idx) "), IMM(T_VECTOR));" nl
+							   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string len) "));" nl
+							   (load-string-chars (+ idx 2) chars)))))
+
+(define initiate-consts
+	(lambda (consts)
+		(if (not (null? consts))
+			(let* ((const-exp (car consts))
+				(idx (car const-exp))
+				(var (cadr const-exp))
+				(type (caddr const-exp))
+				(rest (cdr consts)))
+					(cond 
+						((equal? type T_VOID) (string-append (load-void idx) (initiate-consts rest)))
+						((equal? type T_NIL) (string-append (load-nil idx) (initiate-consts rest)))
+						((equal? type T_BOOL) (string-append (load-bool idx) (initiate-consts rest)))
+						((equal? (car type) T_CHAR) (string-append (load-char idx (cdr type)) (initiate-consts rest)))
+						((equal? (car type) T_INTEGER) (string-append (load-char idx (cadr type)) (initiate-consts rest)))
+						((equal? (car type) T_STRING) (string-append (load-string idx (cdr type)) (initiate-consts rest)))
+						((equal? (car type) T_SYMBOL) (string-append (load-symbol idx (cadr type)) (initiate-consts rest)))
+						((equal? (car type) T_PAIR) (string-append (load-pair idx (cdr type)) (initiate-consts rest)))
+						((equal? (car type) T_VECTOR) (string-append (load-vector idx (cdr type)) (initiate-consts rest)))
+						(else "")
+						)
+				)
+			""
+			)
+		))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; global table ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define global_table '())
@@ -1947,7 +2007,9 @@
                       ""
                       (string-append
                         (code-gen (car exps) 0 0) nl
-                        "CALL(PRINT_R0);" nl
+                        ;"PUSH(R0);" nl
+                        ;"CALL(WRITE_SOB);" nl
+                        "SHOW("", R0);" nl
                         (loop (cdr exps))
                     )))))
             (loop sexps)
@@ -1965,9 +2027,7 @@
 (lambda (const envLevel numberOfParams)
           (string-append 
            "/*const*/" nl
-           "MOV(R0," 
-           (number->string (getConstAddress (cadr const))) 
-           ");" nl
+           "MOV(R0," (number->string (getConstAddress (cadr const)))");" nl
            )))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; compile-scheme-file ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1994,10 +2054,9 @@
     (letrec ((str-maker 
                 (lambda (sexprLst stringExp)
                   (let* ((parsedExp (test-string <sexpr> stringExp))
-                          (exp (cadar parsedExp))
-                          (restStr (cadadr parsedExp)))
-                          (if (and (equal? (caar parsedExp) 'match) 
-                                    (not (null? exp)))
+                          (exp (if (equal? parsedExp '(failed with report:)) '() (cadar parsedExp)))
+                          (restStr (if (equal? parsedExp '(failed with report:)) '() (cadadr parsedExp))))	
+                          (if (and (not (null? exp)) (equal? (caar parsedExp) 'match))
                               (if (equal? (string-length restStr) 0)
                                 `(,@sexprLst ,exp)
                                 (str-maker `(,@sexprLst ,exp) (cadadr parsedExp)))
@@ -2017,25 +2076,78 @@
       )
       noTailCalls)))
 
+(define prolog
+	(string-append
+		"/* final compilar project" nl
+		"Programmers: Ayelet Kalderon & Avishag Daniely */" nl nl
+
+		"#include <stdio.h>" nl
+		"#include <stdlib.h>" nl nl
+
+		"/* change to 0 for no debug info to be printed: */" nl
+		"#define DO_SHOW 1" nl nl
+
+		"#include \"cisc.h\"" nl nl
+
+		"int main()" nl
+		"{" nl
+  		" START_MACHINE;" nl nl
+
+  		" JUMP(CONTINUE);" nl nl
+
+		"#include \"char.lib\"" nl
+		"#include \"io.lib\"" nl
+		"#include \"math.lib\"" nl
+		"#include \"string.lib\"" nl
+		"#include \"system.lib\"" nl
+		"#include \"scheme.lib\""nl nl
+
+ 		"CONTINUE:" nl
+		)
+	)
+
+(define epilog 
+	(string-append
+		;print to stdout
+		"PROG_ENDING: " nl
+		"  STOP_MACHINE;"nl
+		"  return 0;" nl
+        "}" nl
+		)
+
+	)
+
 
 
 (define compile-scheme-file
   (lambda (scheme_source_file cisc_target_file)
-    (let* ((stringFile (file->string scheme_source_file))
+    (let* (
+    	  (out-port (if (file-exists? cisc_target_file) (begin (delete-file cisc_target_file) (open-output-file cisc_target_file))
+            		(open-output-file cisc_target_file)))
+    	  (stringFile (file->string scheme_source_file))
           (sexprLst (string->schemeList stringFile))
           (parsedEvaledSexpr (total-evaluation sexprLst))
           (constant-list (remove_duplicate (create-list-of-certain-type parsedEvaledSexpr 'const))) ;need to call the table creator
           (fvar-list (create-list-of-certain-type parsedEvaledSexpr 'fvar))
           ;;add prolog and epilog to the code then write to file
           )
+    		;make const table
             (initConstTable)
             (map addToConstTable constant-list)
+            ;make global table
             (addLstToGlobalTable (append saveProcedures fvar-list))
-            (codeGenOnAllSexps parsedEvaledSexpr)
-     ;(write ciscStr (open-output-file cisc_target_file)) ;writes to the output file
-     ;(display ciscStr)
-      )
-    ))
+            ;create cisc code
+            (let ((cisc-exp (string-append
+            					prolog nl
+            					"/* ----------initiating const table---------- */" nl
+            					(initiate-consts const_table) nl
+            					(codeGenOnAllSexps parsedEvaledSexpr) nl
+            					epilog
+            					)))
+            	(display cisc-exp out-port)
+            	)
+            (close-output-port out-port))))
 
 
-(compile-scheme-file "test-files/test1.scm" "test-files/foo.c")
+
+(compile-scheme-file "test-files/test1.scm" "arch/foo.c")

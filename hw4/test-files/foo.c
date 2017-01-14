@@ -1,1 +1,0 @@
-((def (fvar x) (const 2)) (applic (fvar +) ((fvar x) (const 2))))

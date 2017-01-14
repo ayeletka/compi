@@ -6,7 +6,7 @@
 (case-sensitive #f) ; ditto
 (print-brackets #f) ; do not use brackets when pretty-printing
 
-(revert-interaction-semantics) ; allow builtins to be redefined
+;(revert-interaction-semantics) ; allow builtins to be redefined
 
 ;;; fix bug in optimizer
 (#%$sputprop 'append '*flags* 122)
@@ -1409,3 +1409,4 @@
         "MOV(R0, SOB_VOID);" nl)))
 
 
+(compile-scheme-file "test1.scm" "foo.c")
