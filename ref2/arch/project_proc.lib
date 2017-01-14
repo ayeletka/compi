@@ -1,0 +1,1260 @@
+PRINT_R0:
+	PUSH(FP);
+	MOV(FP, SP);
+	CMP(R0, SOB_VOID);
+	JUMP_EQ(PRINT_R0_END);
+	PUSH(R0);
+	CALL(WRITE_SOB);
+	DROP(IMM(1));
+	PUSH('\n');
+	CALL(PUTCHAR);
+	DROP(IMM(1));
+PRINT_R0_END:
+	JUMP(END);
+
+IS_BOOLEAN:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(IND(R0), T_BOOL);
+	JUMP(CHECK_BOOLEAN_RES);
+
+IS_CHAR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(FPARG(2));
+	CALL(IS_SOB_CHAR);
+	JUMP(CHECK_BOOLEAN_AFTER_CALL);
+
+IS_NULL:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(R0, SOB_NIL);
+	JUMP(CHECK_BOOLEAN_RES);
+	
+IS_NUMBER:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(IND(R0), T_INTEGER);
+	JUMP(CHECK_BOOLEAN_RES);
+
+IS_INTEGER:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(IND(R0), T_INTEGER);
+	JUMP(CHECK_BOOLEAN_RES);
+
+IS_PAIR:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(IND(R0), T_PAIR);
+	JUMP(CHECK_BOOLEAN_RES);
+
+IS_STRING:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(IND(R0), T_STRING);
+	JUMP(CHECK_BOOLEAN_RES);
+
+IS_SYMBOL:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(IND(R0), T_SYMBOL);
+	JUMP(CHECK_BOOLEAN_RES);			
+
+IS_VECTOR:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R0, FPARG(2));
+	CMP(IND(R0), T_VECTOR);
+	JUMP(CHECK_BOOLEAN_RES);
+	
+IS_ZERO_MY:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R2, FPARG(2));
+	MOV(R2, INDD(R2, 1));
+	CMP(R2, 0);
+	JUMP(CHECK_BOOLEAN_RES);
+
+	
+IS_PROCEDURE:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(FPARG(2));
+	CALL(IS_SOB_CLOSURE);
+	JUMP(CHECK_BOOLEAN_AFTER_CALL);
+	
+		
+CHECK_BOOLEAN_AFTER_CALL:
+	DROP(1);
+	CMP(1, R0);
+	JUMP(CHECK_BOOLEAN_RES);		
+		
+CHECK_BOOLEAN_RES:
+	JUMP_EQ(RES_TRUE);
+	MOV(R0, SOB_FALSE);
+	JUMP(END);
+
+RES_TRUE:
+	MOV(R0, SOB_TRUE);
+	JUMP(END);
+
+
+
+/* R1 : accumulator, R2 : loop_number_of_cycle. R3 : Running index */
+VARIADIC_PLUS:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	
+	MOV(R1, 0);
+	MOV(R2, FPARG(LOC_NUM_ARGS)); /* loop from 2 to 2+numOfArgs */
+	ADD(R2, 2);
+	MOV(R3, 2); 	
+VARIADIC_PLUS_LOOP:
+	CMP(R2, R3);
+	JUMP_EQ(VARIADIC_PLUS_END);
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	ADD(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+	ADD(R3, 1);
+	JUMP(VARIADIC_PLUS_LOOP);
+VARIADIC_PLUS_END:
+	PUSH(R1);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1); 
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+/* R1 : accumulator, R2 : loop_number_of_cycle. R3 : Running index */
+VARIADIC_MUL:
+	PUSH(FP);
+	MOV(FP, SP);
+	MOV(R1, 1);
+	MOV(R2, FPARG(LOC_NUM_ARGS)); /* loop from 2 to 2+numOfArgs */
+	ADD(R2, 2);
+	MOV(R3, 2); 	
+VARIADIC_MUL_LOOP:
+	CMP(R2, R3);
+	JUMP_EQ(VARIADIC_MUL_END);
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	MUL(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+	ADD(R3, 1);
+	JUMP(VARIADIC_MUL_LOOP);
+VARIADIC_MUL_END:
+	PUSH(R1);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1); 
+	JUMP(END);
+	
+/* R1 : accumulator, R2 : loop_number_of_cycle. R3 : Running index */
+VARIADIC_DIV:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	MOV(R1, 1);
+	MOV(R2, FPARG(LOC_NUM_ARGS)); /* loop from 2 to 2+numOfArgs */
+	CMP(R2, 1);
+	JUMP_NE(VARIADIC_DIV_NOT_ONLY_ONE_ARG);
+	MOV(R1, 1);
+	DIV(R1, INDD(FPARG(2), 1));
+	JUMP(VARIADIC_DIV_END);
+VARIADIC_DIV_NOT_ONLY_ONE_ARG:
+	ADD(R2, 2);
+	MOV(R3, 2); 	
+VARIADIC_DIV_LOOP:
+	CMP(R2, R3);
+	JUMP_EQ(VARIADIC_DIV_END);
+	CMP(R3, 2);
+	JUMP_NE(VARIADIC_DIV_LOOP2);
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	MOV(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 	
+	ADD(R3, 1);
+	JUMP(VARIADIC_DIV_LOOP);
+VARIADIC_DIV_LOOP2:
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	DIV(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+	ADD(R3, 1);
+	JUMP(VARIADIC_DIV_LOOP);
+VARIADIC_DIV_END:
+	PUSH(R1);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1); 
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+	
+/* R1 : accumulator, R2 : loop_number_of_cycle. R3 : Running index */
+VARIADIC_MINUS:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	MOV(R1, 0);
+	MOV(R2, FPARG(LOC_NUM_ARGS)); /* loop from 2 to 2+numOfArgs */
+	CMP(R2, 1);
+	JUMP_NE(VARIADIC_MINUS_NOT_ONLY_ONE_ARG);
+	MOV(R1, 0);
+	SUB(R1, INDD(FPARG(2), 1));
+	JUMP(VARIADIC_MINUS_END);
+VARIADIC_MINUS_NOT_ONLY_ONE_ARG:
+	ADD(R2, 2);
+	MOV(R3, 2); 	
+VARIADIC_MINUS_LOOP:
+	CMP(R2, R3);
+	JUMP_EQ(VARIADIC_MINUS_END);
+	CMP(R3, 2);
+	JUMP_NE(VARIADIC_MINUS_LOOP_2);
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	MOV(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 	
+	ADD(R3, 1);
+	JUMP(VARIADIC_MINUS_LOOP);
+VARIADIC_MINUS_LOOP_2:
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	SUB(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+	ADD(R3, 1);
+	JUMP(VARIADIC_MINUS_LOOP);
+VARIADIC_MINUS_END:
+	PUSH(R1);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1); 
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+/* R1 : accumulator, R2 : loop_number_of_cycle. R3 : Running index */
+VARIADIC_EQUAL:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	MOV(R1, 0);
+	MOV(R2, FPARG(LOC_NUM_ARGS)); /* loop from 2 to 2+numOfArgs */
+	ADD(R2, 2);
+	MOV(R3, 2); 	
+VARIADIC_EQUAL_LOOP:
+	CMP(R2, R3);
+	JUMP_EQ(VARIADIC_EQUAL_END);
+	CMP(R3, 2);
+	JUMP_NE(VARIADIC_EQUAL_LOOP_2);
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	MOV(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 	
+	ADD(R3, 1);
+	JUMP(VARIADIC_EQUAL_LOOP);
+VARIADIC_EQUAL_LOOP_2:
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	CMP(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+	JUMP_NE(VARIADIC_EQUAL_END);
+	ADD(R3, 1);
+	JUMP(VARIADIC_EQUAL_LOOP);
+VARIADIC_EQUAL_END:
+	CMP(R2, R3);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(CHECK_BOOLEAN_RES);
+	
+	
+	
+/* R1 : accumulator, R2 : loop_number_of_cycle. R3 : Running index */
+VARIADIC_GT:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	MOV(R1, 0);
+	MOV(R2, FPARG(LOC_NUM_ARGS)); /* loop from 2 to 2+numOfArgs */
+	ADD(R2, 2);
+	MOV(R3, 2); 	
+VARIADIC_GT_LOOP:
+	CMP(R2, R3);
+	JUMP_EQ(VARIADIC_GT_END);
+	CMP(R3, 2);
+	JUMP_NE(VARIADIC_GT_LOOP_2);
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	MOV(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 	
+	ADD(R3, 1);
+	JUMP(VARIADIC_GT_LOOP);
+VARIADIC_GT_LOOP_2:
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	CMP(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+	JUMP_LE(VARIADIC_GT_END);
+	ADD(R3, 1);
+	MOV(R1, INDD(R4, 1));
+	JUMP(VARIADIC_GT_LOOP);
+VARIADIC_GT_END:
+	CMP(R2, R3);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(CHECK_BOOLEAN_RES);
+
+/* R1 : accumulator, R2 : loop_number_of_cycle. R3 : Running index */
+VARIADIC_LT:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	MOV(R1, 0);
+	MOV(R2, FPARG(LOC_NUM_ARGS)); /* loop from 2 to 2+numOfArgs */
+	ADD(R2, 2);
+	MOV(R3, 2); 	
+VARIADIC_LT_LOOP:
+	CMP(R2, R3);
+	JUMP_EQ(VARIADIC_LT_END);
+	CMP(R3, 2);
+	JUMP_NE(VARIADIC_LT_LOOP_2);
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	MOV(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 	
+	ADD(R3, 1);
+	JUMP(VARIADIC_LT_LOOP);
+VARIADIC_LT_LOOP_2:
+	MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+	CMP(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+	JUMP_GE(VARIADIC_LT_END);
+	ADD(R3, 1);
+	MOV(R1, INDD(R4, 1));
+	JUMP(VARIADIC_LT_LOOP);
+VARIADIC_LT_END:
+	CMP(R2, R3);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(CHECK_BOOLEAN_RES);
+	
+CHAR_TO_INTEGER:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R2, INDD(R1, 1));
+	PUSH(R2);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+INTEGER_TO_CHAR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R2, INDD(R1, 1));
+	PUSH(R2);
+	CALL(MAKE_SOB_CHAR);
+	DROP(1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+REMAINDER:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R1, INDD(R1, 1));
+	MOV(R2, FPARG(3));
+	MOV(R2, INDD(R2, 1));
+	REM(R1, R2);
+	PUSH(R1);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+	
+STRING_LENGTH:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R2, INDD(R1, 1));
+	PUSH(R2);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+STRING_REF:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R2, FPARG(3));
+	MOV(R2, INDD(R2, 1));
+	ADD(R2, 2);
+	MOV(R1, INDD(R1, R2));
+	PUSH(R1);
+	CALL(MAKE_SOB_CHAR);
+	DROP(1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+		
+
+STRING_SET:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	MOV(R1, FPARG(2));
+	MOV(R2, FPARG(3));
+	MOV(R3, FPARG(4));
+	MOV(R2, INDD(R2, 1));
+	MOV(R3, INDD(R3, 1));
+	ADD(R2, 2);
+	MOV(INDD(R1, R2), R3);
+	MOV(R0, SOB_VOID);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);	
+
+MAKE_STRING:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R5);
+	MOV(R1, FPARG(2)); /* new string length */
+	MOV(R1, INDD(R1, 1));
+	/* need to check if arg2 exist, if nor the char is '0'*/
+	MOV(R5, FPARG(LOC_NUM_ARGS));
+	CMP(R5, 1);
+	JUMP_EQ(MAKE_STRING_CHAR_0);
+	MOV(R2, FPARG(3));
+	MOV(R2, INDD(R2, 1));
+	JUMP(MAKE_STRING_AFTER_ARG2);
+MAKE_STRING_CHAR_0:
+	PUSH(0);
+	CALL(MAKE_SOB_CHAR);
+	DROP(1); 
+	MOV(R2, R0);	
+MAKE_STRING_AFTER_ARG2:
+	/* Push to stack the char R2, R1 times ... */
+	MOV(R5, 0);
+MAKE_STRING_PUSH_CHARS_LOOP:
+	CMP(R5, R1);
+	JUMP_EQ(MAKE_STRING_AFTER_PUSH_CHARS);
+	PUSH(R2);
+	ADD(R5, 1);
+	JUMP(MAKE_STRING_PUSH_CHARS_LOOP);
+MAKE_STRING_AFTER_PUSH_CHARS:
+	PUSH(R1);
+	CALL(MAKE_SOB_STRING);
+	POP(R1);
+	DROP(R1);
+	POP(R5);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+	
+	
+	
+VECTOR_LENGTH:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R2, INDD(R1, 1));
+	PUSH(R2);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+VECTOR_REF:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R2, FPARG(3));
+	MOV(R2, INDD(R2, 1));
+	ADD(R2, 2);
+	MOV(R1, INDD(R1, R2));
+	MOV(R0, R1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+		
+
+VECTOR_SET:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	MOV(R1, FPARG(2));
+	MOV(R2, FPARG(3));
+	MOV(R3, FPARG(4));
+	MOV(R2, INDD(R2, 1));
+	ADD(R2, 2);
+	MOV(INDD(R1, R2), R3);
+	MOV(R0, SOB_VOID);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);	
+
+
+
+VECTOR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R5);
+	MOV(R1, FPARG(LOC_NUM_ARGS)); /* new vector length */
+	MOV(R5, 0);	/* Running index */ 
+	MOV(R2, 2);	/* Curr loc in FPARG */
+PUSH_VECTOR_ARGS:
+	CMP(R5, R1);
+	JUMP_EQ(VECTOR_AFTER_PUSH);
+	MOV(R3, FPARG(R2));
+	PUSH(R3);
+	ADD(R5, 1);
+	ADD(R2, 1);
+	JUMP(PUSH_VECTOR_ARGS);
+VECTOR_AFTER_PUSH:
+	PUSH(R1);
+	CALL(MAKE_SOB_VECTOR);
+	POP(R1);
+	DROP(R1);
+	POP(R5);
+	POP(R2);
+	POP(R1);
+	JUMP(END);	
+
+	
+MAKE_VECTOR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R5);
+	MOV(R1, FPARG(2)); /* new vector length */
+	MOV(R1, INDD(R1, 1));
+	/* need to check if arg2 exist, if nor the char is '0'*/
+	MOV(R5, FPARG(LOC_NUM_ARGS));
+	CMP(R5, 1);
+	JUMP_EQ(MAKE_VECTOR_CHAR_0);
+	MOV(R2, FPARG(3));
+	JUMP(MAKE_VECTOR_AFTER_ARG2);
+MAKE_VECTOR_CHAR_0:
+	PUSH(0);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1); 
+	MOV(R2, R0);	
+MAKE_VECTOR_AFTER_ARG2:
+	/* Push to stack the char R2, R1 times ... */
+	MOV(R5, 0);
+MAKE_VECTOR_PUSH_CHARS_LOOP:
+	CMP(R5, R1);
+	JUMP_EQ(MAKE_VECTOR_AFTER_PUSH_CHARS);
+	PUSH(R2);
+	ADD(R5, 1);
+	JUMP(MAKE_VECTOR_PUSH_CHARS_LOOP);
+MAKE_VECTOR_AFTER_PUSH_CHARS:
+	PUSH(R1);
+	CALL(MAKE_SOB_VECTOR);
+	POP(R1);
+	DROP(R1);
+	POP(R5);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+	
+	
+CONS:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2)); /* First arg*/
+	MOV(R2, FPARG(3)); /* Sec arg*/
+	PUSH(R2);	/* Reverse order ...*/
+	PUSH(R1);
+	CALL(MAKE_SOB_PAIR);
+	DROP(2);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+CAR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R1, INDD(R1, 1));
+	MOV(R0, R1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+CDR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2));
+	MOV(R1, INDD(R1, 2));
+	MOV(R0, R1);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+SET_CAR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2)); /* is the pair */
+	MOV(R2, FPARG(3)); /* is the new value */
+	MOV(INDD(R1, 1), R2);
+	MOV(R0, SOB_VOID);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+SET_CDR:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	MOV(R1, FPARG(2)); /* is the pair */
+	MOV(R2, FPARG(3)); /* is the new value */
+	MOV(INDD(R1, 2), R2);
+	MOV(R0, SOB_VOID);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+LIST:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R5);
+	PUSH(R6);
+	PUSH(R7);
+	PUSH(R8);
+	PUSH(R10);
+	PUSH(R11);
+	MOV(R5, FPARG(LOC_NUM_ARGS)); /* new list length */
+	MOV(R6, 0);	/* Running index */ 
+	MOV(R7, 2);	/* Curr loc in FPARG */
+	CMP(0, R5);
+	JUMP_NE(CREATE_NODES);	/* if no args and just (list) */
+	PUSH(1);
+	CALL(MALLOC);
+	DROP(1);
+	MOV(R0, SOB_NIL);
+	JUMP(LIST_END);
+CREATE_NODES:
+	CMP(R5, R6);
+	JUMP_EQ(LIST_LAST);
+	PUSH(3);
+	CALL(MALLOC);
+	DROP(1);
+	MOV(R10, R0);
+	MOV(INDD(R10, 0), T_PAIR);
+	MOV(INDD(R10, 1), FPARG(R7));
+	CMP(R6, 0);
+	JUMP_EQ(FIRST_TIME);
+	MOV(INDD(R11, 2), R10);
+	JUMP(LIST_CONTINUE);
+FIRST_TIME:
+	MOV(R8, R10);
+LIST_CONTINUE:
+	MOV(R11, R10);
+	ADD(R6, 1);
+	ADD(R7, 1);
+	JUMP(CREATE_NODES);
+LIST_LAST:
+	MOV(INDD(R11, 2), SOB_NIL);
+	MOV(R0, R8);
+LIST_END:
+	POP(R11);
+	POP(R10);
+	POP(R8);
+	POP(R7);
+	POP(R6);
+	POP(R5);
+	JUMP(END);
+	
+
+LENGTH:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R6);
+	PUSH(R8);
+	MOV(R6, FPARG(2)); 	 /* list */
+	MOV(R8, 0);			 /* list length */	
+GO_OVER_LIST:
+	CMP(INDD(R6, 0), T_NIL);
+	JUMP_EQ(FOUND_NIL);
+	MOV(R6, INDD(R6, 2));
+	ADD(R8, 1);
+	JUMP(GO_OVER_LIST);
+FOUND_NIL:
+	MOV(R0, R8);
+	PUSH(R0);
+	CALL(MAKE_SOB_INTEGER);
+	DROP(1);
+	POP(R8);
+	POP(R6);
+	JUMP(END);
+
+
+LIST_REF:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	/* arg 0 is the ref, arg 1 is the list */
+	MOV(R1, FPARG(0));
+	MOV(R2, FPARG(1));
+	MOV(R3, 0);
+LIST_REF_LOOP:
+	CMP(R3, R1);
+	JUMP_EQ(LIST_REF_END);
+	MOV(R2, INDD(R2, 2));
+	ADD(R3, 1);
+	JUMP(LIST_REF_LOOP);
+LIST_REF_END:
+	MOV(R0, R2);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+	
+APPLY_TC:
+	PUSH(FP);
+	MOV(FP, SP);
+	
+	/* R1 is the function */
+	MOV(R1, FPARG(2));	
+	CMP(IND(R1), T_CLOSURE);
+	JUMP_NE(ERROR);
+	
+	/* R2 hold the list of params */
+	MOV(R2, FPARG(3));	
+
+	PUSH(R2);
+	PUSH(1);
+	PUSH(0);
+	CALL(LENGTH);
+	DROP(IMM(3));
+	
+	/* R3 holld the new list length */
+	MOV(R3, INDD(R0, 1));
+
+	CMP(R3, 0);
+	
+	/* check if the list empty */
+	JUMP_NE(APPLY_TC_LIST_NOT_EMPTY);
+	
+	/* else push 0 as the number of args .. */
+	PUSH(IMM(0));
+	JUMP(APPLY_TC_REVERSE_LIST_END); /* NO NEED TO COPY AND REVERS PARAMS */
+
+APPLY_TC_LIST_NOT_EMPTY:
+	MOV(R4, 0);
+	MOV(R5, 1);
+APPLY_TC_LOOP_REVERSE:
+	CMP(R4, R3);
+	JUMP_EQ(APPLY_TC_REVERSE_LIST_END);
+	PUSH(R2);
+	MOV(R6, R3);
+	SUB(R6, R5);
+	PUSH(R6);
+	CALL(LIST_REF);
+	DROP(2);
+	PUSH(INDD(R0, 1));
+	ADD(R4, IMM(1));
+	ADD(R5, IMM(1));
+	JUMP(APPLY_TC_LOOP_REVERSE);
+
+APPLY_TC_REVERSE_LIST_END: 
+	/* number of params */
+	PUSH(R3);
+	/* func env ... */
+	PUSH(INDD(R1, 1));
+	
+	/* NEW CHANGES .... */
+	/*  Push the return address from current frame */
+	PUSH(FPARG(-1));
+						
+	/* R8 hold the old fp */
+	MOV(R8,FPARG(-2));
+	/* R12 hold the old num of arg */
+	MOV(R12,FPARG(1));
+	/* R13 hold the new num of arg */
+	MOV(R13,STARG(1));
+						
+	/* R6 will old the STARG offset */
+	MOV(R6, R3);
+	ADD(R6, 1);	
+						
+	/* R5 will old the FPARG offset */
+	MOV(R5, R12);
+	ADD(R5, IMM(1));
+
+	/* R4 is the running index */
+	MOV(R4, IMM(0));
+	
+	/* R14 is the number of copy */
+	MOV(R14, R3);
+	ADD(R14, 3);
+	
+APPLY_TC_FIX_STACK:
+	CMP(R4, R14);
+	JUMP_EQ(APPLY_TC_FIX_STACK_EXIT);
+	MOV(FPARG(R5), STARG(R6));
+	SUB(R6, IMM(1));
+	SUB(R5, IMM(1));
+	ADD(R4, IMM(1));
+	JUMP(APPLY_TC_FIX_STACK);
+APPLY_TC_FIX_STACK_EXIT:
+	MOV(R9, R13);
+	SUB(R9, IMM(1));
+	SUB(R9, R12);
+	MOV(SP, FP);
+	ADD(SP, R9);
+	MOV(FP, R8);
+	JUMPA(INDD(R1, 2));
+	JUMP(ERROR);
+	
+	/* call func body */ 
+	CALLA(INDD(R1, 2));
+	/* drop the parameters and env and num of params ... */
+	MOV(R1, STARG(0));
+	ADD(R1, IMM(2));	
+	DROP(R1);
+	JUMP(END);
+	
+	
+SYMBOL_TO_STRING:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R2);
+	MOV(R2, FPARG(2)); /* Put the symbol in r2*/
+	MOV(R2, INDD(R2, 1));  /* go into the bucket */
+	MOV(R2, INDD(R2, 0));  /* go into the string */
+	MOV(R0, R2);
+	POP(R2);
+	JUMP(END);
+	
+COMPARE_STRINGS:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	PUSH(R5);
+	
+	MOV(R1, FPARG(0));	/* first string */
+	MOV(R2, FPARG(1));	/* second string */
+
+	MOV(R3, INDD(R1, 1)); /* check lengths ... */
+	MOV(R4, INDD(R2, 1));	
+	CMP(R3, R4);
+	JUMP_NE(COMPARE_STRINGS_FAILED);
+	/* length equals... now compare chars ... */
+	MOV(R4, 0); /* R4 is the running index */
+COMPARE_STRINGS_LOOP1:
+	CMP(R4, R3);
+	JUMP_EQ(COMPARE_STRINGS_LOOP1_END);
+	MOV(R5, 2);
+	ADD(R5, R4);
+	CMP(INDD(R1, R5), INDD(R2, R5));
+	JUMP_NE(COMPARE_STRINGS_FAILED);  
+	ADD(R4, 1);
+	ADD(R5, 1);	
+	JUMP(COMPARE_STRINGS_LOOP1);
+COMPARE_STRINGS_LOOP1_END:
+	MOV(R0, 1);
+	JUMP(COMPARE_STRINGS_END);
+COMPARE_STRINGS_FAILED:
+	MOV(R0, 0);
+	JUMP(COMPARE_STRINGS_END);
+COMPARE_STRINGS_END:
+	POP(R5);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+
+
+CHECK_IF_SYMBOL_EXIST:
+	/* CHECK_IF_SYMBOL_EXIST */
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	PUSH(R5);
+
+	/* R1 is the adress of the first symbol list node */
+	MOV(R1, SYM_TAB_START);
+
+	/* R2 is the new symbol string */
+	MOV(R2, FPARG(0));
+
+SYMBOL_EXIST_LOOP1:		
+	/* R3 is the bucket addr */
+	MOV(R3, INDD(R1, 1));
+	MOV(R4, INDD(R3, 0));
+	PUSH(R4);
+	PUSH(R2);
+	CALL(COMPARE_STRINGS);
+	DROP(2);
+	/* if equal jump to end */
+	CMP(R0, 1);
+	JUMP_EQ(FOUND_SYMBOL);
+	/* go to the next node ... */
+	/* check if the next is null */
+	CMP(INDD(R1, 2), SOB_NIL);
+	JUMP_EQ(NOT_FOUND_SYMBOL);
+	/* get the next node .. */
+	MOV(R1, INDD(R1, 2));
+	JUMP(SYMBOL_EXIST_LOOP1);
+
+FOUND_SYMBOL:
+	MOV(R0, R3);
+	JUMP(CHECK_IF_SYMBOL_EXIST_END);	
+
+NOT_FOUND_SYMBOL:
+	MOV(R0, 0);	
+	JUMP(CHECK_IF_SYMBOL_EXIST_END);
+		
+CHECK_IF_SYMBOL_EXIST_END:
+	POP(R5);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+	
+	
+		
+MAKE_SOB_SYMBOL:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	PUSH(R5);	
+	/* MAKE_SOB_SYMBOL */
+	
+	/* R1 is the new symbol as string */
+	MOV(R1, FPARG(0));
+	PUSH(R1);
+	CALL(CHECK_IF_SYMBOL_EXIST);
+	POP(R1);
+	CMP(R0, 0);
+	JUMP_NE(HAVE_BUCKET_IN_R0);
+	/* need to create new bucket */
+	PUSH(2);
+	CALL(MALLOC);
+	DROP(1);
+	/* the new bucket ... */
+	MOV(INDD(R0, 0), R1);
+	MOV(INDD(R0, 1), 0);
+	
+HAVE_BUCKET_IN_R0:
+	/* create new entry in sym table */
+	/* save the bucket in R2 */
+	MOV(R2, R0);
+	PUSH(3);
+	CALL(MALLOC);
+	DROP(1);
+	/* initiate the entry */
+	MOV(INDD(R0, 0), T_SYMBOL);
+	MOV(INDD(R0, 1), R2);	
+	MOV(INDD(R0, 2), SOB_NIL);
+	/* save the entry in R3 */
+	MOV(R3, R0);
+
+	/* put it to the last var in the list */
+	MOV(R4, SYM_TAB_START);	
+	
+INSERT_NEW_NODE_LOOP:
+	CMP(INDD(R4, 2), SOB_NIL);
+	JUMP_EQ(FOUND_LAST_NODE);
+	MOV(R4, INDD(R4, 2));		
+	JUMP(INSERT_NEW_NODE_LOOP);
+
+	/* the last node is in R4*/
+FOUND_LAST_NODE:
+	MOV(INDD(R4, 2), R3);
+	JUMP(MAKE_SOB_SYMBOL_END);
+	MOV(R0, R3);
+
+MAKE_SOB_SYMBOL_END:
+	POP(R5);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+	
+	
+
+STRING_TO_SYMBOL:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	PUSH(R5);	
+	/* STRING TO SYMBOL */
+	
+	/* R1 is the string */
+	MOV(R1, FPARG(2));
+	PUSH(R1);
+	CALL(MAKE_SOB_SYMBOL);
+	POP(R1);
+	JUMP(STRING_TO_SYMBOL_END);
+
+STRING_TO_SYMBOL_END:
+	POP(R5);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);
+
+WRITE_SOB_SYMBOL:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  MOV(R0, FPARG(0));
+  MOV(R0, INDD(R0, 1));
+  MOV(R0, INDD(R0, 0));
+  MOV(R1, INDD(R0, 1));
+  MOV(R2, R0);
+  ADD(R2, IMM(2));
+ L_WSS_LOOP_SYMBOL:
+  CMP(R1, IMM(0));
+  JUMP_EQ(L_WSS_EXIT_SYMBOL);
+  CMP(IND(R2), '\n');
+  JUMP_EQ(L_WSS_NEWLINE_SYMBOL);
+  CMP(IND(R2), '\t');
+  JUMP_EQ(L_WSS_TAB_SYMBOL);
+  CMP(IND(R2), '\f');
+  JUMP_EQ(L_WSS_PAGE_SYMBOL);
+  CMP(IND(R2), '\r');
+  JUMP_EQ(L_WSS_RETURN_SYMBOL);
+  CMP(IND(R2), '\\');
+  JUMP_EQ(L_WSS_BACKSLASH_SYMBOL);
+  CMP(IND(R2), '\"');
+  JUMP_EQ(L_WSS_DQUOTE_SYMBOL);
+  CMP(IND(R2), ' ');
+  JUMP_LT(L_WSS_OCT_CHAR_SYMBOL);
+  PUSH(IND(R2));
+  CALL(PUTCHAR);
+  DROP(1);
+  JUMP(L_WSS_LOOP_CONT_SYMBOL);
+ L_WSS_DQUOTE_SYMBOL:
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  PUSH(IMM('\"'));
+  CALL(PUTCHAR);
+  DROP(2);
+  JUMP(L_WSS_LOOP_CONT_SYMBOL);
+ L_WSS_BACKSLASH_SYMBOL:
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  DROP(2);
+  JUMP(L_WSS_LOOP_CONT_SYMBOL);
+ L_WSS_RETURN_SYMBOL:
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  PUSH(IMM('r'));
+  CALL(PUTCHAR);
+  DROP(2);
+  JUMP(L_WSS_LOOP_CONT_SYMBOL);
+ L_WSS_PAGE_SYMBOL:
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  PUSH(IMM('f'));
+  CALL(PUTCHAR);
+  DROP(2);
+  JUMP(L_WSS_LOOP_CONT_SYMBOL);
+ L_WSS_TAB_SYMBOL:
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  PUSH(IMM('t'));
+  CALL(PUTCHAR);
+  DROP(2);
+  JUMP(L_WSS_LOOP_CONT_SYMBOL);  
+ L_WSS_NEWLINE_SYMBOL:
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  PUSH(IMM('n'));
+  CALL(PUTCHAR);
+  DROP(2);
+  JUMP(L_WSS_LOOP_CONT_SYMBOL);
+ L_WSS_OCT_CHAR_SYMBOL:
+  MOV(R0, IND(R2));
+  MOV(R3, R0);
+  REM(R3, IMM(8));
+  PUSH(R3);
+  DIV(R0, IMM(8));
+  MOV(R3, R0);
+  REM(R3, IMM(8));
+  PUSH(R3);
+  DIV(R0, IMM(8));
+  REM(R0, IMM(8));
+  PUSH(R0);
+  PUSH(IMM('\\'));
+  CALL(PUTCHAR);
+  DROP(1);
+  CALL(WRITE_INTEGER);
+  DROP(1);
+  CALL(WRITE_INTEGER);
+  DROP(1);
+  CALL(WRITE_INTEGER);
+  DROP(1);
+ L_WSS_LOOP_CONT_SYMBOL:
+  INCR(R2);
+  DECR(R1);
+  JUMP(L_WSS_LOOP_SYMBOL);
+ L_WSS_EXIT_SYMBOL:
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  JUMP(END);
+  
+  
+  
+EQ:
+	PUSH(FP);
+	MOV(FP, SP);
+	PUSH(R1);
+	PUSH(R2);
+	PUSH(R3);
+	PUSH(R4);
+	PUSH(R5);	
+	
+	/* R1 is the first arg , R2 is the second ... */
+	MOV(R1, FPARG(2));
+	MOV(R2, FPARG(3));
+	
+	/* compare types ... */
+	CMP(INDD(R1, 0), INDD(R2, 0));
+	JUMP_NE(EQ_RET_FALSE);
+	
+	/* same type .. check if need to compare by address or by value?... */
+	/* check by addr type */
+	CMP(INDD(R1, 0), T_PAIR);
+	JUMP_EQ(EQ_BY_ADDR);
+	CMP(INDD(R1, 0), T_STRING);
+	JUMP_EQ(EQ_BY_ADDR);	
+	CMP(INDD(R1, 0), T_VECTOR);
+	JUMP_EQ(EQ_BY_ADDR);		
+	CMP(INDD(R1, 0), T_CLOSURE);
+	JUMP_EQ(EQ_BY_ADDR);
+	
+		
+	/* check by value cell */
+	CMP(INDD(R1, 0), T_INTEGER);
+	JUMP_EQ(EQ_VALUE_CELL);
+	CMP(INDD(R1, 0), T_CHAR);
+	JUMP_EQ(EQ_VALUE_CELL);
+	CMP(INDD(R1, 0), T_SYMBOL);
+	JUMP_EQ(EQ_VALUE_CELL);	
+	CMP(INDD(R1, 0), T_BOOL);
+	JUMP_EQ(EQ_VALUE_CELL);
+		
+	/* void and null always true */
+	CMP(INDD(R1, 0), T_VOID);
+	JUMP_EQ(EQ_RET_TRUE);	
+	CMP(INDD(R1, 0), T_NIL);
+	JUMP_EQ(EQ_RET_TRUE);		
+	
+	
+	JUMP(EQ_RET_FALSE);
+
+EQ_VALUE_CELL:		
+	CMP(INDD(R1, 1), INDD(R2, 1));
+	JUMP_EQ(EQ_RET_TRUE);
+	JUMP(EQ_RET_FALSE);
+
+EQ_BY_ADDR:	
+	CMP(R1, R2);
+	JUMP_EQ(EQ_RET_TRUE);
+	JUMP(EQ_RET_FALSE);
+
+EQ_RET_FALSE:
+	MOV(R0, SOB_FALSE);
+	JUMP(EQ_END);
+
+EQ_RET_TRUE:
+	MOV(R0, SOB_TRUE);
+	JUMP(EQ_END);
+	
+EQ_END:
+	POP(R5);
+	POP(R4);
+	POP(R3);
+	POP(R2);
+	POP(R1);
+	JUMP(END);	
+
+
+END:
+	POP(FP);
+	RETURN;
