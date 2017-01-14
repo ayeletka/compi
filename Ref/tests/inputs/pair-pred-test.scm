@@ -1,0 +1,1 @@
+(((lambda(x y) (if (pair? x) (car (cdr x)) y)) (cons 3 (cons (lambda(x) (cons x x)) '())) 1) 20)

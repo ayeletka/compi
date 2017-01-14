@@ -1,0 +1,1290 @@
+(load "pattern-matcher.scm")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(print-graph #f) ; display circular structures
+(print-gensym #f) ; print gensym as g1234
+(case-sensitive #f) ; ditto
+(print-brackets #f) ; do not use brackets when pretty-printing
+
+(revert-interaction-semantics) ; allow builtins to be redefined
+
+;;; fix bug in optimizer
+(#%$sputprop 'append '*flags* 122)
+(#%$sputprop 'append! '*flags* 34)
+(#%$sputprop 'list* '*flags* 1250)
+(#%$sputprop 'cons* '*flags* 1250)
+
+;;; And just for good luck :-)
+(define with (lambda (s f) (apply f s)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define *reserved-words*
+  '(and begin cond define do else if lambda
+    let let* letrec or quasiquote unquote 
+    unquote-splicing quote set! applic))
+
+(define *void-object* (void))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define expand-qq
+  (lambda (e)
+    (cond ((unquote? e) (cadr e))
+	  ((unquote-splicing? e)
+	   (error 'expand-qq "unquote-splicing here makes no sense!"))
+	  ((pair? e)
+	   (let ((a (car e))
+		 (b (cdr e)))
+	     (cond ((unquote-splicing? a) `(append ,(cadr a) ,(expand-qq b)))
+		   ((unquote-splicing? b) `(cons ,(expand-qq a) ,(cadr b)))
+		   (else `(cons ,(expand-qq a) ,(expand-qq b))))))
+	  ((vector? e) `(list->vector ,(expand-qq (vector->list e))))
+	  ((or (null? e) (symbol? e)) `',e)
+	  (else e))))
+
+(define ^quote?
+  (lambda (tag)
+    (lambda (e)
+      (and (pair? e)
+	   (eq? (car e) tag)
+	   (pair? (cdr e))
+	   (null? (cddr e))))))
+
+(define unquote? (^quote? 'unquote))
+(define unquote-splicing? (^quote? 'unquote-splicing))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define expand-letrec
+  (lambda (letrec-expr)
+    (with letrec-expr
+      (lambda (_letrec ribs . exprs)
+	(let* ((fs (map car ribs))
+	       (lambda-exprs (map cdr ribs))
+	       (nu (gensym))
+	       (nu+fs `(,nu ,@fs))
+	       (body-f `(lambda ,nu+fs ,@exprs))
+	       (hofs
+		(map (lambda (lambda-expr) `(lambda ,nu+fs ,@lambda-expr))
+		  lambda-exprs)))
+	  `(Ym ,body-f ,@hofs))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define simple-const?
+  (lambda (e)
+    (or (boolean? e) (char? e) (number? e) (string? e) (eq? e *void-object*) )))
+
+(define var?
+  (lambda (e)
+    (and (symbol? e) 
+         (not (member e *reserved-words*)))))
+
+(define lambda-with-optional-arguments?
+  (lambda (args)
+    (and (not (list? args)) (pair? args) (not (null? (last-pair args))) )))
+
+(define get-n-items
+    (lambda (args num)
+        (if (> num 0)
+            (cons (car args) (get-n-items (cdr args) (- num 1)))
+            '()))) ;'
+
+(define count
+  (lambda (args c)
+    (if (eq? (car args) c)
+        1
+        (+ 1 (count (cdr args) c)))))
+    
+(define slice
+    (lambda (args c)
+       (get-n-items args (count args c))))
+
+(define mit-style? 
+  (lambda (var-mit-style)
+    (or (and (list? var-mit-style) (>= (length var-mit-style) 2)) ;lambda-simple
+        (lambda-with-optional-arguments? var-mit-style)   ;lambda-opt
+        (symbol? var-mit-style)  ;lambda-variadic
+    )))
+
+(define peExpr->lambda
+  (lambda (args body)
+    `(lambda ,args ,body)))
+
+(define func?
+  (lambda (f)
+    (and (list? f) (>= (length f) 1)
+         (or (and (symbol? (car f)) (not (member (car f) *reserved-words*)))
+             (and (list? (car f)) (not (member (caar f) *reserved-words*)))))))
+
+(define proc?
+  (lambda (p)
+    (not (member p *reserved-words*))))
+
+(define parse-rest
+  (lambda (lst)
+    (if (null? lst)
+        '()
+        (cons (parse (car lst)) (parse-rest (cdr lst))))))
+    
+;;tal
+(define beginify
+  (lambda (body)
+    (cond ((null? body) *void-object*)
+          ((and (list? body) (= 1 (length body))) (car body))
+          (else `(begin ,@body)))))
+;tal
+(define pairs-list?
+  (lambda (lst)
+    (cond ((null? lst) #t)
+          ((list? lst) 
+           (and (pair? (car lst)) (pairs-list? (cdr lst))))
+          (else #f))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define parse
+  (let ((run
+	 (compose-patterns
+      ;;const
+      (pattern-rule
+	   `(quote ,(? 'c))
+	   (lambda (c) `(const ,c)))
+	  (pattern-rule
+	   (? 'c simple-const?)
+	   (lambda (c) `(const ,c)))
+      ;;variable    
+	  (pattern-rule
+	   (? 'v var?)
+	   (lambda (v) (if (symbol? v)
+                       `(var ,v)
+                       `(var ,@v))))
+      ;;if    
+	  (pattern-rule
+	   `(if ,(? 'test) ,(? 'dit))
+	   (lambda (test dit)
+	     `(if3 ,(parse test) ,(parse dit) (const ,*void-object*))))
+	  (pattern-rule
+	   `(if ,(? 'test) ,(? 'dit) ,(? 'dif))
+	   (lambda (test dit dif)
+	     `(if3 ,(parse test) ,(parse dit) ,(parse dif))))
+	 
+	  ;;lambda
+          ;tal
+      (pattern-rule
+	   `(lambda ,(? 'args lambda-with-optional-arguments?)  .,(? 'implicit-sequence pair? list? ));pair? list?
+	   (lambda (args body)
+	    `(lambda-opt ,(slice args (car(last-pair args))) ,(cdr(last-pair args)) ,(parse (beginify body))))) ;;;;--->  `(begin body)
+      (pattern-rule
+	   `(lambda ,(? 'args list?)  .,(? 'implicit-sequence pair? list?))
+	   (lambda (args body)
+	     `(lambda-simple ,args ,(parse (beginify body)))))  ;;;;--->  `(begin body)
+      (pattern-rule
+	   `(lambda ,(? 'args symbol?)  .,(? 'implicit-sequence pair? list?))
+	   (lambda (args body)
+	     `(lambda-variadic ,args ,(parse (beginify body)))))  ;;;;--->  `(begin body)
+      
+      ;;define
+      (pattern-rule
+	   `(define ,(? 'var symbol?)  ,(? 'implicit-sequence))
+	   (lambda (var definition)
+	     `(define ,(parse var) ,(parse definition))))
+      (pattern-rule
+	   `(define ,(? 'var-mit-style mit-style?)  ,(? 'implicit-sequence))
+	   (lambda (var definition)
+	     `(define ,(parse (car var)) ,(parse (peExpr->lambda (cdr var) definition)))))
+      ;;application
+      (pattern-rule
+	   ;(? 'func func?);
+       `(,(? 'proc proc?) .,(? 'args))
+	   (lambda (p args)
+       `(applic ,(parse p) ,(parse-rest args))))
+      ;;begin 
+      ;;tal
+      (pattern-rule
+	   `(begin .,(? 'exprs list?))
+	   (lambda (exps)
+	    (cond ((null? exps) (parse `,*void-object*))
+                  (else `(seq ,(parse-rest exps))))))
+       ;;let
+      ;;tal
+      (pattern-rule
+       `(let ,(? 'defs pairs-list?) .,(? 'exprs list? pair?))
+       (lambda (defs exprs)
+         (parse `((lambda ,(map car defs) .,exprs) .,(map cadr defs)))))
+      ;; let*
+	  (pattern-rule
+	   `(let* () ,(? 'expr) . ,(? 'exprs list?))
+	   (lambda (expr exprs)
+	     (parse (beginify (cons expr exprs)))))
+	  (pattern-rule
+	   `(let* ((,(? 'var var?) ,(? 'val)) . ,(? 'rest)) . ,(? 'exprs))
+	   (lambda (var val rest exprs)
+	     (parse `(let ((,var ,val))
+		       (let* ,rest . ,exprs)))))
+      ;;letrec
+      ;;tal
+       (pattern-rule
+       `(letrec  ,(? 'defs pairs-list?) .,(? 'exprs list? pair?))
+       (lambda (defs exprs)
+         (parse (expand-letrec `(letrec ,defs .,exprs) ))))
+      ;and
+      ;tal
+      (pattern-rule
+       `(and .,(? 'args list?))
+       (lambda (args)
+         (cond
+           ((null? args) (parse '#t))
+           ((null? (cdr args)) (parse `,(car args)))
+           (else (parse `(if ,(car args) (and ,@(cdr args)) #f))))))
+      ;cond
+      ;tal
+      (pattern-rule
+       `(cond .,(? 'exprs pairs-list?))
+       (lambda (exprs)
+         (cond
+           ((null? exprs) (parse `,*void-object*))
+           ((and (eq? 'else (caar exprs))(null? (cdr exprs))) (parse `,(cadar exprs)))
+           (else (parse `(if ,(caar exprs) ,(cadar exprs) (cond ,@(cdr exprs))))))))
+      ;quasiquote
+      ;tal
+      (pattern-rule 
+       `(,'quasiquote ,(? 'arg)) 
+       (lambda (arg) (parse (expand-qq arg))))
+      ;or
+      (pattern-rule 
+       `(or .,(? 'args list?))
+       (lambda (args)
+         (cond
+           ((null? args) (parse '#f))
+           ((null? (cdr args)) (parse `,(car args)))
+           (else `(or ,(map parse args))))))      
+	  )))
+    (lambda (e)
+      (run e
+	   (lambda ()
+	     (error 'parse
+		    (format "I can't recognize this: ~s" e)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define find-pvar-index
+  (lambda (var args res)
+    (cond ((null? args) -1)
+          ((and (symbol? args) (eq? args var)) res)
+          ((and (list? args) (eq? (car args) var)) res)
+          (else (find-pvar-index var (cdr args) (+ res 1))))))
+
+(define find-bvar-2indexs 
+  (lambda (var env major)
+    (cond ((null? env) (cons -1 -1))
+          ((and (pair? env) (pair? (car env))) 
+                (let ((minor (find-pvar-index var (car env) 0)))
+                  (if (>= minor 0) 
+                      (cons major minor)
+                      (find-bvar-2indexs var (cdr env) (+ major 1)))))
+          ((pair? env) 
+           (if (eq? (car env) var) 
+               (cons major 0)
+               (find-bvar-2indexs var (cdr env) (+ major 1)))))))
+
+(define pe->lex-pe
+  (lambda (pe)
+    (letrec ((run 
+              (lambda (pe args env)                        
+                (if (null? pe) 
+                    pe 
+                    (cond 
+                      ;const
+                      ((and (list? pe) (eq? (car pe) 'const)) pe)
+                      ((symbol? pe) pe)
+                      ;variable
+                      ((and (list? pe)  (eq? (car pe) 'var))    
+                       (let ((pval (find-pvar-index (cadr pe) args 0)) 
+                             (bval (find-bvar-2indexs (cadr pe) env 0)))
+                         (if (>= pval 0) 
+                             `(pvar ,(cadr pe) ,pval)
+                             (if (and (>= (car bval) 0) (>= (cdr bval) 0))
+                                 `(bvar ,(cadr pe) ,(car bval) ,(cdr bval))
+                                 `(fvar ,(cadr pe))))))
+                      ;lambda
+                      ((and (list? pe) (eq? (car pe) 'lambda-simple))
+                       (cons (car pe) (cons (cadr pe) (run (cddr pe) `(,@(cadr pe)) `(,args ,@env)))))                                        
+                      ((and (list? pe) (eq? (car pe) 'lambda-opt))
+                       (cons (car pe) (cons  (cadr pe) (cons (caddr pe) (run (cdddr pe) `(,@(cadr pe) ,(caddr pe)) `(,args ,@env))))))                                
+                      ((and (list? pe) (eq? (car pe) 'lambda-variadic))
+                       (cons (car pe) (cons (cadr pe) (run (cddr pe) `(,(cadr pe)) `(,args ,@env)))))                                        
+                      ((and (list? pe) (eq? (car pe) 'define)) 
+                      `(define (fvar ,(cadadr pe)) ,@(run (cddr pe) args env)))                                                                        
+                      (else (cons (run (car pe) args env) (run (cdr pe) args env))))))))
+      (run pe '() '()))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;---------------------------------------------------- annotate-tc --------------------------------------------------------------------;
+(define annotate-tc
+	(lambda (pe)
+		(run pe #f)))
+		
+(define pe-seq
+	(lambda (args tp?)
+          (if (null? (cdr args)) 
+              `(,(run (car args) tp?))
+              `(,(run (car args) #f) ,@(pe-seq (cdr args) tp?)))))
+
+(define run
+  (lambda (pe tp?)
+    (cond
+      ;const
+      ((eq? (car pe) 'const) 
+       ;; if symbol - add symbol->string ?????????
+       (add-to-const-table (cadr pe)) 
+       pe)
+      ;var
+      ((eq? (car pe) 'var) pe);;;;;;;;;;;;;;;
+      ((or (eq? (car pe) 'pvar) (eq? (car pe) 'bvar)) pe)
+      ((eq? (car pe) 'fvar)
+       (add-to-const-table (cadr pe))
+       pe)
+      ;if
+      ((eq? (car pe) 'if3) 
+       (with pe
+             (lambda (_ test dit dif)
+               `(if3 ,(run test #f) ,(run dit tp?) ,(run dif tp?)))))
+      ;lambda
+      ((eq? (car pe) 'lambda-simple) `(lambda-simple ,(cadr pe) ,(run (caddr pe) #t)))
+      ((eq? (car pe) 'lambda-opt) `(lambda-opt ,(cadr pe) ,(caddr pe) , (run (cadddr pe) #t))) 			
+      ((eq? (car pe) 'lambda-variadic) `(lambda-variadic ,(cadr pe) , (run (caddr pe) #t)))
+      ;applic
+      ((eq? (car pe) 'applic)
+       (if tp?
+           `(tc-applic ,(run (cadr pe) #f) ,(map (lambda (x) (run x #f)) (caddr pe)))
+           `(applic ,(run (cadr pe) #f) ,(map (lambda (x) (run x #f)) (caddr pe)))))
+      ;define
+      ((eq? (car pe) 'define) 
+       (add-to-const-table (cadadr pe))
+       `(define ,(cadr pe) ,(run (caddr pe) #f)))
+      ;or
+      ((eq? (car pe) 'or) `(or ,(map (lambda (x) (if (null? (cdr pe)) (run x tp?) (run x #f))) (cadr pe))))
+      ;seq
+      ((eq? (car pe) 'seq) `(seq ,(pe-seq (cadr pe) tp?)))
+      
+      (else (error 'annotate-tc_run
+                   (format "I can't recognize this: ~s" pe))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;---------------------------------------------------- final compiler --------------------------------------------------------------------;
+
+(define ^^label
+  (lambda (name)
+    (let ((n 0))
+      (lambda ()
+        (set! n (+ n 1))
+        (string-append name
+                       (number->string n))))))
+
+
+
+;tal-edit
+;if3
+(define ^label-if3else (^^label "Lif3else"))
+(define ^label-if3exit (^^label "Lif3exit"))
+;or
+(define ^label-orexit (^^label "Lorexit"))
+;lambda-simple
+(define ^label-closure-code (^^label "Llsccode"))
+(define ^label-closure-exit (^^label "Llscexit"))
+(define ^label-lambda-env (^^label "Llsenv"))
+(define ^label-lambda-args (^^label "Llsargs"))
+;applic
+(define ^label-not-closure (^^label "Lanotclosure"))
+(define ^label-applic-exit (^^label "Laexit"))
+;tc-applic
+(define ^label-tc-not-closure (^^label "Ltcanotclosure"))
+(define ^label-tc-applic-exit (^^label "Ltcaexit"))
+(define ^label-tc-applic-loop (^^label "Ltcaloop"))
+(define ^label-tc-applic-loopexit (^^label "Ltcaloopexit"))
+;lambda opt
+(define ^label-opt-finish (^^label "Loptfinish"))
+(define ^label-opt-optparams (^^label "Loptparams"))
+(define ^label-opt-afterparams (^^label "Loptaparams"))
+
+;next-codegen
+(define ^label-next (^^label "Lnext"))
+(define nl (list->string (list #\newline)))
+(define NL (list->string (list #\newline)))
+;---------------------------------------------
+;---------------------------------------------------- create const table --------------------------------------------------------------------;
+(define T_VOID 	937610)
+(define T_NIL 	722689)
+(define T_BOOL 	741553)
+(define T_CHAR 	181048)
+(define T_INTEGER 	945311)
+(define T_STRING 	799345)
+(define T_SYMBOL 	368031)
+(define T_PAIR 	885397)
+(define T_VECTOR 	335728)
+(define T_CLOSURE 	276405)
+
+(define const-table '())
+(define env_size 0)
+(define address 20)
+
+(define init-const-table
+  (lambda ()
+    (set! const-table (append const-table (list (list address *void-object* `(,T_VOID)))))
+    (set! address (+ address 1))
+    (set! const-table (append const-table (list (list address '() `(,T_NIL)))))
+    (set! address (+ address 1))
+    (set! const-table (append const-table (list (list address #f `(,T_BOOL 0)))))
+    (set! address (+ address 2))
+    (set! const-table (append const-table (list (list address #t `(,T_BOOL 1)))))
+    (set! address (+ address 2))
+    ""))
+    
+(define get-const-stack-addr
+	(lambda (const c-table)
+          (cond ((null? c-table) 0) 
+                ((and (not(null? c-table)) (equal? const (cadar c-table))) (caar c-table))
+                (else (get-const-stack-addr const (cdr c-table))))))
+
+(define add-to-const-table
+  (lambda (pe)
+    (let ((addr (get-const-stack-addr pe const-table)))
+      (if (eq? addr 0)
+          (cond ((char? pe) 
+                 (set! const-table (append const-table (list (list address pe (append `(,T_CHAR) (list (char->integer pe)))))))
+                 (set! address (+ address 2)) "")
+                ((number? pe)
+                 (set! const-table (append const-table (list (list address pe (append `(,T_INTEGER) (list pe))))))
+                 (set! address (+ address 2)) "")
+                ((string? pe)
+                 (set! const-table (append const-table (list (list address pe (append `(,T_STRING) (list (length (string->list pe))) (make-int-list (string->list pe)))))))
+                 (set! address  (+ address 2 (length (string->list pe)))) "")
+                ((symbol? pe);----------------------------; symbol==create-void????????????
+                 (add-to-const-table (symbol->string pe))
+                 (set! const-table (append const-table (list (list address pe (append `(,T_SYMBOL) (list 21))))))
+                 (set! address (+ address 2)) "")
+                ((pair? pe)
+                 (set-pair-consts pe)
+                 (set! const-table (append const-table (list (list address pe (append `(,T_PAIR) (list (get-const-stack-addr (car pe) const-table) (get-const-stack-addr (cdr pe) const-table)))))))
+                 (set! address (+ address 3)) "")
+                ((vector? pe);---------------------------; like string (or like pair???) 
+                 (set-pair-consts (vector->list pe))
+                 (set! const-table (append const-table (list (list address pe (append `(,T_VECTOR) (list (vector-length pe)) (get-vec-consts pe 0))))))
+                 (set! address  (+ address 2 (vector-length pe))) "")
+                (else (error 'add-to-const-table (format "I can't recognize this: ~s" pe))))
+          ""))))
+
+;for T_STRING 
+(define make-int-list
+  (lambda (lst)
+    (if (null? lst)
+        '()
+        (append (list (char->integer (car lst))) 
+                (make-int-list (cdr lst))))))
+
+;for T_PAIR 
+(define set-pair-consts
+  (lambda (pe)
+    (let ((car-addr (get-const-stack-addr (car pe) const-table))
+          (cdr-addr (get-const-stack-addr (cdr pe) const-table)))
+      (cond ((and (eq? car-addr 0) (eq? cdr-addr 0))
+             (add-to-const-table (car pe))
+             (add-to-const-table (cdr pe))"")
+            ((and (eq? car-addr 0) (not (eq? cdr-addr 0)))
+             (add-to-const-table (car pe))"")
+            ((and (not (eq? car-addr 0)) (eq? cdr-addr 0))
+             (add-to-const-table (cdr pe))"")
+            ((and (not (eq? car-addr 0)) (not (eq? cdr-addr 0)))"")
+            (else (error 'set-pair-consts (format "I can't recognize this: ~s" pe)))))))
+
+;for T_VECTOR 
+(define get-vec-consts
+  (lambda (vec n)
+    (if (eq? n (vector-length vec))
+        '()
+        (append (list (get-const-stack-addr (vector-ref vec n) const-table))
+                (get-vec-consts vec (+ n 1))))))
+          
+
+;(define sort 
+ ; (lambda (e) 
+ ;   (cond ((or (number? e) (string? e) (eq? *void-object* e) (null? e) (boolean? e)) `(,e)) 
+  ;        ((pair? e) `(,e ,@(sort (car e)) ,@(sort (cdr e)))) 
+   ;       ((vector? e) `(,e ,@(apply append (map sort (vector->list e))))) 
+    ;      ((symbol? e) `(,e ,@(sort (symbol->string e)))) 
+     ;     (else (error 'sort (format "I can't recognize this: ~s" e))))))
+;-----------------------------------------------------------------
+;---------------------------------------------------- load const table --------------------------------------------------------------------;
+(define load-const-table
+  (lambda (c-list)
+    (if (not (null? c-list))
+        (cond ((eq? (caar c-list) T_VOID) (string-append (create-void-obj) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_NIL) (string-append (create-null-obj) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_BOOL) (string-append (create-boolean-obj (cadar c-list)) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_CHAR) (string-append (create-char-obj (cadar c-list)) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_INTEGER) (string-append (create-int-obj (cadar c-list)) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_STRING) (string-append (create-string-obj (cadar c-list) (cddar c-list)) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_SYMBOL) (string-append (create-symbol-obj (cadar c-list)) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_PAIR) (string-append (create-pair-obj (cadar c-list) (caddar c-list)) (load-const-table (cdr c-list))))
+              ((eq? (caar c-list) T_VECTOR) (string-append (create-vec-obj (cadar c-list) (cddar c-list)) (load-const-table (cdr c-list))))
+              ;((eq? (caar c-list) T_CLOSURE) (string-append (create-closure-obj) (load-const-table (cdr c-list))))
+              (else (error 'load-const-table (format "I can't recognize this: ~s" (caar c-list)))))
+        "")))
+ 
+(define create-void-obj
+  (lambda ()
+    (string-append 
+     "/*create void scheme object*/" nl
+     "CALL(MAKE_SOB_VOID);" 
+    ; "MOV(IND(20), IMM(" (number->string T_VOID) "))" nl
+    ; "#define SOB_VOID 20" nl
+     nl nl)))
+
+(define create-null-obj
+  (lambda ()
+    (string-append 
+     "/*create null scheme object*/" nl
+     "CALL(MAKE_SOB_NIL);"
+    ; "MOV(IND(21), IMM(" (number->string T_NIL) "))" nl
+     ;"#define SOB_NIL 21" nl
+     nl nl)))
+
+(define create-boolean-obj
+  (lambda (value)
+    (string-append 
+     "/*create boolean scheme object*/" nl
+     "PUSH(IMM(" (number->string value) "));" nl
+     "CALL(MAKE_SOB_BOOL); " nl
+     "DROP(1);" 
+    ; "MOV(IND(22), IMM(" (number->string T_BOOL) "))" nl
+     ;"MOV(IND(23), IMM(0))" nl
+      ;"#define SOB_FALSE 22" nl
+    ; "MOV(IND(24), IMM(" (number->string T_BOOL) "))" nl
+     ;"MOV(IND(25), IMM(1))" nl
+    
+   ;  "#define SOB_TRUE 24" nl
+     nl nl)))
+
+(define create-char-obj
+  (lambda (value)
+    (string-append 
+     "/*create char scheme object*/" nl
+     "PUSH(IMM(" (number->string value) "));" nl
+     "CALL(MAKE_SOB_CHAR); " nl
+     "DROP(1);" nl nl)))
+
+(define create-int-obj
+  (lambda (value)
+    (string-append 
+     "/*create integer scheme object*/" nl
+     "PUSH(IMM(" (number->string value) "));" nl
+     "CALL(MAKE_SOB_INTEGER); " nl
+     "DROP(1);" nl nl)))
+
+(define create-string-obj
+  (lambda (size char-list)
+    (letrec ((loop
+              (lambda (lst)
+                (if (null? lst)
+                    ""
+                    (string-append 
+                     "PUSH(IMM(" (number->string (car lst)) "));" nl
+                     (loop (cdr lst)))))))
+      (string-append 
+       "/*create string scheme object*/" nl
+       (loop char-list)
+       "PUSH(IMM(" (number->string size) "));" nl
+       "CALL(MAKE_SOB_STRING); " nl
+       "DROP(" (number->string (+ size 1)) ");" nl nl))))
+
+(define create-symbol-obj;;;????????????????????????
+  (lambda (value)
+    (string-append 
+     "/*create symbol scheme object*/" nl
+     "PUSH(SOB_NIL);" nl
+     "CALL(MAKE_SOB_SYMBOL); " nl
+     "DROP(1);" nl nl)))
+
+(define create-pair-obj
+  (lambda (car-addr cdr-addr)
+    (string-append 
+     "/*create pair scheme object*/" nl
+     "PUSH(IMM(" (number->string car-addr) "));" nl
+     "PUSH(IMM(" (number->string cdr-addr) "));" nl
+     "CALL(MAKE_SOB_PAIR); " nl
+     "DROP(2);" nl nl)))
+
+(define create-vec-obj 
+  (lambda (size addr-list)
+    (letrec ((loop
+              (lambda (lst)
+                (if (null? lst)
+                    ""
+                    (string-append 
+                     "PUSH(IMM(" (number->string (car lst)) "));" nl
+                     (loop (cdr lst)))))))
+      (string-append 
+       "/*create vector scheme object*/" nl 
+       (loop addr-list) ;;;;;;;;;;;;;;-----maybe first size then elements??????????
+       "PUSH(IMM(" (number->string size) "));" nl
+       "CALL(MAKE_SOB_VECTOR); " nl
+       "DROP(" (number->string (+ size 1)) ");" nl nl))))
+    
+    
+;-------------------------------------------------------------------------------------------------------
+;---------------------------------------------------- built in procedures --------------------------------------------------------------------;
+(define builtin-proc
+  '(apply boolean? car cdr char->integer char? cons eq? integer?
+          integer->char make-string make-vector null? number? pair? procedure?
+          remainder set-car! set-cdr! string-length string-ref string-set! 
+          string->symbol string? symbol? symbol->string vector-length 
+          vector-ref vector-set! vector?))
+          ;bin+ bin- bin* bin/ bin<? bin=?  < = > + / * - ))
+
+(define builtin-proc-labels
+  '((apply "APPLY") (boolean? "IS_BOOLEAN") (car "CAR") (cdr "CDR") (char->integer "CHAR_TO_INT") (char? "IS_CHAR") (cons "CONS") (eq? "IS_EQ") (integer? "IS_INT")
+          (integer->char "INT_TO_CHAR")  (make-string "MAKE_STRING") (make-vector "MAKE_VECTOR") (null? "IS_NULL") (number? "IS_NUMBER") (pair? "IS_PAIR") (procedure? "IS_PROC")
+          (remainder "REMAINDER") (set-car! "SET_CAR") (set-cdr! "SET_CDR") (string-length "STRING_LENGTH") (string-ref "STRING_REF") (string-set! "STRING_SET") 
+          (string->symbol "STRING_TO_SYMBOL") (string? "IS_STRING") (symbol? "IS_SYMBOL") (symbol->string "SYMBOL_TO_STRING") (vector-length "VECTOR_LENGTH") 
+          (vector-ref "VECTOR_REF") (vector-set! "VECTOR_SET") (vector? "IS_VECTOR")))
+          ;bin+ bin- bin* bin/ bin<? bin=?  < = > + / * - zero?)) integer? zero?
+
+(define add-builtin-proc-to-table
+  (lambda (lst)
+    (if (null? lst)
+        ""
+        (string-append 
+         (add-to-const-table (car lst))
+         (add-builtin-proc-to-table (cdr lst))))))
+
+;---------------------------------------------------------------------------------------------------
+;---------------------------------------------------- load symbol table --------------------------------------------------------------------;
+(define take-if-symbol
+  (lambda (lst)
+    (if (eq? (caaddr lst) T_SYMBOL)
+        #t
+        #f)))
+
+(define load-bucket-list
+  (lambda (s-list)
+    (if (null? s-list)
+        ""
+        (string-append
+         (create-bucket-obj (car s-list)) nl nl
+         (create-closure-obj (car s-list)) nl nl
+         (load-bucket-list (cdr s-list))))))
+    
+(define create-bucket-obj
+  (lambda (sym-data)
+    (string-append 
+     "/*create bucket scheme object*/" nl
+     "/*first cell in the bucket point to the address of the string of the symbol*/" nl
+     "/*second cell in the bucket point to null (address 21)*/" nl
+     "MOV(R0," (number->string (get-const-stack-addr (symbol->string (cadr sym-data)) const-table)) ");  /* R0 point to string - " (symbol->string (cadr sym-data)) " */" nl
+     "PUSH(R0);"  nl
+     "CALL(MAKE_SOB_BUCKET);" nl
+     "DROP(1);" nl
+     "/*add the new bucket to symbol table (linked list)*/ " nl
+     "MOV(R1,ADDR(SYMBOL_TABLE));" nl
+     "MOV(INDD(R1,2),R0);" nl
+     "MOV(ADDR(SYMBOL_TABLE),R0);" nl
+     "/*link the symbol to the new bucket*/ " nl
+     "MOV(R2," (number->string (car sym-data)) "); /* R2 contains the symbol's address */" nl
+     "MOV(INDD(R2,1),R0); " nl )))
+
+(define create-closure-obj
+  (lambda (sym-data)
+    (if (member (cadr sym-data) builtin-proc);only for built in procedures
+        (string-append 
+         "/*create closure scheme object for " (symbol->string (cadr sym-data)) " proc*/" nl
+         "PUSH(LABEL(" (get-sym-label (cadr sym-data) builtin-proc-labels) "));" nl
+         "PUSH(SOB_NIL);" nl
+         "CALL(MAKE_SOB_CLOSURE);" nl
+         "DROP(2);" nl 
+         "/*link the second cell in the bucket to the new closure*/" nl
+         "PUSH(R0);" nl
+         "MOV(R1," (number->string (car sym-data)) ");" nl ;R1 points to symbol address
+         "MOV(R2,INDD(R1,1));" nl ;R2 points to bucket address
+         "MOV(INDD(R2,1),R0); " nl 
+         "POP(R0);" nl nl)
+        "")))
+
+(define get-sym-label
+  (lambda (sym lst)
+    (if (null? lst)
+        ""
+        (if (equal? sym (caar lst))
+            (cadar lst)
+            (get-sym-label sym (cdr lst))))))
+;--------------------------------------------------------
+;---------------------------------------------------- compile scheme file --------------------------------------------------------------------;
+(define compile-scheme-file
+  (lambda (in out)
+    (if (file-exists? out)  (delete-file out) 1)
+    (init-const-table)
+    (add-builtin-proc-to-table builtin-proc)
+    (let* ((out-port (open-output-file out))
+           (in-code (file->sexprs in))
+           (parsed-in-code (map (lambda(x) (annotate-tc (pe->lex-pe (parse x)))) in-code))
+           (code-gen-in (map-cg  parsed-in-code)))
+      (display
+       (string-append
+        prologue
+        " /********************************** load constant table **********************************/ " nl
+        ;"ADD(IND(0), IMM(1000));" nl
+        "MOV(ADDR(0),IMM(20));" nl
+        (load-const-table (map caddr const-table))
+        " /********************************** create buckets for symbol table **********************************/ " nl
+        (load-bucket-list (filter take-if-symbol const-table))
+        " /********************************** code generation for input file **********************************/ " nl
+        code-gen-in
+        epilogue) out-port)
+      (close-output-port out-port))))
+
+(define append-code
+  (lambda (code)
+    (if (null? code)
+        ""
+        (string-append (car code) (append-code (cdr code))))))
+          
+(define file->sexprs
+   (lambda (filename)
+     (let ((input (open-input-file filename)))
+       (letrec ((run
+                 (lambda ()
+                   (let ((e (read input)))
+                     (if (eof-object? e)
+                         (begin (close-input-port input)
+                                '())
+                         (cons e (run)))))))
+         (run)))))
+
+(define map-cg
+  (lambda (pe)
+    (let ((lnext (^label-next)))
+      (if (null? pe)
+          ""
+          (string-append (code-gen (car pe) 0 0) nl
+                         "CMP(R0,SOB_VOID);" nl
+                         "JUMP_EQ(" lnext ");" nl
+                         "PUSH(R0);" nl		
+                         "CALL(WRITE_SOB);" nl
+                         "DROP (1);" nl
+                         lnext ":" nl
+                         (map-cg (cdr pe)))))))
+                         
+          
+
+(define map-code-gen
+	(lambda (p-code)
+		(if (null? p-code) 
+			""
+			(let ((current-pe (car p-code)))
+				(string-append (code-gen current-pe 0 0)
+								(map-code-gen (cdr p-code)) )))))
+
+;--------------------------------------------------------------------------
+;tal-edit
+(define prologue
+  (string-append
+   "#include <stdlib.h>"  nl
+   "#include <stdio.h> "  nl
+   "#define SOB_VOID  20" nl
+   "#define SOB_NIL   21"  nl
+   "#define SOB_FALSE 22 " nl
+   "#define SOB_TRUE  24 " nl
+
+   "/* change to 0 for no debug info to be printed: */" nl
+   "#define DO_SHOW 1" nl
+
+   "/* for debugging only, use SHOW(<msg>, <arg>) */" nl
+   "#if DO_SHOW" nl
+   "#define SHOW(msg, x) { printf(\"%s %s = %ld\\n\", (msg), (#x), (x)); }" nl
+   "#else" nl
+   "#define SHOW(msg, x) {}" nl
+   "#endif" nl
+   "#include \"cisc.h\" " nl
+   
+   "#include \"debug_macros.h\" " nl
+				
+   " /*add here  the define of the functions*/ " nl nl
+   "int main (){" nl nl
+   "START_MACHINE;" nl nl
+   "JUMP(CONTINUE);" nl nl
+   "void print_stack(char* comment){" nl
+   "	int i;" nl
+   "	printf(\"printing stack, FP: %d SP: %d %s\\n\", (int)(FP), (int)(SP), comment);" nl
+   "	for(i=SP+5; i>=0; --i){" nl
+   "		if(SP == i){ "nl
+   "			printf(\"SP \"); }" nl
+   "		if(FP == i){" nl
+   "			printf(\"FP \");}" nl
+   "		printf(\"element %d: \", i);" nl		
+   "		SHOW(\" \", STACK(i)) ;" nl
+   "	}" nl
+   "}" nl
+				
+   "void print_heap(){ " nl
+   "	int i; " nl
+   "	printf(\"printing heap\\n\"); "nl
+   "	for (i=0; i<ADDR(0); i++){ " nl
+   "		printf(\"\\t element %d: \", i);" nl
+   "		SHOW(\" \",ADDR(i));" nl
+   "	}" nl
+   "}" nl
+   
+   "#include \"scheme.lib\"" nl
+   "#include \"char.lib\"" nl
+   "#include \"io.lib\"" nl
+   "#include \"math.lib\"" nl
+   "#include \"string.lib\"" nl
+   "#include \"system.lib\"" nl nl
+   
+   "CONTINUE:" nl nl
+   
+    "/* -----------------------------code----------------------------------------*/" nl
+   
+   ))
+
+(define prologue2
+  (string-append
+   "#include <stdlib.h>"  nl
+   "#include <stdio.h> "  nl
+   "#define SOB_VOID            0xa" nl
+   "#define SOB_NIL             0xb"  nl
+   "#define SOB_BOOLEAN_FALSE   0xc " nl
+   "#define SOB_BOOLEAN_TRUE    0xe " nl
+
+   "/* change to 0 for no debug info to be printed: */" nl
+   "#define DO_SHOW 1" nl
+
+   "/* for debugging only, use SHOW(<msg>, <arg>) */" nl
+   "#if DO_SHOW" nl
+   "#define SHOW(msg, x) { printf(\"%s %s = %ld\\n\", (msg), (#x), (x)); }" nl
+   "#else" nl
+   "#define SHOW(msg, x) {}" nl
+   "#endif" nl
+   "#include \"cisc.h\" " nl
+   
+   ;"#include \"debug_macros.h\" " nl ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; for test
+				
+   " /*add here  the define of the functions*/ " nl nl
+   "int main (){" nl nl
+   "START_MACHINE;" nl nl
+   ;"JUMP(CONTINUE);" nl nl
+   "void print_stack(char* comment){" nl
+   "	int i;" nl
+   "	printf(\"printing stack, FP: %d SP: %d %s\\n\", (int)(FP), (int)(SP), comment);" nl
+   "	for(i=SP+5; i>=0; --i){" nl
+   "		if(SP == i){ "nl
+   "			printf(\"SP \"); }" nl
+   "		if(FP == i){" nl
+   "			printf(\"FP \");}" nl
+   "		printf(\"element %d: \", i);" nl		
+   "		SHOW(\" \", STACK(i)) ;" nl
+   "	}" nl
+   "}" nl
+				
+   "void print_heap(){ " nl
+   "	int i; " nl
+   "	printf(\"printing heap\\n\"); "nl
+   "	for (i=0; i<ADDR(0); i++){ " nl
+   "		printf(\"\\t element %d: \", i);" nl
+   "		SHOW(\" \",ADDR(i));" nl
+   "	}" nl
+   "}" nl
+   
+   "#include \"scheme.lib\"" nl
+   "#include \"char.lib\"" nl
+   "#include \"io.lib\"" nl
+   "#include \"math.lib\"" nl
+   "#include \"string.lib\"" nl
+   "#include \"system.lib\"" nl nl
+   
+   ))
+
+    
+(define epilogue
+  (string-append
+  "/***************************endof code generation for input file **********************************/" nl 
+	"Lend: " nl
+        "INFO;" nl
+	"END_PROG: " nl
+	"  STOP_MACHINE;"nl
+	"  return 0;" nl
+        "}"))
+;--------------------------------------------------------
+
+;---------------------------------------------------- code generator --------------------------------------------------------------------;
+(define code-gen 
+	(lambda (pe env params)
+          (cond ((eq? (car pe) 'const) (code-gen-const (cadr pe)))
+;                ((eq? (car pe) 'pvar) (code-gen-pvar pe))
+ ;               ((eq? (car pe) 'bvar) (code-gen-bvar pe))
+  ;              ((eq? (car pe) 'fvar) (code-gen-fvar pe))
+                ((eq? (car pe) 'if3) (code-gen-if3 pe env params))
+                ((eq? (car pe) 'lambda-simple) (code-gen-lambda-simple pe env params))
+                ((eq? (car pe) 'lambda-opt) (code-gen-lambda-opt pe env params))
+                ((eq? (car pe) 'lambda-variadic) (code-gen-lambda-variadic pe env params))
+                ((eq? (car pe) 'applic) (code-gen-applic pe))
+                ((eq? (car pe) 'tc-applic) (code-gen-tc-applic pe env params))
+                ((eq? (car pe) 'define) (code-gen-define pe ))
+                ((eq? (car pe) 'or) (code-gen-or (cadr pe) env params))
+                ((eq? (car pe) 'seq) (code-gen-seq (cadr pe) env params))
+		     (else (error   'code_gen (format "I can't recognize this: ~s" pe))))))
+
+(define code-gen-if3
+  (lambda (e env params)
+    (with e
+          (lambda (if3 test do-if-true do-if-false)
+            (let ((code-test (code-gen test env params))
+                  (code-dit (code-gen do-if-true env params))
+                  (code-dif (code-gen do-if-false env params))
+                  (label-else (^label-if3else))
+                  (label-exit (^label-if3exit)))
+              (string-append
+               code-test nl ; when run, the result of the test will be in R0
+               "CMP(R0, SOB_FALSE);" nl
+               "JUMP_EQ(" label-else ");" nl
+               code-dit nl
+               "JUMP(" label-exit ");" nl
+               label-else ":" nl
+               code-dif nl
+               label-exit ":"))))))
+
+(define code-gen-const
+	(lambda (const)
+          (string-append 
+           "MOV(R0," 
+           (number->string (get-const-stack-addr const const-table)) 
+           ");" nl)))
+
+;tal-edit
+ (define code-gen-seq
+  (lambda (pe env params)
+    (cond ((null? pe) "")
+	  ((null? (cdr pe)) (string-append "/* sequence */" nl
+					  (code-gen (car pe) env params) nl
+					  "/* endof sequence */" nl))
+	  (else (string-append "/* sequence */" nl
+				(code-gen (car pe) env params) nl
+				(code-gen-seq (cdr pe) env params) nl)))))
+;tal-edit
+(define code-gen-or
+  (lambda (pe env params)
+    (let ((lexit (^label-orexit)))
+    (letrec ((cg-or
+	      (lambda (pe env params)
+		(if (null? pe)
+		  (string-append lexit ":" nl "/* endof or*/" nl)
+		  (string-append "/* or */"  nl
+				 (code-gen (car pe) env params) nl
+				 "CMP(R0, SOB_FALSE);" nl
+				 "JUMP_NE(" lexit ");" nl
+				 (cg-or (cdr pe) env params))))))
+      (cg-or pe env params)))))
+      
+;tal-edit
+;tal-edit-2
+(define code-gen-lambda-simple
+  (lambda (pe env params)
+    (let* ((envsize (+ env 1))
+	   (paramsize  (length (cadr pe)))
+	   (lcode (^label-closure-code))
+	   (lexit (^label-closure-exit))
+	   (lenv (^label-lambda-env))
+	   (largs (^label-lambda-args))
+	   (cg-body (code-gen (caddr pe) envsize paramsize)))
+	  (string-append
+	    "/* lambda-simple */" nl
+	    "PUSH(IMM(" (number->string envsize) "));" nl
+	    "CALL(MALLOC);" nl
+	    "DROP(1);" nl
+	    "MOV(R1, R0); /*now R1 contains the new env*/" nl
+	    "MOV(R2, FPARG(0)); /*now R2 contains the old env*/" nl
+	    "/*now copying the old env to the new one */" nl
+	    "MOV(R3, IMM(0)); /*this is i- for the old env*/" nl
+	    "MOV(R4, IMM(1)); /*this is j - for the new env*/" nl
+	    lenv ":" nl
+	    "MOVE(INDD(R1, R4), INDD(R2, R3)); /*copying old env elements*/" nl
+	    "INCR(R3);" nl
+	    "INCR(R4);" nl
+	    "CMP(R3, IMM(" (number->string env) "));" nl
+	    "JMP_LT(" lenv ");" nl
+	    "PUSH(IMM(" (number->string paramsize) "));" nl
+	    "CALL(MALLOC);" nl
+	    "DROP(1);" nl
+	    "MOV(R3, R0); /*now R3 contains the new args table*/" nl
+	    "MOV(R4, IMM(0)); /*this is i - for the args table loop*/" nl
+	    largs ":" nl
+	    "MOV(INDD(R3, R4), FPARG(2 + R4));" nl
+	    "INCR(R4);" nl
+	    "CMP(R3, IMM(" (number->string paramsize) "));" nl
+	    "JMP_LT(" largs ");" nl
+	    "MOV(INDD(R1, 0), R3); /*now r1 holds the env*/" nl
+	    "/*create the SOB_CLOSURE*/" nl
+	    "PUSH(LABEL(" lcode ")); " nl
+	    "PUSH(R1); /*now r1 holds the env*/" nl
+	    "CALL(MAKE_SOB_CLOSURE); 	/* R10 - the pointer to the new clos */"nl
+	    "DROP(2);" NL
+	    "JUMP(" lexit ");" nl
+	    lcode ": /*closure code*/" nl
+	    "PUSH(FP);" nl
+	    "MOV(FP,SP);" NL
+	    cg-body nl
+	    "POP(FP);" NL
+	    "RETURN;" nl
+	    lexit ":" nl
+            "/*endof lambda-simple */" nl))))
+
+(define list-reverse
+  (lambda (lst)
+    (if (null? lst)
+        '()
+        (reverse lst))))
+
+(define code-gen-applic-params
+  (lambda (params-list env params)
+    (if (null? params)
+        ""
+        (string-append (code-gen (car params-list) env params) nl
+                       "PUSH(R0);" nl
+                       (code-gen-applic-params (cdr params-list))))))
+
+(define code-gen-applic
+  (lambda (pe env params)
+    (let* ((params-list (list-reverse (caddr pe)))
+          (params-num (length (caddr pe)))
+          (lnotclosure (^label-tc-not-closure))
+          (lexit (^label-applic-exit))
+          (cg-params (code-gen-applic-params params-list env params))
+          (cg-proc (code-gen (cadr pe))))
+      (string-append  "/*applic*/" nl
+                      "/*params code*/" nl
+                      "PUSH(SOB_NIL); /*MAGIC*/" NL
+                      cg-params
+                      "/*endof params code*/" nl
+                      "PUSH(IMM(" (number->string params-num) ")); /*the number of the parameters*/" nl
+                      "/*procedure code*/" nl
+                      cg-proc nl
+                      "/*endof procedure code*/" nl
+                      "CMP(INDD(R0, 0),IMM(T_CLOSURE)); /*make sure we got a closure*/" nl
+                      "JUMP_NE(" lerror ");" nl
+                      "PUSH(INDD(R0, 1)); /*RO[1] = env*/" nl
+                      "CALLA(INDD(R0, 2)); /*R0[2] = function pointer*/" nl
+                      "/*cleaning stack*/" nl
+                      ;"DROP(IMM(2 + " (number->string params-num) ")); /*dropping the env, params-num and all the pushing of the params code */" nl
+                      ;MAGIC correction
+                      "DROP(IMM(3 + " (number->string params-num) ")); /*dropping the env, params-num, the MAGIC and all the pushing of the params code */" nl
+                      "JUMP(" lexit ");" nl
+                      lerror ":" nl
+                      "printf(\" ERROR APPLIC - not a closure\");" nl
+                      lexit: ":" nl
+                      "/*endof applic*/" nl))))
+
+(define code-gen-tc-applic
+  (lambda (pe env params)
+    (let* ((params-list (list-reverse (caddr pe)))
+          (params-num (length (caddr pe)))
+          (lnotclosure (^label-not-closure))
+          (lloop (^label-tc-applic-loop))
+          (lloopexit (^label-tc-applic-loopexit))
+          (cg-params (code-gen-applic-params params-list env params))
+          (cg-proc (code-gen (cadr pe))))
+       (string-append  "/*tc-applic*/" nl
+                      "/*params code*/" nl
+                      "PUSH(SOB_NIL); /*MAGIC*/" NL
+                      cg-params
+                      "/*endof params code*/" nl
+                      "PUSH(IMM(" (number->string params-num) ")); /*the number of the parameters*/" nl
+                      "/*procedure code*/" nl
+                      cg-proc nl
+                      "/*endof procedure code*/" nl
+                      "CMP(INDD(R0, 0),IMM(T_CLOSURE)); /*make sure we got a closure*/" nl
+                      "JUMP_NE(" lerror ");" nl
+                      "MOV(R1, SP); /*SP backup*/" nl
+                      "MOV(R2, FP); /*FP backup*/" nl
+                      "MOV(R3,FPARG(-2)); /* old FP backup */ " nl
+                      "/*calculating the bottom of the prev frame - to R4 */" nl
+                      "MOV(R4, SP);" nl
+                      ;"SUB(R4, FPARG(1) + 5 + "  (number->string params-num) ");"nl
+                      ;MAGIC CORRECTION
+                      "SUB(R4, FPARG(1) + 6 + "  (number->string params-num) ");"nl
+                      "PUSH(INDD(R0, 1)); /* push the new env */" nl
+                      "PUSH(FPARG(-1)); /*push the current frame RA*/" nl
+                      "/*moving the last frame*/" nl
+                      "SUB(R1, R2);" nl
+                      "DECR(R1); /*now contains the frame size*/" nl
+                      "MOV(R5, 0);"
+                      lloop ":" nl
+                      "CMP(R1, R5);" nl
+                      "JUMP_LT(" lloopexit ");" nl
+                      "MOV(STACK(R4 + R5), STACK(R2 + R5));" nl
+                      "INCR(R5);" NL
+                      "JUMP(" lloop ");" nl
+                      "/*end of moving the last frame*/" nl
+                      "/*fixing FP SP*/" nl
+                      lloopexit ":"
+                      "MOV(SP, R5 + R4); /*new SP = old SP + frame size*/" nl
+                      "MOV(FP, R3); /*FP takes the old FP*/" nl
+                      "/*now jump to the function*/" NL
+                      "JUMPA(INDD(R0, 2));" NL
+                      lerror ":" nl
+                      "printf(\" ERROR TC-APPLIC - not a closure\");" nl
+                      "/*endof tc-applic*/" nl))))
+
+(define code-gen-lambda-opt
+  (lambda (pe env params)
+    (let* ((envsize (+ env 1))
+	   (paramsize (length (cadr pe)))
+	   (lcode (^label-closure-code))
+	   (lexit (^label-closure-exit))
+	   (lenv (^label-lambda-env))
+	   (largs (^label-lambda-args))
+           (lfinish (^label-opt-finish))
+           (loptparams (^label-opt-optparams))
+           (lafterparams (^label-opt-afterparams))
+           (cg-body (code-gen (cadddr pe) (+ 1 paramsize))))
+	  (string-append
+	    "/* lambda-opt */" nl
+	    "PUSH(IMM(" (number->string envsize) "));" nl
+	    "CALL(MALLOC);" nl
+	    "DROP(1);" nl
+	    "MOV(R1, R0); /*now R1 contains the new env*/" nl
+	    "MOV(R2, FPARG(0)); /*now R2 contains the old env*/" nl
+	    "/*now copying the old env to the new one */" nl
+	    "MOV(R3, IMM(0)); /*this is i- for the old env*/" nl
+	    "MOV(R4, IMM(1)); /*this is j - for the new env*/" nl
+	    lenv ":" nl
+	    "MOVE(INDD(R1, R4), INDD(R2, R3)); /*copying old env elements*/" nl
+	    "INCR(R3);" nl
+	    "INCR(R4);" nl
+	    "CMP(R3, IMM(" (number->string env) "));" nl
+	    "JMP_LT(" lenv ");" nl
+	    "PUSH(IMM(" (number->string paramsize) "));" nl
+	    "CALL(MALLOC);" nl
+	    "DROP(1);" nl
+	    "MOV(R3, R0); /*now R3 contains the new args table*/" nl
+	    "MOV(R4, IMM(0)); /*this is i - for the args table loop*/" nl
+	    largs ":" nl
+	    "MOV(INDD(R3, R4), FPARG(2 + R4));" nl
+	    "INCR(R4);" nl
+	    "CMP(R3, IMM(" (number->string paramsize) "));" nl
+	    "JMP_LT(" largs ");" nl
+	    "MOV(INDD(R1, 0), R3); /*now r1 holds the env*/" nl
+	    "/*create the SOB_CLOSURE*/" nl
+	    "PUSH(LABEL(" lcode ")); " nl
+	    "PUSH(R1); /*now r1 holds the env*/" nl
+	    "CALL(MAKE_SOB_CLOSURE); 	/* R10 - the pointer to the new clos */"nl
+	    "DROP(2);" NL
+	    "JUMP(" lexit ");" nl
+	    lcode ": /*closure code*/" nl
+	    "PUSH(FP);" nl
+	    "MOV(FP,SP);" NL
+            "/*creation of optionals args list*/" nl
+            "MOV(R1, FPARG(1)); /* now R1 got the total number of arguments*/" nl
+            "SUB(R1, "  (number->string paramsize) "); /*now R1 got the number of opt arguments*/" nl
+            "CMP(R1, IMM(0)); /*if there is not opt*/" NL
+            "JUMP_EQ(" lfinish ");" nl
+            "MOV(R2, 1 + FPARG(1)); /*FPARG(R2) = the last optional arg*/" nl
+            "MOV(R3, IMM(0));" NL
+            "MOV(R4, SOB_NIL);" NL
+            loptparams ":" NL
+            "CMP(R3, R1);" NL
+            "JUMP_GE(" lafterparams ");" nl
+            "PUSH(R4); /*cons cdr*/" NL
+            "PUSH(FPARG(R2 - R3)); /*cons car*/" NL
+            "CALL(MAKE_SOB_PAIR);" NL
+            "DROP(2);" NL
+            "MOV(R4, R0);" NL
+            "INCR(R3);" NL
+            "JUMP(" loptparams ");" NL
+            lafterparams ":"
+            "/*now R4 - contains the list of the optional arguments */" nl
+            "MOV(R3, 2 + " (number->string paramsize) "); /*FPARG(R3) = the first optional arg*/" nl
+            "MOV(FPARG(R3), R4); /*put the list of optional args in the place */" nl
+            
+            lfinish ":" nl
+	    cg-body nl
+	    "POP(FP);" NL
+	    "RETURN;" nl
+	    lexit ":" nl
+            "/*endof lambda-opt */" nl))))
+
+(define code-gen-lambda-variadic
+  (lambda (pe env params)
+    (let* ((envsize (+ env 1))
+	   (lcode (^label-closure-code))
+	   (lexit (^label-closure-exit))
+	   (lenv (^label-lambda-env))
+	   (largs (^label-lambda-args))
+     (lfinish (^label-opt-finish))
+     (loptparams (^label-opt-optparams))
+     (lafterparams (^label-opt-afterparams))
+	   (cg-body (code-gen (caddr pe) envsize 1)))
+	  (string-append
+	    "/* lambda-variadic */" nl
+	    "PUSH(IMM(" (number->string envsize) "));" nl
+	    "CALL(MALLOC);" nl
+	    "DROP(1);" nl
+	    "MOV(R1, R0); /*now R1 contains the new env*/" nl
+	    "MOV(R2, FPARG(0)); /*now R2 contains the old env*/" nl
+	    "/*now copying the old env to the new one */" nl
+	    "MOV(R3, IMM(0)); /*this is i- for the old env*/" nl
+	    "MOV(R4, IMM(1)); /*this is j - for the new env*/" nl
+	    lenv ":" nl
+	    "MOVE(INDD(R1, R4), INDD(R2, R3)); /*copying old env elements*/" nl
+	    "INCR(R3);" nl
+	    "INCR(R4);" nl
+	    "CMP(R3, IMM(" (number->string env) "));" nl
+	    "JMP_LT(" lenv ");" nl
+	    "PUSH(IMM(FPARG(1)));" nl
+	    "CALL(MALLOC);" nl
+	    "DROP(1);" nl
+	    "MOV(R3, R0); /*now R3 contains the new args table*/" nl
+	    "MOV(R4, IMM(0)); /*this is i - for the args table loop*/" nl
+	    largs ":" nl
+	    "MOV(INDD(R3, R4), FPARG(2 + R4));" nl
+	    "INCR(R4);" nl
+	    "CMP(R3, IMM(FPARG(1)));" nl
+	    "JMP_LT(" largs ");" nl
+	    "MOV(INDD(R1, 0), R3); /*now r1 holds the env*/" nl
+	    "/*create the SOB_CLOSURE*/" nl
+	    "PUSH(LABEL(" lcode ")); " nl
+	    "PUSH(R1); /*now r1 holds the env*/" nl
+	    "CALL(MAKE_SOB_CLOSURE); 	/* R10 - the pointer to the new clos */"nl
+	    "DROP(2);" NL
+	    "JUMP(" lexit ");" nl
+	    lcode ": /*closure code*/" nl
+	    "PUSH(FP);" nl
+	    "MOV(FP,SP);" NL
+            "/*creation of optionals args list*/" nl
+            "MOV(R1, FPARG(1)); /* now R1 got the total number of arguments*/" nl
+            "CMP(R1, IMM(0)); /*if there is no args*/" NL
+            "JUMP_EQ(" lfinish ");" nl
+            "MOV(R2, 1 + R1); /*FPARG(R2) = the last arg*/" nl
+            "MOV(R3, IMM(0));" NL
+            "MOV(R4, SOB_NIL);" NL
+            loptparams ":" NL
+            "CMP(R3, R1);" NL
+            "JUMP_GE(" lafterparams ");" nl
+            "PUSH(R4); /*cons cdr*/" NL
+            "PUSH(FPARG(R2 - R3)); /*cons car*/" NL
+            "CALL(MAKE_SOB_PAIR);" NL
+            "DROP(2);" NL
+            "MOV(R4, R0);" NL
+            "INCR(R3);" NL
+            "JUMP(" loptparams ");" NL
+            lafterparams ":"
+            "/*now R4 - contains the list of the optional arguments */" nl
+            "MOV(R3, 2); /*FPARG(R3) = the first arg*/" nl
+            "MOV(FPARG(R3), R4); /*put the list of optional args in the place */" nl
+            lfinish ":" nl
+	    cg-body nl
+	    "POP(FP);" NL
+	    "RETURN;" nl
+	    lexit ":" nl
+            "/*endof lambda-variadic */" nl))))

@@ -1,0 +1,1 @@
+ ((lambda (x y . z) (cons y (cons x (cons 3 z)))) 5 4 22 1 0)

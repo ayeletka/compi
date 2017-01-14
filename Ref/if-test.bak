@@ -1,0 +1,4 @@
+(if #t "i love you" "i hate you")
+
+(define f
+  (lambda (x) (+ x 1)))
