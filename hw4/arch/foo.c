@@ -20,6 +20,7 @@ int main()
 #include "math.lib"
 #include "string.lib"
 #include "system.lib"
+#include "ours.lib"
 #include "scheme.lib"
 
 CONTINUE:
@@ -29,24 +30,17 @@ MOV(IND(10), IMM(T_VOID));
 MOV(IND(11), IMM(T_NIL));
 MOV(IND(12), IMM(T_BOOL));
 MOV(IND(13), IMM(T_BOOL));
-MOV(IND(14), IMM(T_STRING));
+MOV(IND(14), IMM(T_CHAR));
 MOV(IND(15), IMM(1));
-MOV(IND(16), IMM(97));
-MOV(IND(17), IMM(T_SYMBOL));
-MOV(IND(18), IMM(14));
-MOV(IND(19), IMM(T_CHAR));
-MOV(IND(20), IMM(1));
 
 /*const*/
-MOV(R0,17);
+MOV(R0,14);
 
-PUSH(R0);
-CALL(WRITE_SOB);
+CALL(PRINT_R0);
 /*const*/
-MOV(R0,19);
+MOV(R0,12);
 
-PUSH(R0);
-CALL(WRITE_SOB);
+CALL(PRINT_R0);
 
 PROG_ENDING: 
   STOP_MACHINE;

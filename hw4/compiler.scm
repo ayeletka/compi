@@ -1836,9 +1836,9 @@
     (set! const_table `(,@const_table (,address () ,T_NIL)))
     (set! address (+ address 1))
     (set! const_table `(,@const_table (,address ,#f ,T_BOOL)))
-    (set! address (+ address 1))
+    (set! address (+ address 2))
     (set! const_table `(,@const_table (,address ,#t ,T_BOOL)))
-    (set! address (+ address 1))
+    (set! address (+ address 2))
     )
   )
 
@@ -1887,13 +1887,21 @@
   )))
 )
 
+
 (define load-void (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_VOID));" nl)))
 (define load-nil (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_NIL));" nl)))
-(define load-bool (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl)))
+(define load-bool 
+  (lambda (idx) 
+    (if (equal? idx 12)
+      (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
+      "MOV(IND(" (number->string (+ idx 1)) "), IMM(0));" nl )
+       (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
+      "MOV(IND(" (number->string (+ idx 1)) "), IMM(1));" nl )     
+    )))
 
 (define load-char (lambda (idx val) 
 	(string-append "MOV(IND(" (number->string idx) "), IMM(T_CHAR));" nl
-				   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string val) "));" nl))))
+				   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string (car val)) "));" nl)))
 
 (define load-int (lambda (idx val) 
 	(string-append "MOV(IND(" (number->string idx) "), IMM(T_INTEGER));" nl
@@ -1948,7 +1956,7 @@
 						((equal? type T_NIL) (string-append (load-nil idx) (initiate-consts rest)))
 						((equal? type T_BOOL) (string-append (load-bool idx) (initiate-consts rest)))
 						((equal? (car type) T_CHAR) (string-append (load-char idx (cdr type)) (initiate-consts rest)))
-						((equal? (car type) T_INTEGER) (string-append (load-char idx (cadr type)) (initiate-consts rest)))
+						((equal? (car type) T_INTEGER) (string-append (load-int idx (cadr type)) (initiate-consts rest)))
 						((equal? (car type) T_STRING) (string-append (load-string idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_SYMBOL) (string-append (load-symbol idx (cadr type)) (initiate-consts rest)))
 						((equal? (car type) T_PAIR) (string-append (load-pair idx (cdr type)) (initiate-consts rest)))
@@ -2008,8 +2016,8 @@
                       (string-append
                         (code-gen (car exps) 0 0) nl
                         ;"PUSH(R0);" nl
-                        ;"CALL(WRITE_SOB);" nl
-                        "SHOW("", R0);" nl
+                        "CALL(PRINT_R0);" nl
+                       ; "SHOW(\"\", R0);" nl
                         (loop (cdr exps))
                     )))))
             (loop sexps)
@@ -2087,7 +2095,7 @@
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
 
-		"#include \"cisc.h\"" nl nl
+		"#include \"arch/cisc.h\"" nl nl
 
 		"int main()" nl
 		"{" nl
@@ -2095,12 +2103,13 @@
 
   		" JUMP(CONTINUE);" nl nl
 
-		"#include \"char.lib\"" nl
-		"#include \"io.lib\"" nl
-		"#include \"math.lib\"" nl
-		"#include \"string.lib\"" nl
-		"#include \"system.lib\"" nl
-		"#include \"scheme.lib\""nl nl
+		"#include \"arch/char.lib\"" nl
+		"#include \"arch/io.lib\"" nl
+		"#include \"arch/math.lib\"" nl
+		"#include \"arch/string.lib\"" nl
+		"#include \"arch/system.lib\"" nl
+    "#include \"arch/ours.lib\"" nl
+		"#include \"arch/scheme.lib\""nl nl
 
  		"CONTINUE:" nl
 		)
@@ -2150,4 +2159,4 @@
 
 
 
-(compile-scheme-file "test-files/test1.scm" "arch/foo.c")
+(compile-scheme-file "test-files/test1.scm" "foo.c")
