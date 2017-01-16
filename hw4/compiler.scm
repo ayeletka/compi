@@ -1871,9 +1871,8 @@
           (set! const_table `(,@const_table (,address ,cVar (,T_STRING ,(string-length cVar) ,@(map char->integer (string->list cVar))))))
           (set! address (+ address 2 (string-length cVar))))
       ((symbol? cVar)
-          (addToConstTable (symbol->string cVar))
-          (set! const_table `(,@const_table (,address ,cVar (,T_SYMBOL ,(getConstAddress (symbol->string cVar))))))
-          (set! address (+ address 2)))
+          (set! const_table `(,@const_table (,address ,cVar (,T_SYMBOL ,(string-length (symbol->string cVar)) ,@(map char->integer (string->list (symbol->string cVar)))))))
+          (set! address (+ address 2 (string-length (symbol->string cVar)))))
       ((pair? cVar)
           (addToConstTable (car cVar))
           (addToConstTable (cdr cVar))
@@ -1925,14 +1924,18 @@
 
 (define load-symbol 
 	(lambda (idx val) 
-		(string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
-					   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string val) "));" nl)))
+    (let (
+      (len (car val))
+      (chars (cdr val)))
+        (string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
+                 "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string len) "));" nl
+                 (load-string-chars (+ idx 2) chars)))))
 
 (define load-pair 
 	(lambda (idx val) 
 		(string-append "MOV(IND(" (number->string idx) "), IMM(T_PAIR));" nl
 					   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string (car val)) "));" nl
-					   "MOV(IND(" (number->string (+ idx 2)) "), IMM(" (number->string (cdr val)) "));" nl)))
+					   "MOV(IND(" (number->string (+ idx 2)) "), IMM(" (number->string (cadr val)) "));" nl)))
 
 (define load-vector 
 	(lambda (idx val) 
@@ -1958,7 +1961,7 @@
 						((equal? (car type) T_CHAR) (string-append (load-char idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_INTEGER) (string-append (load-int idx (cadr type)) (initiate-consts rest)))
 						((equal? (car type) T_STRING) (string-append (load-string idx (cdr type)) (initiate-consts rest)))
-						((equal? (car type) T_SYMBOL) (string-append (load-symbol idx (cadr type)) (initiate-consts rest)))
+						((equal? (car type) T_SYMBOL) (string-append (load-symbol idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_PAIR) (string-append (load-pair idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_VECTOR) (string-append (load-vector idx (cdr type)) (initiate-consts rest)))
 						(else "")
@@ -2016,7 +2019,7 @@
                       (string-append
                         (code-gen (car exps) 0 0) nl
                         ;"PUSH(R0);" nl
-                        "CALL(PRINT_R0);" nl
+                        "CALL(PRINT_R0);" nl nl
                        ; "SHOW(\"\", R0);" nl
                         (loop (cdr exps))
                     )))))
@@ -2108,8 +2111,8 @@
 		"#include \"arch/math.lib\"" nl
 		"#include \"arch/string.lib\"" nl
 		"#include \"arch/system.lib\"" nl
-    "#include \"arch/ours.lib\"" nl
-		"#include \"arch/scheme.lib\""nl nl
+		"#include \"arch/scheme.lib\""nl 
+    "#include \"arch/ours.lib\"" nl nl
 
  		"CONTINUE:" nl
 		)
@@ -2127,7 +2130,6 @@
 	)
 
 
-
 (define compile-scheme-file
   (lambda (scheme_source_file cisc_target_file)
     (let* (
@@ -2143,8 +2145,10 @@
     		;make const table
             (initConstTable)
             (map addToConstTable constant-list)
+
             ;make global table
             (addLstToGlobalTable (append saveProcedures fvar-list))
+            (display global_table)
             ;create cisc code
             (let ((cisc-exp (string-append
             					prolog nl
