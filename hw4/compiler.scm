@@ -1980,6 +1980,33 @@
       string->symbol eq?)
 )
 
+
+
+
+(define load-fvar-symbol 
+  (lambda (idx len val) 
+        (string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
+                 "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string len) "));" nl
+                 (load-string-chars (+ idx 2) val))))
+
+
+(define initiate-fvar
+  (lambda (fvarList)
+    (if (not (null? fvarList))
+      (let* ((fvar-exp (car fvarList))
+        (idx (car fvar-exp))
+        (var (cadr fvar-exp))
+        (type (caddr fvar-exp))
+        (rest (cdr fvarList)))
+      (string-append (load-symbol idx (cdr type)) (initiate-fvar rest)))
+      ;  (string-append (load-fvar-symbol idx (string-length (symbol->string var)) (map char->integer (string->list (symbol->string var)))) (initiate-fvar rest)))
+      ""
+      )
+    ))
+
+
+
+
 (define addLstToGlobalTable
   (lambda (fvarList)
     (letrec ((loop 
@@ -1987,13 +2014,16 @@
         (cond 
         ((null? lst) (void))
         ((not(getGlobalVarAddress (car lst)))
-           (set! global_table `(,@global_table (,address ,(car lst))))
-           (set! address (+ address 1))
+           (set! global_table `(,@global_table (,address ,(car lst) (,T_SYMBOL ,(string-length (symbol->string (car lst))) ,@(map char->integer (string->list (symbol->string (car lst))))))))
+           (set! address (+ address 2 (string-length (symbol->string (car lst)))))
            (loop (cdr lst)))
         (else (loop (cdr lst)))
         )
       )))
     (loop fvarList))))
+
+
+
 
 (define getGlobalVarAddress
   (lambda (var)
@@ -2009,6 +2039,15 @@
     (loop global_table))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; generate ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define labelNum 0)
+(define labelNumberInString 
+  (lambda ()
+        (set! labelNum (+ labelNum 1))
+          (number->string labelNum)
+  ))
+
+
 
 (define codeGenOnAllSexps
   (lambda (sexps)
@@ -2028,9 +2067,14 @@
 
 (define code-gen
   (lambda (sexpr envLevel numberOfParams )
+    (display sexpr)
+    (newline)
       (cond
         ((null? sexpr) (list))
         ((equal? (car sexpr) 'const) (code-gen-const sexpr envLevel numberOfParams))
+        ((equal? (car sexpr) 'fvar) (code-gen-fvar sexpr envLevel numberOfParams))
+        ((equal?  (car sexpr) 'if3) (code-gen-if sexpr envLevel numberOfParams))
+        ((equal?  (car sexpr) 'or) (code-gen-or sexpr envLevel numberOfParams))
         (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
     )))
 
@@ -2040,6 +2084,58 @@
            "/*const*/" nl
            "MOV(R0," (number->string (getConstAddress (cadr const)))");" nl
            )))
+
+(define code-gen-fvar
+  (lambda (fvar envLevel numberOfParams)
+    (string-append
+      "/*fvar */" nl
+      "MOV(R0," (number->string (getGlobalVarAddress (cadr fvar)))");" nl
+
+)))
+
+
+(define code-gen-if
+  (lambda (ifExp envLevel numberOfParams)
+    (let* ( 
+      (code-gen-test (code-gen (cadr ifExp) envLevel numberOfParams))
+      (code-gen-do-if-true (code-gen (caddr ifExp) envLevel numberOfParams))
+      (code-gen-do-if-false (code-gen (cadddr ifExp) envLevel numberOfParams))
+      (labelElse (string-append "labelElse" (labelNumberInString)))
+      (labelIfExit (string-append "labelIfExit" (labelNumberInString)))
+      )
+        (string-append
+          "/*ifExp*/" nl
+          code-gen-test nl
+         ; "SHOW(\"\",R0)" nl
+          "CMP(R0, FALSE);" nl
+          "JUMP_EQ("labelElse");" nl
+          code-gen-do-if-true nl
+          "JUMP("labelIfExit");" nl
+          labelElse":" nl
+          code-gen-do-if-false nl
+          labelIfExit":" nl)
+)))
+
+
+(define code-gen-or
+  (lambda (orExp envLevel numberOfParams)
+        (letrec (
+          (lableOrExit (string-append "lableOrExit" (labelNumberInString)))
+          (loop 
+              (lambda (exprs)
+                (string-append
+                  (car exprs) nl
+                  "CMP(R0, FALSE);" nl
+                  "JUMP_NE("lableOrExit");" nl
+                  (if 
+                    (null? (cdr exprs))
+                    (string-append lableOrExit":" nl)
+                    (loop (cdr exprs))
+                  )
+                ))))
+              
+          (loop (map (lambda (exp) (code-gen exp envLevel numberOfParams)) (cadr orExp)))
+        )))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; compile-scheme-file ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -2097,6 +2193,8 @@
 
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
+    "#define FALSE 12 " nl nl
+    "#define TRUE 14 " nl nl
 
 		"#include \"arch/cisc.h\"" nl nl
 
@@ -2142,18 +2240,22 @@
           (fvar-list (create-list-of-certain-type parsedEvaledSexpr 'fvar))
           ;;add prolog and epilog to the code then write to file
           )
-    		;make const table
+  
+        ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
 
             ;make global table
             (addLstToGlobalTable (append saveProcedures fvar-list))
-            (display global_table)
+            (display const_table)
+    (newline)
+  
             ;create cisc code
             (let ((cisc-exp (string-append
             					prolog nl
             					"/* ----------initiating const table---------- */" nl
             					(initiate-consts const_table) nl
+                      (initiate-fvar global_table) nl
             					(codeGenOnAllSexps parsedEvaledSexpr) nl
             					epilog
             					)))

@@ -864,6 +864,7 @@
 				(string-append
 					"/* I am in the if exp */" nl
 					code-test nl ; when run, the result of the test will be in R0
+					"SHOW(\"\", R0);" nl
 					"CMP(R0, SOB_FALSE);" nl
 					"JUMP_EQ(" label-else ");" nl
 					code-dit nl
@@ -1458,6 +1459,9 @@
 				(g_consTable newConstsEntry)
 			)
 )))
+
+
+
 
 
 (define createNewTableEntry
@@ -2439,4 +2443,4 @@
 		))
 
 
-(compile-scheme-file "test1.scm" "foo.c")
+(compile-scheme-file "test.scm" "foo.c")
