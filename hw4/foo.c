@@ -494,11 +494,6 @@ MOV(R0,30);
 
 CALL(PRINT_R0);
 
-/*fvar */
-MOV(R0,67);
-
-CALL(PRINT_R0);
-
 /*ifExp*/
 /*const*/
 MOV(R0,20);
@@ -640,6 +635,35 @@ labelElse4:
 MOV(R0,12);
 
 labelIfExit5:
+
+CALL(PRINT_R0);
+
+/*fvar */
+MOV(R0,67);
+SHOW("", R0);
+
+CALL(PRINT_R0);
+
+/* push params reverse order. */
+/*const*/
+MOV(R0,26);
+
+PUSH(R0);
+/*const*/
+MOV(R0,26);
+
+PUSH(R0);
+/* push number of args. */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0,67);
+SHOW("", R0);
+PUSH(R0);
+CALL(R0);
+/* move to R5 number of args .. to know how to drop from stack. */
+MOV(R5,STARG(IMM(0)));
+ADD(R5, IMM(2));
+DROP(R5);
 
 CALL(PRINT_R0);
 

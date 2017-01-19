@@ -16,6 +16,7 @@
 (or #f (or 3 #f))  ;3
 (and 3 4 5) ;5
 (and 3 4 (or 3 #f)) ;3
+;(+ 1 1) ;2 doesn't work
 
 ;(lambda () (+ a b))
 

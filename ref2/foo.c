@@ -26,7 +26,7 @@ PUSH(0);
 PUSH(0);
 PUSH(FP);
 MOV(FP, SP);
-MOV(IND(0), IMM(2201));
+MOV(IND(0), IMM(2197));
 MOV(IND(IMM(1)), IMM(937610));
 MOV(IND(IMM(2)), IMM(722689));
 MOV(IND(IMM(3)), IMM(741553));
@@ -1416,25 +1416,21 @@ MOV(IND(IMM(4)), IMM(0));
 MOV(IND(IMM(5)), IMM(741553));
 MOV(IND(IMM(6)), IMM(1));
 MOV(IND(IMM(2161)), IMM(945311));
-MOV(IND(IMM(2162)), IMM(4));
+MOV(IND(IMM(2162)), IMM(-1));
 MOV(IND(IMM(2163)), IMM(945311));
-MOV(IND(IMM(2164)), IMM(3));
+MOV(IND(IMM(2164)), IMM(0));
 MOV(IND(IMM(2165)), IMM(945311));
-MOV(IND(IMM(2166)), IMM(-1));
-MOV(IND(IMM(2167)), IMM(945311));
-MOV(IND(IMM(2168)), IMM(0));
-MOV(IND(IMM(2169)), IMM(945311));
-MOV(IND(IMM(2170)), IMM(2));
+MOV(IND(IMM(2166)), IMM(2));
+MOV(IND(IMM(2167)), IMM(181048));
+MOV(IND(IMM(2168)), IMM(122));
+MOV(IND(IMM(2169)), IMM(181048));
+MOV(IND(IMM(2170)), IMM(97));
 MOV(IND(IMM(2171)), IMM(181048));
-MOV(IND(IMM(2172)), IMM(122));
+MOV(IND(IMM(2172)), IMM(90));
 MOV(IND(IMM(2173)), IMM(181048));
-MOV(IND(IMM(2174)), IMM(97));
-MOV(IND(IMM(2175)), IMM(181048));
-MOV(IND(IMM(2176)), IMM(90));
-MOV(IND(IMM(2177)), IMM(181048));
-MOV(IND(IMM(2178)), IMM(65));
-MOV(IND(IMM(2179)), IMM(945311));
-MOV(IND(IMM(2180)), IMM(1));
+MOV(IND(IMM(2174)), IMM(65));
+MOV(IND(IMM(2175)), IMM(945311));
+MOV(IND(IMM(2176)), IMM(1));
 MOV(INDD(1406, 0), IMM(368031));
 MOV(INDD(1406, 1), IMM(1409));
 MOV(INDD(1406, 2), IMM(1411));
@@ -3222,6 +3218,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3234,11 +3231,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else61);
+JUMP_EQ(L_if3_else60);
 /* In consts .. */
 MOV(R0,IMM(2));
-JUMP(L_if3_exit61);
-L_if3_else61:
+JUMP(L_if3_exit60);
+L_if3_else60:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -3253,6 +3250,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3298,6 +3296,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3331,6 +3330,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2000));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -3367,7 +3367,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit61:
+L_if3_exit60:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -3629,6 +3629,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3646,6 +3647,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3658,11 +3660,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else62);
+JUMP_EQ(L_if3_else61);
 /* In consts .. */
 MOV(R0,IMM(2));
-JUMP(L_if3_exit62);
-L_if3_else62:
+JUMP(L_if3_exit61);
+L_if3_else61:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -3675,6 +3677,7 @@ PUSH(R0);
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -3727,6 +3730,7 @@ PUSH(R0);
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -3757,6 +3761,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3775,6 +3780,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2000));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -3811,7 +3817,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit62:
+L_if3_exit61:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -4618,6 +4624,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -4636,6 +4643,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -4690,6 +4698,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -4715,6 +4724,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -4769,6 +4779,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -4871,6 +4882,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -4889,6 +4901,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -5064,6 +5077,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2085));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -5199,6 +5213,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -5334,6 +5349,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2075));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -5469,6 +5485,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2070));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -5604,6 +5621,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2065));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -5739,6 +5757,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2060));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -5874,6 +5893,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -6009,6 +6029,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1905));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -6027,6 +6048,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1890));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -6162,6 +6184,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1910));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -6180,6 +6203,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1890));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -6301,7 +6325,7 @@ JUMP_NE(ERROR);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -6314,6 +6338,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1930));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -6435,7 +6460,7 @@ JUMP_NE(ERROR);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -6448,6 +6473,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1925));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -6572,14 +6598,14 @@ MOV(R0, FPARG(2));
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else60);
+JUMP_EQ(L_if3_else59);
 /* In consts .. */
 MOV(R0,IMM(3));
-JUMP(L_if3_exit60);
-L_if3_else60:
+JUMP(L_if3_exit59);
+L_if3_else59:
 /* In consts .. */
 MOV(R0,IMM(5));
-L_if3_exit60:
+L_if3_exit59:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -6856,6 +6882,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -6873,6 +6900,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2115));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -6885,7 +6913,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else59);
+JUMP_EQ(L_if3_else58);
 /* push params reverse order. */
 /* push params reverse order. */
 /* in pvar */
@@ -6896,6 +6924,7 @@ PUSH(R0);
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -6904,6 +6933,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -6928,6 +6958,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -6951,6 +6982,7 @@ PUSH(R0);
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -6959,6 +6991,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -7018,11 +7051,11 @@ CMP(R0, SOB_FALSE);
 JUMP_NE(L_or_exit5);
 L_or_exit5:
 
-JUMP(L_if3_exit59);
-L_if3_else59:
+JUMP(L_if3_exit58);
+L_if3_else58:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit59:
+L_if3_exit58:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -7172,6 +7205,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -7481,6 +7515,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -7498,6 +7533,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -7521,6 +7557,7 @@ PUSH(R0);
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -7529,6 +7566,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -7553,6 +7591,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -7565,7 +7604,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else58);
+JUMP_EQ(L_if3_else57);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -7577,6 +7616,7 @@ PUSH(R0);
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -7585,6 +7625,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -7640,11 +7681,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit58);
-L_if3_else58:
+JUMP(L_if3_exit57);
+L_if3_else57:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit58:
+L_if3_exit57:
 
 CMP(R0, SOB_FALSE);
 JUMP_NE(L_or_exit4);
@@ -7798,6 +7839,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -8070,6 +8112,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8095,6 +8138,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8129,7 +8173,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else57);
+JUMP_EQ(L_if3_else56);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -8143,6 +8187,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8165,6 +8210,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8220,11 +8266,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit57);
-L_if3_else57:
+JUMP(L_if3_exit56);
+L_if3_else56:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit57:
+L_if3_exit56:
 
 CMP(R0, SOB_FALSE);
 JUMP_NE(L_or_exit3);
@@ -8494,6 +8540,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -8546,6 +8593,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1895));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -8554,6 +8602,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8574,6 +8623,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1885));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -8582,6 +8632,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8751,6 +8802,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8860,6 +8912,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8878,6 +8931,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1890));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -8927,6 +8981,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1865));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8939,7 +8994,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else56);
+JUMP_EQ(L_if3_else55);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -8953,6 +9008,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -8975,6 +9031,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -9030,11 +9087,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit56);
-L_if3_else56:
+JUMP(L_if3_exit55);
+L_if3_else55:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit56:
+L_if3_exit55:
 
 CMP(R0, SOB_FALSE);
 JUMP_NE(L_or_exit2);
@@ -9220,6 +9277,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -9242,6 +9300,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -9315,6 +9374,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -9557,6 +9617,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -9569,15 +9630,15 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else55);
+JUMP_EQ(L_if3_else54);
 /* in bvar */
 MOV(R1,FPARG(LOC_ENV));
 MOV(R2,INDD(R1,IMM(1)));
 MOV(R3,INDD(R2,IMM(1)));
 MOV(R0,R3);
 
-JUMP(L_if3_exit55);
-L_if3_else55:
+JUMP(L_if3_exit54);
+L_if3_else54:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -9592,6 +9653,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -9632,6 +9694,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -9687,7 +9750,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit55:
+L_if3_exit54:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -9837,6 +9900,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -10366,6 +10430,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(1840));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -10432,12 +10497,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10446,6 +10513,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10466,12 +10534,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10480,6 +10550,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10500,12 +10571,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10514,6 +10587,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10534,12 +10608,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10548,6 +10624,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10568,12 +10645,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1830));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10582,6 +10661,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10602,12 +10682,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1825));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10616,6 +10698,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10636,12 +10719,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1820));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10650,6 +10735,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10670,12 +10756,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1815));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10684,6 +10772,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10704,12 +10793,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1830));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10718,6 +10809,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10738,12 +10830,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1825));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10752,6 +10846,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10772,12 +10867,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1820));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10786,6 +10883,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10806,12 +10904,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1815));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10820,6 +10920,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10840,12 +10941,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1810));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10854,6 +10957,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10874,12 +10978,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1805));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10888,6 +10994,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10908,12 +11015,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1800));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10922,6 +11031,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10942,12 +11052,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1795));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10956,6 +11068,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -10976,12 +11089,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1790));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -10990,6 +11105,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11010,12 +11126,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1785));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11024,6 +11142,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11044,12 +11163,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1780));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11058,6 +11179,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11078,12 +11200,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1775));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11092,6 +11216,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11112,12 +11237,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1810));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11126,6 +11253,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11146,12 +11274,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1805));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11160,6 +11290,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11180,12 +11311,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1800));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11194,6 +11327,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11214,12 +11348,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1795));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11228,6 +11364,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11248,12 +11385,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1790));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11262,6 +11401,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11282,12 +11422,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1785));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11296,6 +11438,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11316,12 +11459,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1780));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11330,6 +11475,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11350,12 +11496,14 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1775));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -11364,6 +11512,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11606,6 +11755,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11618,15 +11768,15 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else54);
+JUMP_EQ(L_if3_else53);
 /* in bvar */
 MOV(R1,FPARG(LOC_ENV));
 MOV(R2,INDD(R1,IMM(1)));
 MOV(R3,INDD(R2,IMM(1)));
 MOV(R0,R3);
 
-JUMP(L_if3_exit54);
-L_if3_else54:
+JUMP(L_if3_exit53);
+L_if3_else53:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -11641,6 +11791,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11681,6 +11832,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -11736,7 +11888,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit54:
+L_if3_exit53:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -11974,6 +12126,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -12248,6 +12401,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12260,12 +12414,12 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else53);
+JUMP_EQ(L_if3_else52);
 /* in pvar */
 MOV(R0, FPARG(2));
 
-JUMP(L_if3_exit53);
-L_if3_else53:
+JUMP(L_if3_exit52);
+L_if3_else52:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -12279,6 +12433,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12302,6 +12457,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12379,7 +12535,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit53:
+L_if3_exit52:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -12560,6 +12716,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12572,15 +12729,15 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else52);
+JUMP_EQ(L_if3_else51);
 /* in bvar */
 MOV(R1,FPARG(LOC_ENV));
 MOV(R2,INDD(R1,IMM(1)));
 MOV(R3,INDD(R2,IMM(1)));
 MOV(R0,R3);
 
-JUMP(L_if3_exit52);
-L_if3_else52:
+JUMP(L_if3_exit51);
+L_if3_else51:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -12594,6 +12751,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12616,6 +12774,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12671,7 +12830,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit52:
+L_if3_exit51:
 
 POP(FP);
 RETURN;
@@ -12692,6 +12851,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -12894,6 +13054,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12916,6 +13077,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -12994,6 +13156,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1900));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -13002,6 +13165,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1680));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13019,6 +13183,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13040,6 +13205,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1895));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -13048,6 +13214,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1680));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13065,6 +13232,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13086,6 +13254,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1910));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -13094,6 +13263,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1680));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13111,6 +13281,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13132,6 +13303,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1885));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -13140,6 +13312,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1680));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13157,6 +13330,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13178,6 +13352,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1905));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -13186,6 +13361,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1680));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13203,6 +13379,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13296,7 +13473,7 @@ MOV(R0, FPARG(2));
 
 PUSH(R0);
 /* In consts .. */
-MOV(R0,IMM(2177));
+MOV(R0,IMM(2173));
 PUSH(R0);
 /* push number of args. */
 PUSH(IMM(2));
@@ -13304,6 +13481,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1670));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13316,11 +13494,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else51);
+JUMP_EQ(L_if3_else50);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2175));
+MOV(R0,IMM(2171));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -13333,6 +13511,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1670));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -13369,11 +13548,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit51);
-L_if3_else51:
+JUMP(L_if3_exit50);
+L_if3_else50:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit51:
+L_if3_exit50:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -13464,7 +13643,7 @@ MOV(R0, FPARG(2));
 
 PUSH(R0);
 /* In consts .. */
-MOV(R0,IMM(2173));
+MOV(R0,IMM(2169));
 PUSH(R0);
 /* push number of args. */
 PUSH(IMM(2));
@@ -13472,6 +13651,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1670));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13484,11 +13664,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else50);
+JUMP_EQ(L_if3_else49);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2171));
+MOV(R0,IMM(2167));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -13501,6 +13681,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1670));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -13537,11 +13718,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit50);
-L_if3_else50:
+JUMP(L_if3_exit49);
+L_if3_else49:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit50:
+L_if3_exit49:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -13558,7 +13739,7 @@ CALL(PRINT_R0);
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2177));
+MOV(R0,IMM(2173));
 PUSH(R0);
 /* push number of args. */
 PUSH(IMM(1));
@@ -13566,6 +13747,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13579,7 +13761,7 @@ DROP(R5);
 PUSH(R0);
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2173));
+MOV(R0,IMM(2169));
 PUSH(R0);
 /* push number of args. */
 PUSH(IMM(1));
@@ -13587,6 +13769,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13604,6 +13787,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13771,6 +13955,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1645));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13783,7 +13968,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else49);
+JUMP_EQ(L_if3_else48);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -13805,6 +13990,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13822,6 +14008,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13840,6 +14027,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2045));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -13876,12 +14064,12 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit49);
-L_if3_else49:
+JUMP(L_if3_exit48);
+L_if3_else48:
 /* in pvar */
 MOV(R0, FPARG(2));
 
-L_if3_exit49:
+L_if3_exit48:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -13913,7 +14101,7 @@ CALL(PRINT_R0);
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2177));
+MOV(R0,IMM(2173));
 PUSH(R0);
 /* push number of args. */
 PUSH(IMM(1));
@@ -13921,6 +14109,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13934,7 +14123,7 @@ DROP(R5);
 PUSH(R0);
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2173));
+MOV(R0,IMM(2169));
 PUSH(R0);
 /* push number of args. */
 PUSH(IMM(1));
@@ -13942,6 +14131,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -13959,6 +14149,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14126,6 +14317,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1650));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14138,7 +14330,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else48);
+JUMP_EQ(L_if3_else47);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -14160,6 +14352,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2050));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14177,6 +14370,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2085));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14195,6 +14389,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2045));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -14231,12 +14426,12 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit48);
-L_if3_else48:
+JUMP(L_if3_exit47);
+L_if3_else47:
 /* in pvar */
 MOV(R0, FPARG(2));
 
-L_if3_exit48:
+L_if3_exit47:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -14349,6 +14544,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14371,6 +14567,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14389,6 +14586,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1670));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -14438,6 +14636,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14538,6 +14737,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14560,6 +14760,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14578,6 +14779,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1665));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -14627,6 +14829,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14727,6 +14930,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14749,6 +14953,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14767,6 +14972,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1675));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -14816,6 +15022,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14916,6 +15123,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14938,6 +15146,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -14956,6 +15165,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1655));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -15005,6 +15215,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15105,6 +15316,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15127,6 +15339,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15145,6 +15358,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1660));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -15194,6 +15408,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15294,6 +15509,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15309,6 +15525,7 @@ PUSH(R0);
 MOV(R1, IMM(1640));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -15317,6 +15534,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15335,6 +15553,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1600));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -15467,6 +15686,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15482,6 +15702,7 @@ PUSH(R0);
 MOV(R1, IMM(1635));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -15490,6 +15711,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15508,6 +15730,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1600));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -15630,7 +15853,7 @@ JUMP_NE(ERROR);
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2169));
+MOV(R0,IMM(2165));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -15642,6 +15865,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1580));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15660,6 +15884,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2100));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -15783,7 +16008,7 @@ JUMP_NE(ERROR);
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2169));
+MOV(R0,IMM(2165));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -15795,6 +16020,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1580));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15812,6 +16038,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2100));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15830,6 +16057,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1890));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -15960,6 +16188,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -15972,11 +16201,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else47);
+JUMP_EQ(L_if3_else46);
 /* In consts .. */
-MOV(R0,IMM(2167));
-JUMP(L_if3_exit47);
-L_if3_else47:
+MOV(R0,IMM(2163));
+JUMP(L_if3_exit46);
+L_if3_else46:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -15991,6 +16220,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16008,6 +16238,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1970));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16026,6 +16257,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1880));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -16062,7 +16294,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit47:
+L_if3_exit46:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -16254,6 +16486,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2100));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16266,7 +16499,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else46);
+JUMP_EQ(L_if3_else45);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -16280,6 +16513,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -16316,13 +16550,13 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit46);
-L_if3_else46:
+JUMP(L_if3_exit45);
+L_if3_else45:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -16334,6 +16568,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16356,6 +16591,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16374,6 +16610,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1570));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -16410,7 +16647,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit46:
+L_if3_exit45:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -16505,6 +16742,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16529,6 +16767,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2115));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16541,7 +16780,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else45);
+JUMP_EQ(L_if3_else44);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -16555,6 +16794,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -16573,6 +16813,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1565));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -16609,11 +16850,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit45);
-L_if3_else45:
+JUMP(L_if3_exit44);
+L_if3_else44:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit45:
+L_if3_exit44:
 
 CMP(R0, SOB_FALSE);
 JUMP_NE(L_or_exit1);
@@ -16798,6 +17039,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1955));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -16848,6 +17090,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1870));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -16969,7 +17212,7 @@ JUMP_NE(ERROR);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2167));
+MOV(R0,IMM(2163));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -16982,6 +17225,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2065));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -17103,7 +17347,7 @@ JUMP_NE(ERROR);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2167));
+MOV(R0,IMM(2163));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(2));
@@ -17116,6 +17360,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2060));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -17259,6 +17504,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1545));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -17451,7 +17697,7 @@ JUMP_NE(ERROR);
 /* I am in the if exp */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2165));
+MOV(R0,IMM(2161));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -17463,6 +17709,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17475,12 +17722,12 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else44);
+JUMP_EQ(L_if3_else43);
 /* in pvar */
 MOV(R0, FPARG(4));
 
-JUMP(L_if3_exit44);
-L_if3_else44:
+JUMP(L_if3_exit43);
+L_if3_else43:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -17503,6 +17750,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2035));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17520,6 +17768,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2000));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17533,7 +17782,7 @@ DROP(R5);
 PUSH(R0);
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -17545,6 +17794,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17604,7 +17854,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit44:
+L_if3_exit43:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -17768,7 +18018,7 @@ MOV(R0,IMM(2));
 PUSH(R0);
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* push params reverse order. */
 /* in pvar */
@@ -17781,6 +18031,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2040));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17798,6 +18049,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17876,6 +18128,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17975,6 +18228,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2040));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -17997,6 +18251,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2040));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18098,6 +18353,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18110,7 +18366,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else43);
+JUMP_EQ(L_if3_else42);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -18127,6 +18383,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18152,6 +18409,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18251,6 +18509,7 @@ PUSH(R0);
 MOV(R1, IMM(1675));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -18260,6 +18519,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(1865));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -18337,11 +18597,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit43);
-L_if3_else43:
+JUMP(L_if3_exit42);
+L_if3_else42:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit43:
+L_if3_exit42:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -18622,6 +18882,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18634,7 +18895,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else42);
+JUMP_EQ(L_if3_else41);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -18648,6 +18909,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2115));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -18684,8 +18946,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit42);
-L_if3_else42:
+JUMP(L_if3_exit41);
+L_if3_else41:
 /* I am in the if exp */
 /* push params reverse order. */
 /* in pvar */
@@ -18698,6 +18960,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18710,11 +18973,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else41);
+JUMP_EQ(L_if3_else40);
 /* In consts .. */
 MOV(R0,IMM(3));
-JUMP(L_if3_exit41);
-L_if3_else41:
+JUMP(L_if3_exit40);
+L_if3_else40:
 /* I am in the if exp */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -18728,6 +18991,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18750,6 +19014,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18767,6 +19032,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1675));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18779,7 +19045,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else40);
+JUMP_EQ(L_if3_else39);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -18793,6 +19059,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18815,6 +19082,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18870,8 +19138,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit40);
-L_if3_else40:
+JUMP(L_if3_exit39);
+L_if3_else39:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -18885,6 +19153,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18907,6 +19176,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -18925,6 +19195,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1665));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -18961,11 +19232,11 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
+L_if3_exit39:
+
 L_if3_exit40:
 
 L_if3_exit41:
-
-L_if3_exit42:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -19067,6 +19338,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19092,6 +19364,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19158,6 +19431,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -19293,6 +19567,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1535));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -19428,6 +19703,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1530));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19446,6 +19722,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1890));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -19581,6 +19858,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1535));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19599,6 +19877,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1890));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -19651,6 +19930,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1540));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -19659,6 +19939,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19679,6 +19960,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1535));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -19687,6 +19969,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19707,6 +19990,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1530));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -19715,6 +19999,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19735,6 +20020,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1525));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -19743,6 +20029,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19763,6 +20050,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1520));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -19771,6 +20059,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1860));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19932,7 +20221,7 @@ JUMP_NE(ERROR);
 /* I am in the if exp */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2165));
+MOV(R0,IMM(2161));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -19944,6 +20233,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -19956,12 +20246,12 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else39);
+JUMP_EQ(L_if3_else38);
 /* in pvar */
 MOV(R0, FPARG(4));
 
-JUMP(L_if3_exit39);
-L_if3_else39:
+JUMP(L_if3_exit38);
+L_if3_else38:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -19984,6 +20274,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2015));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20001,6 +20292,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2000));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20014,7 +20306,7 @@ DROP(R5);
 PUSH(R0);
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -20026,6 +20318,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20085,7 +20378,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit39:
+L_if3_exit38:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -20249,7 +20542,7 @@ MOV(R0,IMM(2));
 PUSH(R0);
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* push params reverse order. */
 /* in pvar */
@@ -20262,6 +20555,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2020));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20279,6 +20573,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20357,6 +20652,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20456,6 +20752,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1970));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20554,6 +20851,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2025));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20802,6 +21100,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20814,15 +21113,15 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else38);
+JUMP_EQ(L_if3_else37);
 /* in bvar */
 MOV(R1,FPARG(LOC_ENV));
 MOV(R2,INDD(R1,IMM(1)));
 MOV(R3,INDD(R2,IMM(0)));
 MOV(R0,R3);
 
-JUMP(L_if3_exit38);
-L_if3_else38:
+JUMP(L_if3_exit37);
+L_if3_else37:
 /* push params reverse order. */
 /* push params reverse order. */
 /* in pvar */
@@ -20835,6 +21134,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20863,6 +21163,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(2030));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20877,7 +21178,7 @@ DROP(R5);
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -20889,6 +21190,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2085));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20911,6 +21213,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -20967,7 +21270,7 @@ MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
 
-L_if3_exit38:
+L_if3_exit37:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -21056,7 +21359,7 @@ JUMP_NE(ERROR);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2167));
+MOV(R0,IMM(2163));
 PUSH(R0);
 /* in bvar */
 MOV(R1,FPARG(LOC_ENV));
@@ -21120,6 +21423,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -21333,6 +21637,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1970));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -21431,6 +21736,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2005));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -21679,6 +21985,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -21691,15 +21998,15 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else37);
+JUMP_EQ(L_if3_else36);
 /* in bvar */
 MOV(R1,FPARG(LOC_ENV));
 MOV(R2,INDD(R1,IMM(1)));
 MOV(R3,INDD(R2,IMM(0)));
 MOV(R0,R3);
 
-JUMP(L_if3_exit37);
-L_if3_else37:
+JUMP(L_if3_exit36);
+L_if3_else36:
 /* push params reverse order. */
 /* push params reverse order. */
 /* in pvar */
@@ -21712,6 +22019,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -21740,6 +22048,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(2010));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -21754,7 +22063,7 @@ DROP(R5);
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -21766,6 +22075,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2085));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -21788,6 +22098,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -21844,7 +22155,7 @@ MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
 
-L_if3_exit37:
+L_if3_exit36:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -21933,7 +22244,7 @@ JUMP_NE(ERROR);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2167));
+MOV(R0,IMM(2163));
 PUSH(R0);
 /* in bvar */
 MOV(R1,FPARG(LOC_ENV));
@@ -21997,6 +22308,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -22209,6 +22521,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22221,11 +22534,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else36);
+JUMP_EQ(L_if3_else35);
 /* In consts .. */
 MOV(R0,IMM(3));
-JUMP(L_if3_exit36);
-L_if3_else36:
+JUMP(L_if3_exit35);
+L_if3_else35:
 /* I am in the if exp */
 /* push params reverse order. */
 /* in pvar */
@@ -22243,6 +22556,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22260,6 +22574,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1480));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22272,12 +22587,12 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else35);
+JUMP_EQ(L_if3_else34);
 /* in pvar */
 MOV(R0, FPARG(3));
 
-JUMP(L_if3_exit35);
-L_if3_else35:
+JUMP(L_if3_exit34);
+L_if3_else34:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -22291,6 +22606,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22313,6 +22629,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1485));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -22349,9 +22666,9 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit35:
+L_if3_exit34:
 
-L_if3_exit36:
+L_if3_exit35:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -22370,14 +22687,14 @@ CALL(PRINT_R0);
 MOV(R0,IMM(3));
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else16);
+JUMP_EQ(L_if3_else15);
 /* In consts .. */
 MOV(R0,IMM(3));
-JUMP(L_if3_exit16);
-L_if3_else16:
+JUMP(L_if3_exit15);
+L_if3_else15:
 /* In consts .. */
 MOV(R0,IMM(1));
-L_if3_exit16:
+L_if3_exit15:
 
 PUSH(R0);
 /* push number of args. */
@@ -22610,6 +22927,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2130));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22622,7 +22940,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else17);
+JUMP_EQ(L_if3_else16);
 /* push params reverse order. */
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -22634,6 +22952,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2130));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22644,15 +22963,15 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
-JUMP(L_if3_exit17);
-L_if3_else17:
+JUMP(L_if3_exit16);
+L_if3_else16:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit17:
+L_if3_exit16:
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else34);
+JUMP_EQ(L_if3_else33);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -22670,6 +22989,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1475));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -22706,8 +23026,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit34);
-L_if3_else34:
+JUMP(L_if3_exit33);
+L_if3_else33:
 /* I am in the if exp */
 /* I am in the if exp */
 /* push params reverse order. */
@@ -22721,6 +23041,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2125));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22733,7 +23054,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else18);
+JUMP_EQ(L_if3_else17);
 /* push params reverse order. */
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -22745,6 +23066,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2125));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22755,15 +23077,15 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
-JUMP(L_if3_exit18);
-L_if3_else18:
+JUMP(L_if3_exit17);
+L_if3_else17:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit18:
+L_if3_exit17:
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else33);
+JUMP_EQ(L_if3_else32);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -22781,6 +23103,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1675));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -22817,8 +23140,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit33);
-L_if3_else33:
+JUMP(L_if3_exit32);
+L_if3_else32:
 /* I am in the if exp */
 /* push params reverse order. */
 /* in pvar */
@@ -22831,6 +23154,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22843,7 +23167,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else32);
+JUMP_EQ(L_if3_else31);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -22857,6 +23181,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -22893,8 +23218,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit32);
-L_if3_else32:
+JUMP(L_if3_exit31);
+L_if3_else31:
 /* I am in the if exp */
 /* I am in the if exp */
 /* push params reverse order. */
@@ -22908,6 +23233,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2140));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22920,7 +23246,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else19);
+JUMP_EQ(L_if3_else18);
 /* push params reverse order. */
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -22932,6 +23258,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2140));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -22942,15 +23269,15 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
-JUMP(L_if3_exit19);
-L_if3_else19:
+JUMP(L_if3_exit18);
+L_if3_else18:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit19:
+L_if3_exit18:
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else31);
+JUMP_EQ(L_if3_else30);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -22968,6 +23295,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -23004,8 +23332,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit31);
-L_if3_else31:
+JUMP(L_if3_exit30);
+L_if3_else30:
 /* I am in the if exp */
 /* I am in the if exp */
 /* push params reverse order. */
@@ -23019,6 +23347,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2115));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23031,7 +23360,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else20);
+JUMP_EQ(L_if3_else19);
 /* push params reverse order. */
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -23043,6 +23372,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2115));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23053,15 +23383,15 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
-JUMP(L_if3_exit20);
-L_if3_else20:
+JUMP(L_if3_exit19);
+L_if3_else19:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit20:
+L_if3_exit19:
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else30);
+JUMP_EQ(L_if3_else29);
 /* I am in the if exp */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -23075,6 +23405,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23097,6 +23428,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23127,7 +23459,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else21);
+JUMP_EQ(L_if3_else20);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -23141,6 +23473,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23163,6 +23496,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23218,14 +23552,14 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit21);
-L_if3_else21:
+JUMP(L_if3_exit20);
+L_if3_else20:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit21:
+L_if3_exit20:
 
-JUMP(L_if3_exit30);
-L_if3_else30:
+JUMP(L_if3_exit29);
+L_if3_else29:
 /* I am in the if exp */
 /* I am in the if exp */
 /* push params reverse order. */
@@ -23239,6 +23573,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2110));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23251,7 +23586,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else22);
+JUMP_EQ(L_if3_else21);
 /* push params reverse order. */
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -23263,6 +23598,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2110));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23273,15 +23609,15 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
-JUMP(L_if3_exit22);
-L_if3_else22:
+JUMP(L_if3_exit21);
+L_if3_else21:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit22:
+L_if3_exit21:
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else29);
+JUMP_EQ(L_if3_else28);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -23299,6 +23635,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1515));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -23335,8 +23672,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit29);
-L_if3_else29:
+JUMP(L_if3_exit28);
+L_if3_else28:
 /* I am in the if exp */
 /* I am in the if exp */
 /* push params reverse order. */
@@ -23350,6 +23687,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2105));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23362,7 +23700,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else23);
+JUMP_EQ(L_if3_else22);
 /* push params reverse order. */
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -23374,6 +23712,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2105));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23384,15 +23723,15 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
-JUMP(L_if3_exit23);
-L_if3_else23:
+JUMP(L_if3_exit22);
+L_if3_else22:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit23:
+L_if3_exit22:
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else28);
+JUMP_EQ(L_if3_else27);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -23410,6 +23749,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1955));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -23446,8 +23786,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit28);
-L_if3_else28:
+JUMP(L_if3_exit27);
+L_if3_else27:
 /* I am in the if exp */
 /* I am in the if exp */
 /* push params reverse order. */
@@ -23461,31 +23801,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2095));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
-CMP(INDD(R0,0), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move to R5 number of args .. to know how to drop from stack. */
-MOV(R5,STARG(IMM(0)));
-/* add r5 env, numOfArg */
-ADD(R5, IMM(2));
-DROP(R5);
-
 SHOW("", R0);
-CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else25);
-/* I am in the if exp */
-/* push params reverse order. */
-/* in pvar */
-MOV(R0, FPARG(3));
-
-PUSH(R0);
-/* push number of args. */
-PUSH(IMM(1));
-/* in fvar */
-MOV(R1, IMM(2095));
-MOV(R2,INDD(R1,0));
-MOV(R0,R2);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23499,6 +23815,32 @@ DROP(R5);
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
 JUMP_EQ(L_if3_else24);
+/* I am in the if exp */
+/* push params reverse order. */
+/* in pvar */
+MOV(R0, FPARG(3));
+
+PUSH(R0);
+/* push number of args. */
+PUSH(IMM(1));
+/* in fvar */
+MOV(R1, IMM(2095));
+MOV(R2,INDD(R1,0));
+MOV(R0,R2);
+SHOW("", R0);
+CMP(INDD(R0,0), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move to R5 number of args .. to know how to drop from stack. */
+MOV(R5,STARG(IMM(0)));
+/* add r5 env, numOfArg */
+ADD(R5, IMM(2));
+DROP(R5);
+
+SHOW("", R0);
+CMP(R0, SOB_FALSE);
+JUMP_EQ(L_if3_else23);
 /* push params reverse order. */
 /* push params reverse order. */
 /* in pvar */
@@ -23511,6 +23853,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2020));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23533,6 +23876,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2020));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23550,6 +23894,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2055));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23560,21 +23905,21 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
+JUMP(L_if3_exit23);
+L_if3_else23:
+/* In consts .. */
+MOV(R0,IMM(3));
+L_if3_exit23:
+
 JUMP(L_if3_exit24);
 L_if3_else24:
 /* In consts .. */
 MOV(R0,IMM(3));
 L_if3_exit24:
 
-JUMP(L_if3_exit25);
-L_if3_else25:
-/* In consts .. */
-MOV(R0,IMM(3));
-L_if3_exit25:
-
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else27);
+JUMP_EQ(L_if3_else26);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -23588,6 +23933,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1490));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23610,6 +23956,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1490));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23665,8 +24012,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit27);
-L_if3_else27:
+JUMP(L_if3_exit26);
+L_if3_else26:
 /* I am in the if exp */
 /* push params reverse order. */
 /* in bvar */
@@ -23686,6 +24033,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1955));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -23698,7 +24046,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else26);
+JUMP_EQ(L_if3_else25);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in bvar */
@@ -23719,6 +24067,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1955));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -23755,10 +24104,12 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit26);
-L_if3_else26:
+JUMP(L_if3_exit25);
+L_if3_else25:
 /* In consts .. */
 MOV(R0,IMM(3));
+L_if3_exit25:
+
 L_if3_exit26:
 
 L_if3_exit27:
@@ -23774,8 +24125,6 @@ L_if3_exit31:
 L_if3_exit32:
 
 L_if3_exit33:
-
-L_if3_exit34:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -23878,6 +24227,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -24161,6 +24511,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -24173,11 +24524,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else15);
+JUMP_EQ(L_if3_else14);
 /* In consts .. */
 MOV(R0,IMM(3));
-JUMP(L_if3_exit15);
-L_if3_else15:
+JUMP(L_if3_exit14);
+L_if3_else14:
 /* I am in the if exp */
 /* push params reverse order. */
 /* in pvar */
@@ -24195,6 +24546,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1830));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -24225,7 +24577,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else14);
+JUMP_EQ(L_if3_else13);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -24239,6 +24591,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -24275,8 +24628,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit14);
-L_if3_else14:
+JUMP(L_if3_exit13);
+L_if3_else13:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -24290,6 +24643,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -24349,9 +24703,9 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit14:
+L_if3_exit13:
 
-L_if3_exit15:
+L_if3_exit14:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -24454,6 +24808,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -24506,6 +24861,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1480));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -24514,6 +24870,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1470));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -24534,6 +24891,7 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1955));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -24542,6 +24900,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1470));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -24641,6 +25000,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2130));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -24653,7 +25013,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else11);
+JUMP_EQ(L_if3_else10);
 /* push params reverse order. */
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -24665,6 +25025,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2130));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -24675,27 +25036,27 @@ MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
 
-JUMP(L_if3_exit11);
-L_if3_else11:
+JUMP(L_if3_exit10);
+L_if3_else10:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit11:
+L_if3_exit10:
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else13);
+JUMP_EQ(L_if3_else12);
 /* I am in the if exp */
 /* in pvar */
 MOV(R0, FPARG(2));
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else12);
+JUMP_EQ(L_if3_else11);
 /* in pvar */
 MOV(R0, FPARG(3));
 
-JUMP(L_if3_exit12);
-L_if3_else12:
+JUMP(L_if3_exit11);
+L_if3_else11:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -24709,6 +25070,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1890));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -24745,13 +25107,13 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit12:
+L_if3_exit11:
 
-JUMP(L_if3_exit13);
-L_if3_else13:
+JUMP(L_if3_exit12);
+L_if3_else12:
 /* In consts .. */
 MOV(R0,IMM(3));
-L_if3_exit13:
+L_if3_exit12:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -24770,14 +25132,14 @@ CALL(PRINT_R0);
 MOV(R0,IMM(3));
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else10);
+JUMP_EQ(L_if3_else9);
 /* In consts .. */
 MOV(R0,IMM(3));
-JUMP(L_if3_exit10);
-L_if3_else10:
+JUMP(L_if3_exit9);
+L_if3_else9:
 /* In consts .. */
 MOV(R0,IMM(1));
-L_if3_exit10:
+L_if3_exit9:
 
 PUSH(R0);
 /* push number of args. */
@@ -24964,6 +25326,7 @@ PUSH(IMM(0));
 MOV(R1, IMM(1455));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25139,6 +25502,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1955));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -25296,6 +25660,7 @@ PUSH(R0);
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -25304,6 +25669,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25319,6 +25685,7 @@ PUSH(R0);
 MOV(R1, IMM(1440));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -25327,6 +25694,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25345,6 +25713,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1600));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -25486,6 +25855,7 @@ PUSH(R0);
 MOV(R1, IMM(1490));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -25494,6 +25864,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1940));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25509,6 +25880,7 @@ PUSH(R0);
 MOV(R1, IMM(1440));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -25517,6 +25889,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1975));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25535,6 +25908,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1545));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -25736,6 +26110,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25748,12 +26123,12 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else7);
+JUMP_EQ(L_if3_else6);
 /* in pvar */
 MOV(R0, FPARG(2));
 
-JUMP(L_if3_exit7);
-L_if3_else7:
+JUMP(L_if3_exit6);
+L_if3_else6:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -25768,6 +26143,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25790,6 +26166,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -25867,7 +26244,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit7:
+L_if3_exit6:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -26036,6 +26413,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26048,12 +26426,12 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else9);
+JUMP_EQ(L_if3_else8);
 /* in pvar */
 MOV(R0, FPARG(3));
 
-JUMP(L_if3_exit9);
-L_if3_else9:
+JUMP(L_if3_exit8);
+L_if3_else8:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -26072,6 +26450,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26112,6 +26491,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26130,6 +26510,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2000));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -26166,7 +26547,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit9:
+L_if3_exit8:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -26347,6 +26728,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26359,11 +26741,11 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else8);
+JUMP_EQ(L_if3_else7);
 /* In consts .. */
 MOV(R0,IMM(2));
-JUMP(L_if3_exit8);
-L_if3_else8:
+JUMP(L_if3_exit7);
+L_if3_else7:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -26377,6 +26759,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26399,6 +26782,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26454,7 +26838,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit8:
+L_if3_exit7:
 
 POP(FP);
 RETURN;
@@ -26474,6 +26858,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26644,6 +27029,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2120));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26656,12 +27042,12 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else6);
+JUMP_EQ(L_if3_else5);
 /* in pvar */
 MOV(R0, FPARG(3));
 
-JUMP(L_if3_exit6);
-L_if3_else6:
+JUMP(L_if3_exit5);
+L_if3_else5:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
@@ -26680,6 +27066,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26697,6 +27084,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2000));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26719,6 +27107,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -26774,7 +27163,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit6:
+L_if3_exit5:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -27003,6 +27392,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1935));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27023,18 +27413,21 @@ CALL(PRINT_R0);
 MOV(R1, IMM(1595));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1430));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* in fvar */
 MOV(R1, IMM(1600));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 
 PUSH(R0);
 /* push number of args. */
@@ -27043,6 +27436,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(1835));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27141,6 +27535,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2100));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27153,7 +27548,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else5);
+JUMP_EQ(L_if3_else4);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -27167,6 +27562,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1995));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -27203,13 +27599,13 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit5);
-L_if3_else5:
+JUMP(L_if3_exit4);
+L_if3_else4:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -27221,6 +27617,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27243,6 +27640,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27261,6 +27659,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1570));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -27297,7 +27696,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit5:
+L_if3_exit4:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -27393,6 +27792,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(2100));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27405,7 +27805,7 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else4);
+JUMP_EQ(L_if3_else3);
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -27423,6 +27823,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(1945));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -27459,8 +27860,8 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-JUMP(L_if3_exit4);
-L_if3_else4:
+JUMP(L_if3_exit3);
+L_if3_else3:
 /* In codegen-tc-applis */
 /* push params reverse order. */
 /* in pvar */
@@ -27469,7 +27870,7 @@ MOV(R0, FPARG(4));
 PUSH(R0);
 /* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2179));
+MOV(R0,IMM(2175));
 PUSH(R0);
 /* in pvar */
 MOV(R0, FPARG(3));
@@ -27481,6 +27882,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2080));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27503,6 +27905,7 @@ PUSH(IMM(1));
 MOV(R1, IMM(1990));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27521,6 +27924,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(1420));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -27557,7 +27961,7 @@ ADD(SP, R9);
 MOV(FP, R8);
 JUMPA(INDD(R0, 2));
 
-L_if3_exit4:
+L_if3_exit3:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -27658,6 +28062,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2060));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -27670,16 +28075,16 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else3);
+JUMP_EQ(L_if3_else2);
 /* in pvar */
 MOV(R0, FPARG(2));
 
-JUMP(L_if3_exit3);
-L_if3_else3:
+JUMP(L_if3_exit2);
+L_if3_else2:
 /* in pvar */
 MOV(R0, FPARG(3));
 
-L_if3_exit3:
+L_if3_exit2:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -27892,6 +28297,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(1840));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -28041,6 +28447,7 @@ PUSH(IMM(2));
 MOV(R1, IMM(2065));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -28053,16 +28460,16 @@ DROP(R5);
 
 SHOW("", R0);
 CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else2);
+JUMP_EQ(L_if3_else1);
 /* in pvar */
 MOV(R0, FPARG(2));
 
-JUMP(L_if3_exit2);
-L_if3_else2:
+JUMP(L_if3_exit1);
+L_if3_else1:
 /* in pvar */
 MOV(R0, FPARG(3));
 
-L_if3_exit2:
+L_if3_exit1:
 /* retrun from code gen .. */
 
 POP(FP);
@@ -28275,6 +28682,7 @@ PUSH(IMM(3));
 MOV(R1, IMM(1840));
 MOV(R2,INDD(R1,0));
 MOV(R0,R2);
+SHOW("", R0);
 CMP(INDD(R0,0),IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 /* push env ... */
@@ -28335,19 +28743,29 @@ MOV(ADDR(1410), R0);
 MOV(R0, SOB_VOID);
 
 CALL(PRINT_R0);
-/* I am in the if exp */
+/* push params reverse order. */
 /* In consts .. */
-MOV(R0,IMM(2163));
+MOV(R0,IMM(2175));
+PUSH(R0);
+/* In consts .. */
+MOV(R0,IMM(2175));
+PUSH(R0);
+/* push number of args. */
+PUSH(IMM(2));
+/* in fvar */
+MOV(R1, IMM(2085));
+MOV(R2,INDD(R1,0));
+MOV(R0,R2);
 SHOW("", R0);
-CMP(R0, SOB_FALSE);
-JUMP_EQ(L_if3_else1);
-/* In consts .. */
-MOV(R0,IMM(2161));
-JUMP(L_if3_exit1);
-L_if3_else1:
-/* In consts .. */
-MOV(R0,IMM(3));
-L_if3_exit1:
+CMP(INDD(R0,0), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move to R5 number of args .. to know how to drop from stack. */
+MOV(R5,STARG(IMM(0)));
+/* add r5 env, numOfArg */
+ADD(R5, IMM(2));
+DROP(R5);
 
 CALL(PRINT_R0);
 

@@ -1152,6 +1152,7 @@
 
 (define codegen-applic 
 	(lambda (exp envL paramsL)
+		(display exp)
 			(let* 	( 	
 						(func 				(cadr exp))
 						(paramsList			(caddr exp))
@@ -1265,7 +1266,6 @@
 			"MOV(R3,INDD(R2,IMM(" (number->string (get-minor e)) ")));" nl
 			"MOV(R0,R3);" nl
 )))
-
 (define codegen-fvar
 	(lambda (e envL paramsL)
 		(let*  (
@@ -1278,6 +1278,8 @@
 			"MOV(R1, IMM(" (number->string freeVarBucketValueAddr) "));" nl
 			"MOV(R2,INDD(R1,0));" nl
 			"MOV(R0,R2);" nl
+			"SHOW(\"\", R0);" nl
+
 ))))
 
 (define get-name
@@ -1616,6 +1618,8 @@
 				"MOV(R0,IMM(" (number->string constsAddr)  "));"
 			)
 	)))
+
+
 
 ;;;;;; TILL HERE CONSTS PART
 
