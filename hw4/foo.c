@@ -43,17 +43,17 @@ MOV(IND(1003), IMM(1));
 MOV(IND(1004), IMM(T_BOOL));
 MOV(IND(1005), IMM(1));
 MOV(IND(1006), IMM(T_INTEGER));
-MOV(IND(1007), IMM(4));
-MOV(IND(1008), IMM(T_INTEGER));
-MOV(IND(1009), IMM(6));
-MOV(IND(1010), IMM(T_INTEGER));
-MOV(IND(1011), IMM(3));
+MOV(IND(1007), IMM(22));
 
 PUSH(LABEL(PLUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(1012), R0);
+MOV(IND(1008), R0);
+MOV(IND(1009), IMM(999999));
+MOV(IND(1010), IMM(999999));
+MOV(IND(1011), IMM(999999));
+MOV(IND(1012), IMM(999999));
 MOV(IND(1013), IMM(999999));
 MOV(IND(1014), IMM(999999));
 MOV(IND(1015), IMM(999999));
@@ -90,23 +90,8 @@ MOV(IND(1045), IMM(999999));
 MOV(IND(1046), IMM(999999));
 MOV(IND(1047), IMM(999999));
 MOV(IND(1048), IMM(999999));
-MOV(IND(1049), IMM(999999));
-MOV(IND(1050), IMM(999999));
-MOV(IND(1051), IMM(999999));
 
-/* applic */
-
-/* push params reverse order. */
-/*const*/
-MOV(R0, IMM(1006));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(1010));
-
-PUSH(R0);
-/* push number of args. */
-PUSH(IMM(2));
+/* define */
 /* get old env address, put in R1 */
 MOV(R1, FPARG(0));
 /* make room for new env */
@@ -162,23 +147,11 @@ MOV(FP,SP);
 /* lambda simple body */
 /* check if number of params is correct */
 MOV(R1, FPARG(1));
-CMP(R1, IMM(2));
+CMP(R1, IMM(1));
 JUMP_NE(ERROR);
 /* code-gen on body */
-/* set */
-/*const*/
-MOV(R0, IMM(1008));
-
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(FPARG(R10),R0);
-MOV(R0,IMM(T_VOID));
 /* pvar */
 MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-/* pvar */
-MOV(R10, IMM(1));
 ADD(R10,IMM(2));
 MOV(R0, FPARG(R10));
 
@@ -186,6 +159,23 @@ POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
 closureEndLabel5:
+
+MOV(IND(IMM(1048)),R0);
+MOV(R0, IMM(T_VOID));
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push params reverse order. */
+/*const*/
+MOV(R0, IMM(1006));
+
+PUSH(R0);
+/* push number of args. */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(1048));
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));

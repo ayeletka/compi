@@ -322,13 +322,30 @@
         ((equal? (car sexpr) 'pvar) (code-gen-pvar (cdr sexpr) envLevel paramsLevel))
         ((equal? (car sexpr) 'bvar) (code-gen-bvar (cdr sexpr) envLevel paramsLevel))
         ((equal? (car sexpr) 'set) (code-gen-set (cdr sexpr) envLevel paramsLevel))
+        ((equal? (car sexpr) 'def) (code-gen-def (cdr sexpr) envLevel paramsLevel))
         ((equal?  (car sexpr) 'if3) (code-gen-if sexpr envLevel paramsLevel))
         ((equal?  (car sexpr) 'or) (code-gen-or sexpr envLevel paramsLevel))
         ((equal? (car sexpr) 'seq) (code-gen-seq (cadr sexpr) envLevel paramsLevel))
         ((equal?  (car sexpr) 'applic) (code-gen-applic sexpr envLevel paramsLevel))
         ((equal?  (car sexpr) 'lambda-simple) (code-gen-lambda sexpr envLevel paramsLevel))
+        ((equal?  (car sexpr) 'lambda-opt) (code-gen-lambda sexpr envLevel paramsLevel)) ;not working!
         (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
     )))
+
+(define code-gen-def
+  (lambda (defVar envLevel paramsLevel)
+    (let (
+      (varAddress (getGlobalVarAddress (cadar defVar)))
+      (e (cadr defVar))
+      )
+    (string-append 
+    "/* define */"nl
+    (code-gen e envLevel paramsLevel) nl
+    "MOV(IND(IMM("(number->string varAddress)")),R0);" nl
+    "MOV(R0, IMM(T_VOID));"nl
+    ))
+))
+
 
 (define code-gen-const
 (lambda (const envLevel paramsLevel)
@@ -552,7 +569,7 @@
         (cond 
           ((eq? (car sexpr) 'lambda-simple) (code-gen-lambda-simple-body sexpr envLevel paramsLevel))
           ((eq? (car sexpr) 'lambda-opt) (code-gen-lambda-opt-body sexpr envLevel paramsLevel)) ;not implemented yet
-          (else (code-gen-lambda-variadic-body sexpr envLevel paramsLevel)) ;not implemented yet
+          (else (code-gen-lambda-var-body sexpr envLevel paramsLevel)) ;not implemented yet
         )
         nl
         "POP(FP);" nl
@@ -575,6 +592,78 @@
       "/* code-gen on body */" nl
       (code-gen body (+ 1 envLevel) numberOfParams)
 ))))
+
+(define code-gen-lambda-opt-body
+  (lambda (sexpr envLevel paramsLevel)
+    (let ((numberOfParams (length (cadr sexpr)))
+          (body (cadddr sexpr))
+          (loopLabel (string-append "optLambdaCopyLabel" (labelNumberInString)))
+          (loopEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
+          (copyLabel (string-append "optLambdaCopyLabel" (labelNumberInString)))
+          (copyEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
+          )
+    (string-append
+      "/* lambda opt body */" nl
+      "/* pop old fp */"nl
+      "POP(R10);"nl
+      "/* pop return address */"nl
+      "POP(R11);"nl
+      "/* pop env */"nl
+      "POP(R12);"nl
+      "/* pop number of arguments */"nl
+      "POP(R13);"nl
+
+      "/* malloc for old arguments */"nl
+      (malloc numberOfParams) nl
+      "MOV(R1,R0);" nl
+
+      "/* itterate through arguments */" nl
+      "MOV(R2, IMM(0));"
+      loopLabel":"nl
+        "CMP(R2, IMM("(number->string numberOfParams) "));" nl
+        "JUMP_EQ(" loopEndLabel ");" nl
+        "POP(R3);" nl
+        "MOV(INDD(R1,R2), R3);" nl
+        "ADD(R2, IMM(1));" nl
+        "JUMP(" loopLabel ");" nl
+      loopEndLabel ":" nl
+      "/* R4 is the num of opt arguments */" nl
+        "MOV(R4, R13);" nl
+        "SUB(R4, IMM(" (number->string numberOfParams) "));" nl ; 
+        "PUSH(R4);" nl
+        "PUSH(IMM(0));" nl
+        "CALL(LIST);" nl
+        "DROP(IMM(1));" nl
+        "POP(R4);" nl
+        "/* drop the optional args from stack */" nl 
+        "DROP(R4);" nl 
+        "/* R5 will hold all the optional args */"nl
+        "MOV(R5, R0);" nl nl
+
+        "/* Insert all args and values to stack */" nl
+        "PUSH(R5);" nl
+        "/* itterate through arguments */" nl
+        "MOV(R2, IMM("(number->string (- numberOfParams 1))"));" nl
+        copyLabel ":" nl
+          "CMP(R2, IMM(-1));" nl
+          "JUMP_EQ(" copyEndLabel ");" nl
+          "PUSH(INDD(R1,R2));" nl
+          "SUB(R2, IMM(1));" nl
+          "JUMP(" copyLabel ");" nl
+          copyEndLabel ":" nl
+
+          "PUSH(IMM(" (number->string (+ 1 numberOfParams))  "));" nl
+          "PUSH(R12);" nl
+          "PUSH(R11);" nl
+          "PUSH(R10);" nl
+          "MOV(FP, SP);" nl
+
+      "/* code-gen on body */" nl
+      (code-gen body (+ 1 envLevel) numberOfParams)
+))))
+
+
+  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; compile-scheme-file ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -684,6 +773,7 @@
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
+    (display parsedEvaledSexpr)
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
