@@ -1,6 +1,10 @@
 
-(define tst (lambda (a) a))
-(tst 22)
+(define tst (lambda (a c d . b) b))
+(tst 23 23 22 21)
+
+
+;(define tst (lambda a a))
+;(tst 22)
 
 ;'(2 3 4)
 ;((lambda (x y) (set! x 6) x ) 3 4)

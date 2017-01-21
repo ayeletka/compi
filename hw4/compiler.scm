@@ -329,6 +329,7 @@
         ((equal?  (car sexpr) 'applic) (code-gen-applic sexpr envLevel paramsLevel))
         ((equal?  (car sexpr) 'lambda-simple) (code-gen-lambda sexpr envLevel paramsLevel))
         ((equal?  (car sexpr) 'lambda-opt) (code-gen-lambda sexpr envLevel paramsLevel)) ;not working!
+        ((equal?  (car sexpr) 'lambda-var) (code-gen-lambda sexpr envLevel paramsLevel))
         (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
     )))
 
@@ -484,7 +485,7 @@
             "JUMP_NE(ERROR);" nl
             "PUSH(INDD(R0,IMM(1)));" nl   ; push the closure environment
             "CALLA(INDD(R0,IMM(2)));" nl  ;call the func code
-            "/* move to R5 number of args .. to know how to drop from stack. */" nl
+            "/* move number of args to R5, this is the amount to drop from stack. */" nl
             "MOV(R5,STARG(IMM(0)));" nl     
            ; "/* add r5 env, numOfArg */" nl
             "ADD(R5, IMM(2));" nl   
@@ -590,20 +591,16 @@
       "CMP(R1, IMM(" (number->string numberOfParams) "));" nl
       "JUMP_NE(ERROR);" nl
       "/* code-gen on body */" nl
-      (code-gen body (+ 1 envLevel) numberOfParams)
+      (code-gen body (+ 1 envLevel) numberOfParams) nl
 ))))
 
-(define code-gen-lambda-opt-body
+
+(define code-gen-lambda-var-body
   (lambda (sexpr envLevel paramsLevel)
-    (let ((numberOfParams (length (cadr sexpr)))
-          (body (cadddr sexpr))
-          (loopLabel (string-append "optLambdaCopyLabel" (labelNumberInString)))
-          (loopEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
-          (copyLabel (string-append "optLambdaCopyLabel" (labelNumberInString)))
-          (copyEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
-          )
+    (let ((body         (caddr sexpr)))
     (string-append
-      "/* lambda opt body */" nl
+
+      "/* lambda var body */" nl
       "/* pop old fp */"nl
       "POP(R10);"nl
       "/* pop return address */"nl
@@ -613,50 +610,69 @@
       "/* pop number of arguments */"nl
       "POP(R13);"nl
 
-      "/* malloc for old arguments */"nl
-      (malloc numberOfParams) nl
-      "MOV(R1,R0);" nl
+      "POP(R14);"nl
+      "POP(R15);"nl
 
-      "/* itterate through arguments */" nl
-      "MOV(R2, IMM(0));"
-      loopLabel":"nl
-        "CMP(R2, IMM("(number->string numberOfParams) "));" nl
-        "JUMP_EQ(" loopEndLabel ");" nl
-        "POP(R3);" nl
-        "MOV(INDD(R1,R2), R3);" nl
-        "ADD(R2, IMM(1));" nl
-        "JUMP(" loopLabel ");" nl
-      loopEndLabel ":" nl
-      "/* R4 is the num of opt arguments */" nl
-        "MOV(R4, R13);" nl
-        "SUB(R4, IMM(" (number->string numberOfParams) "));" nl ; 
-        "PUSH(R4);" nl
-        "PUSH(IMM(0));" nl
-        "CALL(LIST);" nl
-        "DROP(IMM(1));" nl
-        "POP(R4);" nl
-        "/* drop the optional args from stack */" nl 
-        "DROP(R4);" nl 
-        "/* R5 will hold all the optional args */"nl
-        "MOV(R5, R0);" nl nl
+      "PUSH(IMM(T_NIL));"
+      "PUSH(R15);" nl
+      "PUSH(R14);" nl
+      "PUSH(IMM(1));" nl
+      "PUSH(R12);" nl
+      "PUSH(R11);" nl
+      "PUSH(R10);" nl
+      "MOV(FP, SP);" nl
+      "/* code-gen on body */" nl
+      (code-gen body (+ 1 envLevel) 1) nl
+))))
 
-        "/* Insert all args and values to stack */" nl
-        "PUSH(R5);" nl
-        "/* itterate through arguments */" nl
-        "MOV(R2, IMM("(number->string (- numberOfParams 1))"));" nl
-        copyLabel ":" nl
-          "CMP(R2, IMM(-1));" nl
-          "JUMP_EQ(" copyEndLabel ");" nl
-          "PUSH(INDD(R1,R2));" nl
-          "SUB(R2, IMM(1));" nl
-          "JUMP(" copyLabel ");" nl
-          copyEndLabel ":" nl
-
-          "PUSH(IMM(" (number->string (+ 1 numberOfParams))  "));" nl
-          "PUSH(R12);" nl
-          "PUSH(R11);" nl
-          "PUSH(R10);" nl
-          "MOV(FP, SP);" nl
+(define code-gen-lambda-opt-body
+  (lambda (sexpr envLevel paramsLevel)
+    (let ((numberOfParams (length (cadr sexpr)))
+          (body (cadddr sexpr))
+          (loopLabel (string-append "optLambdaCopyLabel" (labelNumberInString)))
+          (loopEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
+          (pushLabel (string-append "optLambdaCopyLabel" (labelNumberInString)))
+          (pushEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
+          )
+    (string-append
+      "/* lambda opt body */" nl
+      "/* pop old fp */"nl
+      "POP(R1);"nl
+      "/* pop return address */"nl
+      "POP(R2);"nl
+      "/* pop env */"nl
+      "POP(R3);"nl
+      "/* pop number of arguments */"nl
+      "POP(R4);"nl
+      " /* R5 will hold new variables */"
+      (malloc (+ 2 numberOfParams)) nl
+      "MOV(R5, R0);" nl
+      "MOV(R6, IMM("(number->string numberOfParams)"));" nl
+      loopLabel ":" nl
+        "CMP(R6, IMM(-1));" nl
+        "JUMP_EQ("loopEndLabel");" nl
+        "POP(R7);" nl
+        "MOV(INDD(R5,R6),R7);" nl
+        "DECR(R6);" nl
+        "JUMP("loopLabel");"
+      loopEndLabel ":" nl  
+      
+      "MOV(R0,IMM(T_NIL));"
+      "PUSH(R0);" nl
+      "MOV(R6, IMM(0));" nl
+      pushLabel ":" nl
+        "CMP(R6, IMM("(number->string (+ 1 numberOfParams))"));" nl
+        "JUMP_EQ("pushEndLabel");" nl
+        "PUSH(INDD(R5,R6));" nl
+        "ADD(R6,IMM(1));" nl
+        "JUMP("pushLabel");" nl
+      pushEndLabel ":" nl  
+      "PUSH(IMM("(number->string (+ 1 numberOfParams))"));" nl ;change to new number of args
+      "PUSH(R3);" nl
+      "PUSH(R2);" nl
+      "PUSH(R1);" nl
+      "MOV(FP, SP);" nl
+      "/* code-gen on body */" nl
 
       "/* code-gen on body */" nl
       (code-gen body (+ 1 envLevel) numberOfParams)
@@ -773,7 +789,6 @@
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
-    (display parsedEvaledSexpr)
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)

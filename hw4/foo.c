@@ -43,17 +43,17 @@ MOV(IND(1003), IMM(1));
 MOV(IND(1004), IMM(T_BOOL));
 MOV(IND(1005), IMM(1));
 MOV(IND(1006), IMM(T_INTEGER));
-MOV(IND(1007), IMM(22));
+MOV(IND(1007), IMM(21));
+MOV(IND(1008), IMM(T_INTEGER));
+MOV(IND(1009), IMM(23));
+MOV(IND(1010), IMM(T_INTEGER));
+MOV(IND(1011), IMM(22));
 
 PUSH(LABEL(PLUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(1008), R0);
-MOV(IND(1009), IMM(999999));
-MOV(IND(1010), IMM(999999));
-MOV(IND(1011), IMM(999999));
-MOV(IND(1012), IMM(999999));
+MOV(IND(1012), R0);
 MOV(IND(1013), IMM(999999));
 MOV(IND(1014), IMM(999999));
 MOV(IND(1015), IMM(999999));
@@ -90,6 +90,10 @@ MOV(IND(1045), IMM(999999));
 MOV(IND(1046), IMM(999999));
 MOV(IND(1047), IMM(999999));
 MOV(IND(1048), IMM(999999));
+MOV(IND(1049), IMM(999999));
+MOV(IND(1050), IMM(999999));
+MOV(IND(1051), IMM(999999));
+MOV(IND(1052), IMM(999999));
 
 /* define */
 /* get old env address, put in R1 */
@@ -144,14 +148,46 @@ JUMP(closureEndLabel5);
 closureBodyLabel6:
 PUSH(FP);
 MOV(FP,SP);
-/* lambda simple body */
-/* check if number of params is correct */
-MOV(R1, FPARG(1));
-CMP(R1, IMM(1));
-JUMP_NE(ERROR);
+/* lambda opt body */
+/* pop old fp */
+POP(R1);
+/* pop return address */
+POP(R2);
+/* pop env */
+POP(R3);
+/* pop number of arguments */
+POP(R4);
+ /* R5 will hold new variables */PUSH(IMM(5));
+CALL(MALLOC);
+DROP(IMM(1));
+
+MOV(R5, R0);
+MOV(R6, IMM(3));
+optLambdaCopyLabel10:
+CMP(R6, IMM(-1));
+JUMP_EQ(optLambdaCopyEndLabel9);
+POP(R7);
+MOV(INDD(R5,R6),R7);
+DECR(R6);
+JUMP(optLambdaCopyLabel10);optLambdaCopyEndLabel9:
+MOV(R0,IMM(T_NIL));PUSH(R0);
+MOV(R6, IMM(0));
+optLambdaCopyLabel8:
+CMP(R6, IMM(4));
+JUMP_EQ(optLambdaCopyEndLabel7);
+PUSH(INDD(R5,R6));
+ADD(R6,IMM(1));
+JUMP(optLambdaCopyLabel8);
+optLambdaCopyEndLabel7:
+PUSH(IMM(4));
+PUSH(R3);
+PUSH(R2);
+PUSH(R1);
+MOV(FP, SP);
+/* code-gen on body */
 /* code-gen on body */
 /* pvar */
-MOV(R10, IMM(0));
+MOV(R10, IMM(3));
 ADD(R10,IMM(2));
 MOV(R0, FPARG(R10));
 
@@ -160,7 +196,7 @@ RETURN;
 /* LABEL END LAMBDA */
 closureEndLabel5:
 
-MOV(IND(IMM(1048)),R0);
+MOV(IND(IMM(1052)),R0);
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -172,15 +208,27 @@ CALL(PRINT_R0);
 MOV(R0, IMM(1006));
 
 PUSH(R0);
+/*const*/
+MOV(R0, IMM(1010));
+
+PUSH(R0);
+/*const*/
+MOV(R0, IMM(1008));
+
+PUSH(R0);
+/*const*/
+MOV(R0, IMM(1008));
+
+PUSH(R0);
 /* push number of args. */
-PUSH(IMM(1));
+PUSH(IMM(4));
 /*fvar */
-MOV(R0, IND(1048));
+MOV(R0, IND(1052));
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
 CALLA(INDD(R0,IMM(2)));
-/* move to R5 number of args .. to know how to drop from stack. */
+/* move number of args to R5, this is the amount to drop from stack. */
 MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
 DROP(R5);
