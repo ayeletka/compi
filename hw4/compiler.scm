@@ -43,7 +43,7 @@
     ))
     )
 
-(define address 10)
+(define address 1000)
 
 (define labelNum 0)
 (define labelNumberInString 
@@ -310,34 +310,35 @@
         )))
 
 (define code-gen
-  (lambda (sexpr envLevel numberOfParams )
+  (lambda (sexpr envLevel paramsLevel)
     ;(newline)
-    (display ":::::")
-    (display sexpr)
-    (newline)
+    ;(display ":::::")
+    ;(display sexpr)
+    ;(newline)
       (cond
         ((null? sexpr) (list))
-        ((equal? (car sexpr) 'const) (code-gen-const sexpr envLevel numberOfParams))
-        ((equal? (car sexpr) 'fvar) (code-gen-fvar sexpr envLevel numberOfParams))
-        ((equal? (car sexpr) 'pvar) (code-gen-pvar (cdr sexpr) envLevel numberOfParams))
-        ((equal? (car sexpr) 'bvar) (code-gen-bvar (cdr sexpr) envLevel numberOfParams))
-        ((equal?  (car sexpr) 'if3) (code-gen-if sexpr envLevel numberOfParams))
-        ((equal?  (car sexpr) 'or) (code-gen-or sexpr envLevel numberOfParams))
-        ((equal? (car sexpr) 'seq) (code-gen-seq (cadr sexpr) envLevel numberOfParams))
-        ((equal?  (car sexpr) 'applic) (code-gen-applic sexpr envLevel numberOfParams))
-        ((equal?  (car sexpr) 'lambda-simple) (code-gen-lambda sexpr envLevel numberOfParams))
+        ((equal? (car sexpr) 'const) (code-gen-const sexpr envLevel paramsLevel))
+        ((equal? (car sexpr) 'fvar) (code-gen-fvar sexpr envLevel paramsLevel))
+        ((equal? (car sexpr) 'pvar) (code-gen-pvar (cdr sexpr) envLevel paramsLevel))
+        ((equal? (car sexpr) 'bvar) (code-gen-bvar (cdr sexpr) envLevel paramsLevel))
+        ((equal? (car sexpr) 'set) (code-gen-set (cdr sexpr) envLevel paramsLevel))
+        ((equal?  (car sexpr) 'if3) (code-gen-if sexpr envLevel paramsLevel))
+        ((equal?  (car sexpr) 'or) (code-gen-or sexpr envLevel paramsLevel))
+        ((equal? (car sexpr) 'seq) (code-gen-seq (cadr sexpr) envLevel paramsLevel))
+        ((equal?  (car sexpr) 'applic) (code-gen-applic sexpr envLevel paramsLevel))
+        ((equal?  (car sexpr) 'lambda-simple) (code-gen-lambda sexpr envLevel paramsLevel))
         (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
     )))
 
 (define code-gen-const
-(lambda (const envLevel numberOfParams)
+(lambda (const envLevel paramsLevel)
           (string-append 
            "/*const*/" nl
            "MOV(R0, IMM(" (number->string (getConstAddress (cadr const)))"));" nl
            )))
 
 (define code-gen-fvar
-  (lambda (fvar envLevel numberOfParams)
+  (lambda (fvar envLevel paramsLevel)
     (string-append
       "/*fvar */" nl
       "MOV(R0, IND(" (number->string (getGlobalVarAddress (cadr fvar)))"));" nl
@@ -346,7 +347,7 @@
 )))
 
 (define code-gen-pvar
-  (lambda (pvar envLevel numberOfParams)
+  (lambda (pvar envLevel paramsLevel)
     (let ((var (car pvar))
           (mindex (cadr pvar)))
     (string-append
@@ -357,7 +358,7 @@
       )))) 
 
 (define code-gen-bvar
-  (lambda (bvar envLevel numberOfParams)
+  (lambda (bvar envLevel paramsLevel)
     (let ((var (car bvar))
           (mjrdex (cadr bvar))
           (mindex (caddr bvar)))
@@ -366,15 +367,27 @@
       "MOV(R0, FPARG(IMM(0)));" nl
       "MOV(R0,INDD(R0,"(number->string mjrdex) "));" nl
       "MOV(R0,INDD(R0,"(number->string mindex) "));" nl
-      "SHOW(\"\",R0);" nl
+      )))) 
+
+(define code-gen-set
+  (lambda (setvar envLevel paramsLevel)
+    (let ((e (cadr setvar))
+          (mindex (caddar setvar)))
+    (string-append
+      "/* set */" nl
+      (code-gen e envLevel paramsLevel) nl
+      "MOV(R10, IMM("(number->string mindex)"));" nl
+      "ADD(R10,IMM(2));" nl
+      "MOV(FPARG(R10),R0);" nl
+      "MOV(R0,IMM(T_VOID));" nl
       )))) 
 
 (define code-gen-if
-  (lambda (ifExp envLevel numberOfParams)
+  (lambda (ifExp envLevel paramsLevel)
     (let* ( 
-      (code-gen-test (code-gen (cadr ifExp) envLevel numberOfParams))
-      (code-gen-do-if-true (code-gen (caddr ifExp) envLevel numberOfParams))
-      (code-gen-do-if-false (code-gen (cadddr ifExp) envLevel numberOfParams))
+      (code-gen-test (code-gen (cadr ifExp) envLevel paramsLevel))
+      (code-gen-do-if-true (code-gen (caddr ifExp) envLevel paramsLevel))
+      (code-gen-do-if-false (code-gen (cadddr ifExp) envLevel paramsLevel))
       (labelElse (string-append "labelElse" (labelNumberInString)))
       (labelIfExit (string-append "labelIfExit" (labelNumberInString)))
       )
@@ -393,7 +406,7 @@
 
 
 (define code-gen-or
-  (lambda (orExp envLevel numberOfParams)
+  (lambda (orExp envLevel paramsLevel)
         (letrec (
           (lableOrExit (string-append "lableOrExit" (labelNumberInString)))
           (loop 
@@ -410,15 +423,15 @@
                   )
                 ))))
               
-          (loop (map (lambda (exp) (code-gen exp envLevel numberOfParams)) (cadr orExp)))
+          (loop (map (lambda (exp) (code-gen exp envLevel paramsLevel)) (cadr orExp)))
         )))
 
 (define code-gen-seq
-  (lambda (seqExp envLevel numberOfParams)
+  (lambda (seqExp envLevel paramsLevel)
     (if (null? seqExp) ""
         (string-append
-          (code-gen (car seqExp) envLevel numberOfParams)
-          (code-gen-seq (cdr seqExp) envLevel numberOfParams)))
+          (code-gen (car seqExp) envLevel paramsLevel)
+          (code-gen-seq (cdr seqExp) envLevel paramsLevel)))
   ))
 
 
@@ -436,11 +449,11 @@
 
 ;;;;;; TODO: 
 (define code-gen-applic 
-  (lambda (applicExp envLevel numberOfParams)
+  (lambda (applicExp envLevel paramsLevel)
       (let*   (   
             (paramsList     (caddr applicExp))
-            (compParams     (map (lambda (exp) (code-gen exp envLevel numberOfParams)) paramsList))
-            (compFunction     (code-gen (cadr applicExp) envLevel numberOfParams))
+            (compParams     (map (lambda (exp) (code-gen exp envLevel paramsLevel)) paramsList))
+            (compFunction     (code-gen (cadr applicExp) envLevel paramsLevel))
           )
           ;nl(display compFunction)nl
           (string-append
@@ -470,7 +483,7 @@
   )))
 
 (define code-gen-lambda 
-  (lambda (sexpr envLevel ParamsLength)
+  (lambda (sexpr envLevel paramsLevel)
     (let (
       (bodyLabel (string-append "closureBodyLabel" (labelNumberInString)))
       (endLabel (string-append "closureEndLabel" (labelNumberInString)))
@@ -504,7 +517,7 @@
         envLoopEndLabel ": " nl
 
         "/* get old parameters length, put in R3 */" nl
-        (malloc ParamsLength) nl
+        (malloc paramsLevel) nl
 
         "/* put old params in R2 */" nl
         "MOV(INDD(R2,0),R0);"
@@ -514,7 +527,7 @@
         "MOV(R4, IMM(0));" nl
         "MOV(R5, IMM(1));" nl
         parameterLoopLabel ":" nl
-        "CMP(R4,IMM(" (number->string (+ 2 ParamsLength)) "));" nl
+        "CMP(R4,IMM(" (number->string (+ 2 paramsLevel)) "));" nl
         "JUMP_GE(" parameterLoopEndLabel ");" nl
         "MOV(INDD(INDD(R2,0),R4), FPARG(R5));" nl
         "INCR(R4);" nl
@@ -537,9 +550,9 @@
         "PUSH(FP);" nl
         "MOV(FP,SP);" nl
         (cond 
-          ((eq? (car sexpr) 'lambda-simple) (code-gen-lambda-simple-body sexpr envLevel ParamsLength))
-          ((eq? (car sexpr) 'lambda-opt) (code-gen-lambda-opt-body sexpr envLevel ParamsLength)) ;not implemented yet
-          (else (code-gen-lambda-variadic-body sexpr envLevel ParamsLength)) ;not implemented yet
+          ((eq? (car sexpr) 'lambda-simple) (code-gen-lambda-simple-body sexpr envLevel paramsLevel))
+          ((eq? (car sexpr) 'lambda-opt) (code-gen-lambda-opt-body sexpr envLevel paramsLevel)) ;not implemented yet
+          (else (code-gen-lambda-variadic-body sexpr envLevel paramsLevel)) ;not implemented yet
         )
         nl
         "POP(FP);" nl
@@ -550,11 +563,11 @@
     )))
 
 (define code-gen-lambda-simple-body
-  (lambda (sexpr envLevel ParamsLength)
+  (lambda (sexpr envLevel paramsLevel)
     (let ((numberOfParams (length (cadr sexpr)))
           (body (caddr sexpr)))
     (string-append
-      "/* simple lambda body ... */" nl
+      "/* lambda simple body */" nl
       "/* check if number of params is correct */" nl
       "MOV(R1, FPARG(1));" nl
       "CMP(R1, IMM(" (number->string numberOfParams) "));" nl
@@ -623,7 +636,8 @@
     "#define TRUE 14 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
 
-		"#include \"arch/cisc.h\"" nl nl
+		"#include \"arch/cisc.h\"" nl
+    "#include \"arch/BenTest.h\"" nl nl
 
 		"int main()" nl
 		"{" nl
