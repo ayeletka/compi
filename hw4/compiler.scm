@@ -64,6 +64,7 @@
 (define T_PAIR  885397)
 (define T_VECTOR  335728)
 (define T_CLOSURE   276405)
+(define T_UNDEFINED 999999)
 
 
 (define const_table '())
@@ -223,11 +224,16 @@
 
 
 
-(define load-fvar-symbol 
-  (lambda (idx len val) 
-        (string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
-                 "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string len) "));" nl
-                 (load-string-chars (+ idx 2) val))))
+(define load-fvar
+  (lambda (idx var val) 
+    (cond 
+      ((equal? var '+) (string-append (closureFromLabelMaker "PLUS") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )
+                 ))
+      (else
+        (string-append 
+                  "MOV(IND(" (number->string idx) "), IMM(" (number->string val) "));" nl
+                 )))))
 
 
 (define initiate-fvar
@@ -238,7 +244,7 @@
         (var (cadr fvar-exp))
         (type (caddr fvar-exp))
         (rest (cdr fvarList)))
-      (string-append (load-symbol idx (cdr type)) (initiate-fvar rest)))
+        (string-append (load-fvar idx var type) (initiate-fvar rest)))
       ;  (string-append (load-fvar-symbol idx (string-length (symbol->string var)) (map char->integer (string->list (symbol->string var)))) (initiate-fvar rest)))
       ""
       )
@@ -251,17 +257,24 @@
     (letrec ((loop 
       (lambda (lst) 
         (cond 
-        ((null? lst) (void))
-        ((not(getGlobalVarAddress (car lst)))
-           (set! global_table `(,@global_table (,address ,(car lst) (,T_SYMBOL ,(string-length (symbol->string (car lst))) ,@(map char->integer (string->list (symbol->string (car lst))))))))
-           (set! address (+ address 2 (string-length (symbol->string (car lst)))))
-           (loop (cdr lst)))
-        (else (loop (cdr lst)))
+          ((null? lst) (void))
+          ((not (getGlobalVarAddress (car lst)))
+               (set! global_table `(,@global_table (,address ,(car lst) ,T_UNDEFINED)))
+                  (set! address (+ address 1 ))
+                  (loop (cdr lst)))
+          (else (loop (cdr lst)))
         )
       )))
     (loop fvarList))))
 
-
+(define closureFromLabelMaker
+  (lambda (label)
+    (string-append
+      "PUSH(LABEL(" label "));" nl
+      "PUSH(IMM(0));" nl 
+      "CALL(MAKE_SOB_CLOSURE);" nl
+      "DROP(IMM(2));" nl
+  )))
 
 (define getGlobalVarAddress
   (lambda (var)
@@ -298,18 +311,21 @@
 
 (define code-gen
   (lambda (sexpr envLevel numberOfParams )
-        (newline)
+    ;(newline)
     (display ":::::")
-
     (display sexpr)
     (newline)
       (cond
         ((null? sexpr) (list))
         ((equal? (car sexpr) 'const) (code-gen-const sexpr envLevel numberOfParams))
         ((equal? (car sexpr) 'fvar) (code-gen-fvar sexpr envLevel numberOfParams))
+        ((equal? (car sexpr) 'pvar) (code-gen-pvar (cdr sexpr) envLevel numberOfParams))
+        ((equal? (car sexpr) 'bvar) (code-gen-bvar (cdr sexpr) envLevel numberOfParams))
         ((equal?  (car sexpr) 'if3) (code-gen-if sexpr envLevel numberOfParams))
         ((equal?  (car sexpr) 'or) (code-gen-or sexpr envLevel numberOfParams))
+        ((equal? (car sexpr) 'seq) (code-gen-seq (cadr sexpr) envLevel numberOfParams))
         ((equal?  (car sexpr) 'applic) (code-gen-applic sexpr envLevel numberOfParams))
+        ((equal?  (car sexpr) 'lambda-simple) (code-gen-lambda sexpr envLevel numberOfParams))
         (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
     )))
 
@@ -317,18 +333,41 @@
 (lambda (const envLevel numberOfParams)
           (string-append 
            "/*const*/" nl
-           "MOV(R0," (number->string (getConstAddress (cadr const)))");" nl
+           "MOV(R0, IMM(" (number->string (getConstAddress (cadr const)))"));" nl
            )))
 
 (define code-gen-fvar
   (lambda (fvar envLevel numberOfParams)
     (string-append
       "/*fvar */" nl
-      "MOV(R0," (number->string (getGlobalVarAddress (cadr fvar)))");" nl
-                "SHOW(\"\", R0);" nl
+      "MOV(R0, IND(" (number->string (getGlobalVarAddress (cadr fvar)))"));" nl
+                ;"SHOW(\"\", R0);" nl
 
 )))
 
+(define code-gen-pvar
+  (lambda (pvar envLevel numberOfParams)
+    (let ((var (car pvar))
+          (mindex (cadr pvar)))
+    (string-append
+      "/* pvar */" nl
+      "MOV(R10, IMM("(number->string mindex)"));" nl
+      "ADD(R10,IMM(2));" nl
+      "MOV(R0, FPARG(R10));" nl
+      )))) 
+
+(define code-gen-bvar
+  (lambda (bvar envLevel numberOfParams)
+    (let ((var (car bvar))
+          (mjrdex (cadr bvar))
+          (mindex (caddr bvar)))
+    (string-append
+      "/* bvar */" nl
+      "MOV(R0, FPARG(IMM(0)));" nl
+      "MOV(R0,INDD(R0,"(number->string mjrdex) "));" nl
+      "MOV(R0,INDD(R0,"(number->string mindex) "));" nl
+      "SHOW(\"\",R0);" nl
+      )))) 
 
 (define code-gen-if
   (lambda (ifExp envLevel numberOfParams)
@@ -345,10 +384,10 @@
          ; "SHOW(\"\",R0)" nl
           "CMP(R0, FALSE);" nl
           "JUMP_EQ("labelElse");" nl
-          code-gen-do-if-true nl
+              code-gen-do-if-true nl
           "JUMP("labelIfExit");" nl
           labelElse":" nl
-          code-gen-do-if-false nl
+              code-gen-do-if-false nl
           labelIfExit":" nl)
 )))
 
@@ -360,6 +399,7 @@
           (loop 
               (lambda (exprs)
                 (string-append
+                  "/* or */" nl nl
                   (car exprs) nl
                   "CMP(R0, FALSE);" nl
                   "JUMP_NE("lableOrExit");" nl
@@ -372,6 +412,15 @@
               
           (loop (map (lambda (exp) (code-gen exp envLevel numberOfParams)) (cadr orExp)))
         )))
+
+(define code-gen-seq
+  (lambda (seqExp envLevel numberOfParams)
+    (if (null? seqExp) ""
+        (string-append
+          (code-gen (car seqExp) envLevel numberOfParams)
+          (code-gen-seq (cdr seqExp) envLevel numberOfParams)))
+  ))
+
 
 ;;;;;; TODO: 
 (define push-applic-params 
@@ -393,22 +442,127 @@
             (compParams     (map (lambda (exp) (code-gen exp envLevel numberOfParams)) paramsList))
             (compFunction     (code-gen (cadr applicExp) envLevel numberOfParams))
           )
-          nl(display compFunction)nl
-
+          ;nl(display compFunction)nl
           (string-append
+            "/* applic */" nl nl
             "/* push params reverse order. */" nl
             (push-applic-params (reverse compParams) (length paramsList))
             "/* push number of args. */" nl
             "PUSH(IMM(" (number->string (length paramsList)) "));" nl
             compFunction
-            "PUSH(R0);" nl   ; push the closure environment
-            "CALL(R0);" nl      
+            "CMP(INDD(R0,0), IMM(T_CLOSURE));" nl
+            "JUMP_NE(ERROR);" nl
+            "PUSH(INDD(R0,IMM(1)));" nl   ; push the closure environment
+            "CALLA(INDD(R0,IMM(2)));" nl  ;call the func code
             "/* move to R5 number of args .. to know how to drop from stack. */" nl
             "MOV(R5,STARG(IMM(0)));" nl     
            ; "/* add r5 env, numOfArg */" nl
             "ADD(R5, IMM(2));" nl   
             "DROP(R5);"  nl       
         ))))
+
+(define malloc
+  (lambda(int)
+    (string-append
+        "PUSH(IMM(" (number->string int) "));" nl   
+        "CALL(MALLOC);" nl
+        "DROP(IMM(1));" nl
+  )))
+
+(define code-gen-lambda 
+  (lambda (sexpr envLevel ParamsLength)
+    (let (
+      (bodyLabel (string-append "closureBodyLabel" (labelNumberInString)))
+      (endLabel (string-append "closureEndLabel" (labelNumberInString)))
+      (parameterLoopLabel (string-append "closureParameterLoopLabel" (labelNumberInString)))
+      (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
+      (envLoopLabel (string-append "closureEnvLoopLabel" (labelNumberInString)))
+
+      (envLoopEndLabel (string-append "closureEnvLoopEndLabel" (labelNumberInString)))  
+     )
+    (string-append
+        "/* get old env address, put in R1 */" nl
+        "MOV(R1, FPARG(0));" nl
+
+        "/* make room for new env */" nl
+        (malloc (+ 1 envLevel))
+
+        "/* put new env in R2 */" nl
+        "MOV(R2,R0);" nl
+
+        "/* clone the env */" nl
+        "/* R4 is i, R5 is j */" nl
+        "MOV(R4, IMM(0));" nl
+        "MOV(R5, IMM(1));" nl
+        envLoopLabel ":" nl
+        "CMP(R4,IMM(" (number->string envLevel) "));" nl
+        "JUMP_GE(" envLoopEndLabel ");" nl
+        "MOV(INDD(R2,R5), INDD(R1,R4));" nl
+        "INCR(R4);" nl
+        "INCR(R5);" nl
+        "JUMP(" envLoopLabel ");" nl
+        envLoopEndLabel ": " nl
+
+        "/* get old parameters length, put in R3 */" nl
+        (malloc ParamsLength) nl
+
+        "/* put old params in R2 */" nl
+        "MOV(INDD(R2,0),R0);"
+
+        "/* clone parameters from stack */" nl        
+        "/* R4 is i, R5 is j */" nl
+        "MOV(R4, IMM(0));" nl
+        "MOV(R5, IMM(1));" nl
+        parameterLoopLabel ":" nl
+        "CMP(R4,IMM(" (number->string (+ 2 ParamsLength)) "));" nl
+        "JUMP_GE(" parameterLoopEndLabel ");" nl
+        "MOV(INDD(INDD(R2,0),R4), FPARG(R5));" nl
+        "INCR(R4);" nl
+        "INCR(R5);" nl
+        "JUMP(" parameterLoopLabel ");" nl
+        parameterLoopEndLabel ": " nl
+
+        "/* Calling malloc for closure, env and body. */" nl
+        (malloc 3)
+        "/* put closure in R0 */" nl
+        "MOV(INDD(R0,IMM(0))," (number->string T_CLOSURE) ");" nl
+        "/* put env in R0 */" nl
+        "MOV(INDD(R0,IMM(1)), R2);" nl
+
+        "/* closure body ...*/" nl
+        "MOV(INDD(R0,IMM(2)), LABEL(" bodyLabel "));" nl
+
+        "JUMP(" endLabel  ");" nl
+        bodyLabel ":" nl
+        "PUSH(FP);" nl
+        "MOV(FP,SP);" nl
+        (cond 
+          ((eq? (car sexpr) 'lambda-simple) (code-gen-lambda-simple-body sexpr envLevel ParamsLength))
+          ((eq? (car sexpr) 'lambda-opt) (code-gen-lambda-opt-body sexpr envLevel ParamsLength)) ;not implemented yet
+          (else (code-gen-lambda-variadic-body sexpr envLevel ParamsLength)) ;not implemented yet
+        )
+        nl
+        "POP(FP);" nl
+        "RETURN;" nl
+        "/* LABEL END LAMBDA */" nl
+        endLabel ":" nl
+      )
+    )))
+
+(define code-gen-lambda-simple-body
+  (lambda (sexpr envLevel ParamsLength)
+    (let ((numberOfParams (length (cadr sexpr)))
+          (body (caddr sexpr)))
+    (string-append
+      "/* simple lambda body ... */" nl
+      "/* check if number of params is correct */" nl
+      "MOV(R1, FPARG(1));" nl
+      "CMP(R1, IMM(" (number->string numberOfParams) "));" nl
+      "JUMP_NE(ERROR);" nl
+      "/* code-gen on body */" nl
+      (code-gen body (+ 1 envLevel) numberOfParams)
+))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; compile-scheme-file ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -467,6 +621,7 @@
 		"#define DO_SHOW 1" nl nl
     "#define FALSE 12 " nl nl
     "#define TRUE 14 " nl nl
+    "#define LOCAL_NUM_ARGS 1 " nl nl
 
 		"#include \"arch/cisc.h\"" nl nl
 
@@ -483,6 +638,8 @@
 		"#include \"arch/system.lib\"" nl
 		"#include \"arch/scheme.lib\""nl 
     "#include \"arch/ours.lib\"" nl nl
+    "ERROR:" nl
+        "HALT;" nl nl
 
  		"CONTINUE:" nl
 		)
@@ -510,18 +667,17 @@
           (parsedEvaledSexpr (total-evaluation sexprLst))
           (constant-list (remove_duplicate (create-list-of-certain-type parsedEvaledSexpr 'const))) ;need to call the table creator
           (fvar-list (create-list-of-certain-type parsedEvaledSexpr 'fvar))
+          (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
-  
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
 
             ;make global table
-            (addLstToGlobalTable (append saveProcedures fvar-list))
-            (display const_table)
-    (newline)
-  
+            (addLstToGlobalTable fvar-no-duplicates)
+            ;(display const_table)
+            (newline)
             ;create cisc code
             (let ((cisc-exp (string-append
             					prolog nl
@@ -537,4 +693,5 @@
 
 
 
-(compile-scheme-file "test-files/test1.scm" "foo.c")
+
+(compile-scheme-file "test-files/test2-lambda.scm" "foo.c")

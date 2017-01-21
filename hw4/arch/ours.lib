@@ -218,3 +218,33 @@ END:
   POP(R1);
   POP(FP);
   RETURN;
+
+
+
+PLUS:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  MOV(R1, 0);
+  MOV(R2, FPARG(LOCAL_NUM_ARGS)); /*iterate from 2 to 2+ number of args */
+  ADD(R2, 2);
+  MOV(R3, 2);   
+PLUS_LOOP:
+  CMP(R2, R3);
+  JUMP_EQ(PLUS_END);
+  MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+  ADD(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+  ADD(R3, 1);
+  JUMP(PLUS_LOOP);
+PLUS_END:
+  PUSH(R1);
+  CALL(MAKE_SOB_INTEGER);
+  DROP(1); 
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  JUMP(END);

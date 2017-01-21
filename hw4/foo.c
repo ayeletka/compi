@@ -11,6 +11,8 @@ Programmers: Ayelet Kalderon & Avishag Daniely */
 
 #define TRUE 14 
 
+#define LOCAL_NUM_ARGS 1 
+
 #include "arch/cisc.h"
 
 int main()
@@ -27,6 +29,9 @@ int main()
 #include "arch/scheme.lib"
 #include "arch/ours.lib"
 
+ERROR:
+HALT;
+
 CONTINUE:
 
 /* ----------initiating const table---------- */
@@ -37,629 +42,364 @@ MOV(IND(13), IMM(0));
 MOV(IND(14), IMM(T_BOOL));
 MOV(IND(15), IMM(1));
 MOV(IND(16), IMM(T_INTEGER));
-MOV(IND(17), IMM(4));
+MOV(IND(17), IMM(6));
 MOV(IND(18), IMM(T_INTEGER));
 MOV(IND(19), IMM(5));
-MOV(IND(20), IMM(T_INTEGER));
-MOV(IND(21), IMM(3));
-MOV(IND(22), IMM(T_INTEGER));
-MOV(IND(23), IMM(2));
-MOV(IND(24), IMM(T_INTEGER));
-MOV(IND(25), IMM(24));
-MOV(IND(26), IMM(T_INTEGER));
-MOV(IND(27), IMM(1));
-MOV(IND(28), IMM(T_INTEGER));
-MOV(IND(29), IMM(2));
-MOV(IND(30), IMM(T_PAIR));
-MOV(IND(31), IMM(26));
-MOV(IND(32), IMM(22));
-MOV(IND(33), IMM(T_SYMBOL));
-MOV(IND(34), IMM(3));
-MOV(IND(35), IMM(97));
-MOV(IND(36), IMM(98));
-MOV(IND(37), IMM(99));
-MOV(IND(38), IMM(T_CHAR));
-MOV(IND(39), IMM(97));
-MOV(IND(40), IMM(T_INTEGER));
-MOV(IND(41), IMM(5));
-MOV(IND(42), IMM(T_INTEGER));
-MOV(IND(43), IMM(6));
-MOV(IND(44), IMM(T_INTEGER));
-MOV(IND(45), IMM(3));
-MOV(IND(46), IMM(T_INTEGER));
-MOV(IND(47), IMM(4));
-MOV(IND(48), IMM(T_INTEGER));
-MOV(IND(49), IMM(1));
-MOV(IND(50), IMM(T_INTEGER));
-MOV(IND(51), IMM(2));
-MOV(IND(52), IMM(T_VECTOR));
-MOV(IND(53), IMM(6));
-MOV(IND(54), IMM(26));
-MOV(IND(55), IMM(22));
-MOV(IND(56), IMM(20));
-MOV(IND(57), IMM(16));
-MOV(IND(58), IMM(18));
-MOV(IND(59), IMM(42));
-MOV(IND(60), IMM(T_INTEGER));
-MOV(IND(61), IMM(1));
-MOV(IND(62), IMM(T_STRING));
-MOV(IND(63), IMM(3));
-MOV(IND(64), IMM(97));
-MOV(IND(65), IMM(98));
-MOV(IND(66), IMM(99));
 
-MOV(IND(67), IMM(T_SYMBOL));
-MOV(IND(68), IMM(1));
-MOV(IND(69), IMM(43));
-MOV(IND(70), IMM(T_SYMBOL));
-MOV(IND(71), IMM(1));
-MOV(IND(72), IMM(45));
-MOV(IND(73), IMM(T_SYMBOL));
-MOV(IND(74), IMM(1));
-MOV(IND(75), IMM(42));
-MOV(IND(76), IMM(T_SYMBOL));
-MOV(IND(77), IMM(1));
-MOV(IND(78), IMM(47));
-MOV(IND(79), IMM(T_SYMBOL));
-MOV(IND(80), IMM(1));
-MOV(IND(81), IMM(60));
-MOV(IND(82), IMM(T_SYMBOL));
-MOV(IND(83), IMM(1));
-MOV(IND(84), IMM(62));
-MOV(IND(85), IMM(T_SYMBOL));
-MOV(IND(86), IMM(1));
-MOV(IND(87), IMM(61));
-MOV(IND(88), IMM(T_SYMBOL));
-MOV(IND(89), IMM(7));
-MOV(IND(90), IMM(110));
-MOV(IND(91), IMM(117));
-MOV(IND(92), IMM(109));
-MOV(IND(93), IMM(98));
-MOV(IND(94), IMM(101));
-MOV(IND(95), IMM(114));
-MOV(IND(96), IMM(63));
-MOV(IND(97), IMM(T_SYMBOL));
-MOV(IND(98), IMM(8));
-MOV(IND(99), IMM(105));
-MOV(IND(100), IMM(110));
-MOV(IND(101), IMM(116));
-MOV(IND(102), IMM(101));
-MOV(IND(103), IMM(103));
-MOV(IND(104), IMM(101));
-MOV(IND(105), IMM(114));
-MOV(IND(106), IMM(63));
-MOV(IND(107), IMM(T_SYMBOL));
-MOV(IND(108), IMM(8));
-MOV(IND(109), IMM(98));
-MOV(IND(110), IMM(111));
-MOV(IND(111), IMM(111));
-MOV(IND(112), IMM(108));
-MOV(IND(113), IMM(101));
-MOV(IND(114), IMM(97));
-MOV(IND(115), IMM(110));
-MOV(IND(116), IMM(63));
-MOV(IND(117), IMM(T_SYMBOL));
-MOV(IND(118), IMM(7));
-MOV(IND(119), IMM(115));
-MOV(IND(120), IMM(121));
-MOV(IND(121), IMM(109));
-MOV(IND(122), IMM(98));
-MOV(IND(123), IMM(111));
-MOV(IND(124), IMM(108));
-MOV(IND(125), IMM(63));
-MOV(IND(126), IMM(T_SYMBOL));
-MOV(IND(127), IMM(5));
-MOV(IND(128), IMM(99));
-MOV(IND(129), IMM(104));
-MOV(IND(130), IMM(97));
-MOV(IND(131), IMM(114));
-MOV(IND(132), IMM(63));
-MOV(IND(133), IMM(T_SYMBOL));
-MOV(IND(134), IMM(5));
-MOV(IND(135), IMM(110));
-MOV(IND(136), IMM(117));
-MOV(IND(137), IMM(108));
-MOV(IND(138), IMM(108));
-MOV(IND(139), IMM(63));
-MOV(IND(140), IMM(T_SYMBOL));
-MOV(IND(141), IMM(5));
-MOV(IND(142), IMM(112));
-MOV(IND(143), IMM(97));
-MOV(IND(144), IMM(105));
-MOV(IND(145), IMM(114));
-MOV(IND(146), IMM(63));
-MOV(IND(147), IMM(T_SYMBOL));
-MOV(IND(148), IMM(7));
-MOV(IND(149), IMM(115));
-MOV(IND(150), IMM(116));
-MOV(IND(151), IMM(114));
-MOV(IND(152), IMM(105));
-MOV(IND(153), IMM(110));
-MOV(IND(154), IMM(103));
-MOV(IND(155), IMM(63));
-MOV(IND(156), IMM(T_SYMBOL));
-MOV(IND(157), IMM(5));
-MOV(IND(158), IMM(122));
-MOV(IND(159), IMM(101));
-MOV(IND(160), IMM(114));
-MOV(IND(161), IMM(111));
-MOV(IND(162), IMM(63));
-MOV(IND(163), IMM(T_SYMBOL));
-MOV(IND(164), IMM(7));
-MOV(IND(165), IMM(118));
-MOV(IND(166), IMM(101));
-MOV(IND(167), IMM(99));
-MOV(IND(168), IMM(116));
-MOV(IND(169), IMM(111));
-MOV(IND(170), IMM(114));
-MOV(IND(171), IMM(63));
-MOV(IND(172), IMM(T_SYMBOL));
-MOV(IND(173), IMM(10));
-MOV(IND(174), IMM(112));
-MOV(IND(175), IMM(114));
-MOV(IND(176), IMM(111));
-MOV(IND(177), IMM(99));
-MOV(IND(178), IMM(101));
-MOV(IND(179), IMM(100));
-MOV(IND(180), IMM(117));
-MOV(IND(181), IMM(114));
-MOV(IND(182), IMM(101));
-MOV(IND(183), IMM(63));
-MOV(IND(184), IMM(T_SYMBOL));
-MOV(IND(185), IMM(13));
-MOV(IND(186), IMM(99));
-MOV(IND(187), IMM(104));
-MOV(IND(188), IMM(97));
-MOV(IND(189), IMM(114));
-MOV(IND(190), IMM(45));
-MOV(IND(191), IMM(62));
-MOV(IND(192), IMM(105));
-MOV(IND(193), IMM(110));
-MOV(IND(194), IMM(116));
-MOV(IND(195), IMM(101));
-MOV(IND(196), IMM(103));
-MOV(IND(197), IMM(101));
-MOV(IND(198), IMM(114));
-MOV(IND(199), IMM(T_SYMBOL));
-MOV(IND(200), IMM(13));
-MOV(IND(201), IMM(105));
-MOV(IND(202), IMM(110));
-MOV(IND(203), IMM(116));
-MOV(IND(204), IMM(101));
-MOV(IND(205), IMM(103));
-MOV(IND(206), IMM(101));
-MOV(IND(207), IMM(114));
-MOV(IND(208), IMM(45));
-MOV(IND(209), IMM(62));
-MOV(IND(210), IMM(99));
-MOV(IND(211), IMM(104));
-MOV(IND(212), IMM(97));
-MOV(IND(213), IMM(114));
-MOV(IND(214), IMM(T_SYMBOL));
-MOV(IND(215), IMM(13));
-MOV(IND(216), IMM(115));
-MOV(IND(217), IMM(116));
-MOV(IND(218), IMM(114));
-MOV(IND(219), IMM(105));
-MOV(IND(220), IMM(110));
-MOV(IND(221), IMM(103));
-MOV(IND(222), IMM(45));
-MOV(IND(223), IMM(108));
-MOV(IND(224), IMM(101));
-MOV(IND(225), IMM(110));
-MOV(IND(226), IMM(103));
-MOV(IND(227), IMM(116));
-MOV(IND(228), IMM(104));
-MOV(IND(229), IMM(T_SYMBOL));
-MOV(IND(230), IMM(10));
-MOV(IND(231), IMM(115));
-MOV(IND(232), IMM(116));
-MOV(IND(233), IMM(114));
-MOV(IND(234), IMM(105));
-MOV(IND(235), IMM(110));
-MOV(IND(236), IMM(103));
-MOV(IND(237), IMM(45));
-MOV(IND(238), IMM(114));
-MOV(IND(239), IMM(101));
-MOV(IND(240), IMM(102));
-MOV(IND(241), IMM(T_SYMBOL));
-MOV(IND(242), IMM(11));
-MOV(IND(243), IMM(115));
-MOV(IND(244), IMM(116));
-MOV(IND(245), IMM(114));
-MOV(IND(246), IMM(105));
-MOV(IND(247), IMM(110));
-MOV(IND(248), IMM(103));
-MOV(IND(249), IMM(45));
-MOV(IND(250), IMM(115));
-MOV(IND(251), IMM(101));
-MOV(IND(252), IMM(116));
-MOV(IND(253), IMM(33));
-MOV(IND(254), IMM(T_SYMBOL));
-MOV(IND(255), IMM(11));
-MOV(IND(256), IMM(109));
-MOV(IND(257), IMM(97));
-MOV(IND(258), IMM(107));
-MOV(IND(259), IMM(101));
-MOV(IND(260), IMM(45));
-MOV(IND(261), IMM(115));
-MOV(IND(262), IMM(116));
-MOV(IND(263), IMM(114));
-MOV(IND(264), IMM(105));
-MOV(IND(265), IMM(110));
-MOV(IND(266), IMM(103));
-MOV(IND(267), IMM(T_SYMBOL));
-MOV(IND(268), IMM(13));
-MOV(IND(269), IMM(118));
-MOV(IND(270), IMM(101));
-MOV(IND(271), IMM(99));
-MOV(IND(272), IMM(116));
-MOV(IND(273), IMM(111));
-MOV(IND(274), IMM(114));
-MOV(IND(275), IMM(45));
-MOV(IND(276), IMM(108));
-MOV(IND(277), IMM(101));
-MOV(IND(278), IMM(110));
-MOV(IND(279), IMM(103));
-MOV(IND(280), IMM(116));
-MOV(IND(281), IMM(104));
-MOV(IND(282), IMM(T_SYMBOL));
-MOV(IND(283), IMM(10));
-MOV(IND(284), IMM(118));
-MOV(IND(285), IMM(101));
-MOV(IND(286), IMM(99));
-MOV(IND(287), IMM(116));
-MOV(IND(288), IMM(111));
-MOV(IND(289), IMM(114));
-MOV(IND(290), IMM(45));
-MOV(IND(291), IMM(114));
-MOV(IND(292), IMM(101));
-MOV(IND(293), IMM(102));
-MOV(IND(294), IMM(T_SYMBOL));
-MOV(IND(295), IMM(11));
-MOV(IND(296), IMM(118));
-MOV(IND(297), IMM(101));
-MOV(IND(298), IMM(99));
-MOV(IND(299), IMM(116));
-MOV(IND(300), IMM(111));
-MOV(IND(301), IMM(114));
-MOV(IND(302), IMM(45));
-MOV(IND(303), IMM(115));
-MOV(IND(304), IMM(101));
-MOV(IND(305), IMM(116));
-MOV(IND(306), IMM(33));
-MOV(IND(307), IMM(T_SYMBOL));
-MOV(IND(308), IMM(11));
-MOV(IND(309), IMM(109));
-MOV(IND(310), IMM(97));
-MOV(IND(311), IMM(107));
-MOV(IND(312), IMM(101));
-MOV(IND(313), IMM(45));
-MOV(IND(314), IMM(118));
-MOV(IND(315), IMM(101));
-MOV(IND(316), IMM(99));
-MOV(IND(317), IMM(116));
-MOV(IND(318), IMM(111));
-MOV(IND(319), IMM(114));
-MOV(IND(320), IMM(T_SYMBOL));
-MOV(IND(321), IMM(4));
-MOV(IND(322), IMM(99));
-MOV(IND(323), IMM(111));
-MOV(IND(324), IMM(110));
-MOV(IND(325), IMM(115));
-MOV(IND(326), IMM(T_SYMBOL));
-MOV(IND(327), IMM(3));
-MOV(IND(328), IMM(99));
-MOV(IND(329), IMM(97));
-MOV(IND(330), IMM(114));
-MOV(IND(331), IMM(T_SYMBOL));
-MOV(IND(332), IMM(3));
-MOV(IND(333), IMM(99));
-MOV(IND(334), IMM(100));
-MOV(IND(335), IMM(114));
-MOV(IND(336), IMM(T_SYMBOL));
-MOV(IND(337), IMM(8));
-MOV(IND(338), IMM(115));
-MOV(IND(339), IMM(101));
-MOV(IND(340), IMM(116));
-MOV(IND(341), IMM(45));
-MOV(IND(342), IMM(99));
-MOV(IND(343), IMM(100));
-MOV(IND(344), IMM(114));
-MOV(IND(345), IMM(33));
-MOV(IND(346), IMM(T_SYMBOL));
-MOV(IND(347), IMM(8));
-MOV(IND(348), IMM(115));
-MOV(IND(349), IMM(101));
-MOV(IND(350), IMM(116));
-MOV(IND(351), IMM(45));
-MOV(IND(352), IMM(99));
-MOV(IND(353), IMM(97));
-MOV(IND(354), IMM(114));
-MOV(IND(355), IMM(33));
-MOV(IND(356), IMM(T_SYMBOL));
-MOV(IND(357), IMM(4));
-MOV(IND(358), IMM(108));
-MOV(IND(359), IMM(105));
-MOV(IND(360), IMM(115));
-MOV(IND(361), IMM(116));
-MOV(IND(362), IMM(T_SYMBOL));
-MOV(IND(363), IMM(6));
-MOV(IND(364), IMM(118));
-MOV(IND(365), IMM(101));
-MOV(IND(366), IMM(99));
-MOV(IND(367), IMM(116));
-MOV(IND(368), IMM(111));
-MOV(IND(369), IMM(114));
-MOV(IND(370), IMM(T_SYMBOL));
-MOV(IND(371), IMM(5));
-MOV(IND(372), IMM(97));
-MOV(IND(373), IMM(112));
-MOV(IND(374), IMM(112));
-MOV(IND(375), IMM(108));
-MOV(IND(376), IMM(121));
-MOV(IND(377), IMM(T_SYMBOL));
-MOV(IND(378), IMM(6));
-MOV(IND(379), IMM(108));
-MOV(IND(380), IMM(101));
-MOV(IND(381), IMM(110));
-MOV(IND(382), IMM(103));
-MOV(IND(383), IMM(116));
-MOV(IND(384), IMM(104));
-MOV(IND(385), IMM(T_SYMBOL));
-MOV(IND(386), IMM(14));
-MOV(IND(387), IMM(115));
-MOV(IND(388), IMM(121));
-MOV(IND(389), IMM(109));
-MOV(IND(390), IMM(98));
-MOV(IND(391), IMM(111));
-MOV(IND(392), IMM(108));
-MOV(IND(393), IMM(45));
-MOV(IND(394), IMM(62));
-MOV(IND(395), IMM(115));
-MOV(IND(396), IMM(116));
-MOV(IND(397), IMM(114));
-MOV(IND(398), IMM(105));
-MOV(IND(399), IMM(110));
-MOV(IND(400), IMM(103));
-MOV(IND(401), IMM(T_SYMBOL));
-MOV(IND(402), IMM(14));
-MOV(IND(403), IMM(115));
-MOV(IND(404), IMM(116));
-MOV(IND(405), IMM(114));
-MOV(IND(406), IMM(105));
-MOV(IND(407), IMM(110));
-MOV(IND(408), IMM(103));
-MOV(IND(409), IMM(45));
-MOV(IND(410), IMM(62));
-MOV(IND(411), IMM(115));
-MOV(IND(412), IMM(121));
-MOV(IND(413), IMM(109));
-MOV(IND(414), IMM(98));
-MOV(IND(415), IMM(111));
-MOV(IND(416), IMM(108));
-MOV(IND(417), IMM(T_SYMBOL));
-MOV(IND(418), IMM(3));
-MOV(IND(419), IMM(101));
-MOV(IND(420), IMM(113));
-MOV(IND(421), IMM(63));
+PUSH(LABEL(PLUS));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(20), R0);
+MOV(IND(21), IMM(999999));
+MOV(IND(22), IMM(999999));
+MOV(IND(23), IMM(999999));
+MOV(IND(24), IMM(999999));
+MOV(IND(25), IMM(999999));
+MOV(IND(26), IMM(999999));
+MOV(IND(27), IMM(999999));
+MOV(IND(28), IMM(999999));
+MOV(IND(29), IMM(999999));
+MOV(IND(30), IMM(999999));
+MOV(IND(31), IMM(999999));
+MOV(IND(32), IMM(999999));
+MOV(IND(33), IMM(999999));
+MOV(IND(34), IMM(999999));
+MOV(IND(35), IMM(999999));
+MOV(IND(36), IMM(999999));
+MOV(IND(37), IMM(999999));
+MOV(IND(38), IMM(999999));
+MOV(IND(39), IMM(999999));
+MOV(IND(40), IMM(999999));
+MOV(IND(41), IMM(999999));
+MOV(IND(42), IMM(999999));
+MOV(IND(43), IMM(999999));
+MOV(IND(44), IMM(999999));
+MOV(IND(45), IMM(999999));
+MOV(IND(46), IMM(999999));
+MOV(IND(47), IMM(999999));
+MOV(IND(48), IMM(999999));
+MOV(IND(49), IMM(999999));
+MOV(IND(50), IMM(999999));
+MOV(IND(51), IMM(999999));
+MOV(IND(52), IMM(999999));
+MOV(IND(53), IMM(999999));
+MOV(IND(54), IMM(999999));
+MOV(IND(55), IMM(999999));
+MOV(IND(56), IMM(999999));
+MOV(IND(57), IMM(999999));
+MOV(IND(58), IMM(999999));
+MOV(IND(59), IMM(999999));
 
-/*const*/
-MOV(R0,26);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,62);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,12);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,14);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,38);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,52);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,33);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,11);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,24);
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,30);
-
-CALL(PRINT_R0);
-
-/*ifExp*/
-/*const*/
-MOV(R0,20);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse15);
-/*const*/
-MOV(R0,12);
-
-JUMP(labelIfExit16);
-labelElse15:
-/*const*/
-MOV(R0,14);
-
-labelIfExit16:
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,12);
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit12);
-/*ifExp*/
-/*const*/
-MOV(R0,20);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse13);
-/*const*/
-MOV(R0,14);
-
-JUMP(labelIfExit14);
-labelElse13:
-/*const*/
-MOV(R0,12);
-
-labelIfExit14:
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit12);
-/*const*/
-MOV(R0,22);
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit12);
-lableOrExit12:
-
-CALL(PRINT_R0);
-
-/*const*/
-MOV(R0,12);
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit10);
-/*const*/
-MOV(R0,20);
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit11);
-/*const*/
-MOV(R0,12);
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit11);
-lableOrExit11:
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit10);
-lableOrExit10:
-
-CALL(PRINT_R0);
-
-/*ifExp*/
-/*const*/
-MOV(R0,20);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse8);
-/*ifExp*/
-/*const*/
-MOV(R0,16);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse6);
-/*const*/
-MOV(R0,18);
-
-JUMP(labelIfExit7);
-labelElse6:
-/*const*/
-MOV(R0,12);
-
-labelIfExit7:
-
-JUMP(labelIfExit9);
-labelElse8:
-/*const*/
-MOV(R0,12);
-
-labelIfExit9:
-
-CALL(PRINT_R0);
-
-/*ifExp*/
-/*const*/
-MOV(R0,20);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse4);
-/*ifExp*/
-/*const*/
-MOV(R0,16);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse2);
-/*const*/
-MOV(R0,20);
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit1);
-/*const*/
-MOV(R0,12);
-
-CMP(R0, FALSE);
-JUMP_NE(lableOrExit1);
-lableOrExit1:
-
-JUMP(labelIfExit3);
-labelElse2:
-/*const*/
-MOV(R0,12);
-
-labelIfExit3:
-
-JUMP(labelIfExit5);
-labelElse4:
-/*const*/
-MOV(R0,12);
-
-labelIfExit5:
-
-CALL(PRINT_R0);
-
-/*fvar */
-MOV(R0,67);
-SHOW("", R0);
-
-CALL(PRINT_R0);
+/* applic */
 
 /* push params reverse order. */
 /*const*/
-MOV(R0,26);
+MOV(R0, IMM(18));
 
 PUSH(R0);
 /*const*/
-MOV(R0,26);
+MOV(R0, IMM(16));
 
 PUSH(R0);
 /* push number of args. */
 PUSH(IMM(2));
-/*fvar */
-MOV(R0,67);
-SHOW("", R0);
+/* get old env address, put in R1 */
+MOV(R1, FPARG(0));
+/* make room for new env */
+PUSH(IMM(1));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R2 */
+MOV(R2,R0);
+/* clone the env */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureEnvLoopLabel14:
+CMP(R4,IMM(0));
+JUMP_GE(closureEnvLoopEndLabel13);
+MOV(INDD(R2,R5), INDD(R1,R4));
+INCR(R4);
+INCR(R5);
+JUMP(closureEnvLoopLabel14);
+closureEnvLoopEndLabel13: 
+/* get old parameters length, put in R3 */
+PUSH(IMM(0));
+CALL(MALLOC);
+DROP(IMM(1));
+
+/* put old params in R2 */
+MOV(INDD(R2,0),R0);/* clone parameters from stack */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureParameterLoopLabel16:
+CMP(R4,IMM(2));
+JUMP_GE(closureParameterLoopEndLabel15);
+MOV(INDD(INDD(R2,0),R4), FPARG(R5));
+INCR(R4);
+INCR(R5);
+JUMP(closureParameterLoopLabel16);
+closureParameterLoopEndLabel15: 
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R2);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel18));
+JUMP(closureEndLabel17);
+closureBodyLabel18:
+PUSH(FP);
+MOV(FP,SP);
+/* simple lambda body ... */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(2));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* get old env address, put in R1 */
+MOV(R1, FPARG(0));
+/* make room for new env */
+PUSH(IMM(2));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R2 */
+MOV(R2,R0);
+/* clone the env */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureEnvLoopLabel20:
+CMP(R4,IMM(1));
+JUMP_GE(closureEnvLoopEndLabel19);
+MOV(INDD(R2,R5), INDD(R1,R4));
+INCR(R4);
+INCR(R5);
+JUMP(closureEnvLoopLabel20);
+closureEnvLoopEndLabel19: 
+/* get old parameters length, put in R3 */
+PUSH(IMM(2));
+CALL(MALLOC);
+DROP(IMM(1));
+
+/* put old params in R2 */
+MOV(INDD(R2,0),R0);/* clone parameters from stack */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureParameterLoopLabel22:
+CMP(R4,IMM(4));
+JUMP_GE(closureParameterLoopEndLabel21);
+MOV(INDD(INDD(R2,0),R4), FPARG(R5));
+INCR(R4);
+INCR(R5);
+JUMP(closureParameterLoopLabel22);
+closureParameterLoopEndLabel21: 
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R2);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel24));
+JUMP(closureEndLabel23);
+closureBodyLabel24:
+PUSH(FP);
+MOV(FP,SP);
+/* simple lambda body ... */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(1));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* bvar */
+MOV(R0, FPARG(IMM(0)));
+MOV(R0,INDD(R0,0));
+MOV(R0,INDD(R0,0));
+SHOW("",R0);
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel23:
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel17:
+CMP(INDD(R0,0), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move to R5 number of args .. to know how to drop from stack. */
+MOV(R5,STARG(IMM(0)));
+ADD(R5, IMM(2));
+DROP(R5);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push params reverse order. */
+/*const*/
+MOV(R0, IMM(18));
+
 PUSH(R0);
-CALL(R0);
+/*const*/
+MOV(R0, IMM(16));
+
+PUSH(R0);
+/* push number of args. */
+PUSH(IMM(2));
+/* get old env address, put in R1 */
+MOV(R1, FPARG(0));
+/* make room for new env */
+PUSH(IMM(1));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R2 */
+MOV(R2,R0);
+/* clone the env */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureEnvLoopLabel2:
+CMP(R4,IMM(0));
+JUMP_GE(closureEnvLoopEndLabel1);
+MOV(INDD(R2,R5), INDD(R1,R4));
+INCR(R4);
+INCR(R5);
+JUMP(closureEnvLoopLabel2);
+closureEnvLoopEndLabel1: 
+/* get old parameters length, put in R3 */
+PUSH(IMM(0));
+CALL(MALLOC);
+DROP(IMM(1));
+
+/* put old params in R2 */
+MOV(INDD(R2,0),R0);/* clone parameters from stack */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureParameterLoopLabel4:
+CMP(R4,IMM(2));
+JUMP_GE(closureParameterLoopEndLabel3);
+MOV(INDD(INDD(R2,0),R4), FPARG(R5));
+INCR(R4);
+INCR(R5);
+JUMP(closureParameterLoopLabel4);
+closureParameterLoopEndLabel3: 
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R2);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel6));
+JUMP(closureEndLabel5);
+closureBodyLabel6:
+PUSH(FP);
+MOV(FP,SP);
+/* simple lambda body ... */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(2));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* get old env address, put in R1 */
+MOV(R1, FPARG(0));
+/* make room for new env */
+PUSH(IMM(2));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R2 */
+MOV(R2,R0);
+/* clone the env */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureEnvLoopLabel8:
+CMP(R4,IMM(1));
+JUMP_GE(closureEnvLoopEndLabel7);
+MOV(INDD(R2,R5), INDD(R1,R4));
+INCR(R4);
+INCR(R5);
+JUMP(closureEnvLoopLabel8);
+closureEnvLoopEndLabel7: 
+/* get old parameters length, put in R3 */
+PUSH(IMM(2));
+CALL(MALLOC);
+DROP(IMM(1));
+
+/* put old params in R2 */
+MOV(INDD(R2,0),R0);/* clone parameters from stack */
+/* R4 is i, R5 is j */
+MOV(R4, IMM(0));
+MOV(R5, IMM(1));
+closureParameterLoopLabel10:
+CMP(R4,IMM(4));
+JUMP_GE(closureParameterLoopEndLabel9);
+MOV(INDD(INDD(R2,0),R4), FPARG(R5));
+INCR(R4);
+INCR(R5);
+JUMP(closureParameterLoopLabel10);
+closureParameterLoopEndLabel9: 
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R2);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel12));
+JUMP(closureEndLabel11);
+closureBodyLabel12:
+PUSH(FP);
+MOV(FP,SP);
+/* simple lambda body ... */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(1));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* bvar */
+MOV(R0, FPARG(IMM(0)));
+MOV(R0,INDD(R0,0));
+MOV(R0,INDD(R0,0));
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel11:
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel5:
+CMP(INDD(R0,0), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
 /* move to R5 number of args .. to know how to drop from stack. */
 MOV(R5,STARG(IMM(0)));
 ADD(R5, IMM(2));
