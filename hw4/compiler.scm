@@ -228,8 +228,11 @@
   (lambda (idx var val) 
     (cond 
       ((equal? var '+) (string-append (closureFromLabelMaker "PLUS") (string-append 
-                  "MOV(IND(" (number->string idx) "), R0);" nl )
-                 ))
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       (else
         (string-append 
                   "MOV(IND(" (number->string idx) "), IMM(" (number->string val) "));" nl
@@ -508,7 +511,6 @@
       (parameterLoopLabel (string-append "closureParameterLoopLabel" (labelNumberInString)))
       (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
       (envLoopLabel (string-append "closureEnvLoopLabel" (labelNumberInString)))
-
       (envLoopEndLabel (string-append "closureEnvLoopEndLabel" (labelNumberInString)))  
      )
     (string-append
@@ -597,7 +599,14 @@
 
 (define code-gen-lambda-var-body
   (lambda (sexpr envLevel paramsLevel)
-    (let ((body         (caddr sexpr)))
+    (let (
+      (body         (caddr sexpr))
+      (parameterLoopLabel (string-append "closureParameterLoopLabel" (labelNumberInString)))
+      (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
+      (pushLoopLabel (string-append "closurePushLoopLabel" (labelNumberInString)))
+      (pushLoopEndLabel (string-append "closurePushLoopEndLabel" (labelNumberInString)))
+      
+     )
     (string-append
 
       "/* lambda var body */" nl
@@ -608,15 +617,50 @@
       "/* pop env */"nl
       "POP(R12);"nl
       "/* pop number of arguments */"nl
-      "POP(R13);"nl
+      "POP(R13);"nl nl
 
-      "POP(R14);"nl
-      "POP(R15);"nl
-
-      "PUSH(IMM(T_NIL));"
-      "PUSH(R15);" nl
+      ;need to first pop all vars (number of vars in R13), then push T_NIL, then push all vars again according to opposite order
+      "MOV(R14,R13);" nl
       "PUSH(R14);" nl
-      "PUSH(IMM(1));" nl
+      "CALL(MALLOC);" nl
+      "DROP(IMM(1));"
+      "MOV(R1,R0);" nl
+      "MOV(R2,IMM(0));" nl
+      parameterLoopLabel ":" nl
+        "CMP(R2,R13);" nl
+        "JUMP_GE("parameterLoopEndLabel");" nl
+        "POP(R3);" nl
+        "MOV(INDD(R1,R2),R3);"nl
+        "INCR(R2);"nl
+        "JUMP("parameterLoopLabel");"
+      parameterLoopEndLabel ":" nl  
+
+
+
+      "PUSH(IMM(T_NIL));" nl
+      "DECR(R14);"
+      "MOV(R2,IMM(R14));" nl
+      pushLoopLabel ":" nl
+        "CMP(R2,IMM(-1));"nl
+        "JUMP_EQ("pushLoopEndLabel");"nl
+        "PUSH(INDD(R1,R2));"nl
+        "DECR(R2);" nl
+        "JUMP("pushLoopLabel");" nl
+      pushLoopEndLabel ":" nl
+
+      "/* create list of vars */" nl
+
+      "ADD(R13,2);"
+      "PUSH(R13);" nl
+      "PUSH(IMM(0));" nl
+      "CALL(LIST);" nl
+      "DROP(IMM(1));" nl
+      "POP(R13);" nl
+      "DROP(R13);" nl
+                  "INFO;"
+
+      "PUSH(R0);" nl
+      "PUSH(1);" nl
       "PUSH(R12);" nl
       "PUSH(R11);" nl
       "PUSH(R10);" nl
@@ -737,6 +781,7 @@
 
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
+    "#define SOB_NIL 2" nl nl
     "#define FALSE 12 " nl nl
     "#define TRUE 14 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl

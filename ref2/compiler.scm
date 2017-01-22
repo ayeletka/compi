@@ -864,7 +864,6 @@
 				(string-append
 					"/* I am in the if exp */" nl
 					code-test nl ; when run, the result of the test will be in R0
-					"SHOW(\"\", R0);" nl
 					"CMP(R0, SOB_FALSE);" nl
 					"JUMP_EQ(" label-else ");" nl
 					code-dit nl
@@ -1152,7 +1151,6 @@
 
 (define codegen-applic 
 	(lambda (exp envL paramsL)
-		(display exp)
 			(let* 	( 	
 						(func 				(cadr exp))
 						(paramsList			(caddr exp))
@@ -1266,6 +1264,7 @@
 			"MOV(R3,INDD(R2,IMM(" (number->string (get-minor e)) ")));" nl
 			"MOV(R0,R3);" nl
 )))
+
 (define codegen-fvar
 	(lambda (e envL paramsL)
 		(let*  (
@@ -1278,8 +1277,6 @@
 			"MOV(R1, IMM(" (number->string freeVarBucketValueAddr) "));" nl
 			"MOV(R2,INDD(R1,0));" nl
 			"MOV(R0,R2);" nl
-			"SHOW(\"\", R0);" nl
-
 ))))
 
 (define get-name
@@ -1463,9 +1460,6 @@
 )))
 
 
-
-
-
 (define createNewTableEntry
 	(lambda (newConst)
 		(cond 
@@ -1618,8 +1612,6 @@
 				"MOV(R0,IMM(" (number->string constsAddr)  "));"
 			)
 	)))
-
-
 
 ;;;;;; TILL HERE CONSTS PART
 
@@ -2447,4 +2439,4 @@
 		))
 
 
-(compile-scheme-file "test.scm" "foo.c")
+(compile-scheme-file "test2-lambda.scm" "foo.c")

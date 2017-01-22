@@ -7,6 +7,8 @@ Programmers: Ayelet Kalderon & Avishag Daniely */
 /* change to 0 for no debug info to be printed: */
 #define DO_SHOW 1
 
+#define SOB_NIL 2
+
 #define FALSE 12 
 
 #define TRUE 14 
@@ -45,17 +47,17 @@ MOV(IND(1005), IMM(1));
 MOV(IND(1006), IMM(T_INTEGER));
 MOV(IND(1007), IMM(21));
 MOV(IND(1008), IMM(T_INTEGER));
-MOV(IND(1009), IMM(23));
+MOV(IND(1009), IMM(20));
 MOV(IND(1010), IMM(T_INTEGER));
-MOV(IND(1011), IMM(22));
+MOV(IND(1011), IMM(23));
+MOV(IND(1012), IMM(T_INTEGER));
+MOV(IND(1013), IMM(22));
 
 PUSH(LABEL(PLUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(1012), R0);
-MOV(IND(1013), IMM(999999));
-MOV(IND(1014), IMM(999999));
+MOV(IND(1014), R0);
 MOV(IND(1015), IMM(999999));
 MOV(IND(1016), IMM(999999));
 MOV(IND(1017), IMM(999999));
@@ -83,17 +85,27 @@ MOV(IND(1038), IMM(999999));
 MOV(IND(1039), IMM(999999));
 MOV(IND(1040), IMM(999999));
 MOV(IND(1041), IMM(999999));
-MOV(IND(1042), IMM(999999));
+PUSH(LABEL(CONS));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(1042), R0);
 MOV(IND(1043), IMM(999999));
 MOV(IND(1044), IMM(999999));
 MOV(IND(1045), IMM(999999));
 MOV(IND(1046), IMM(999999));
-MOV(IND(1047), IMM(999999));
+PUSH(LABEL(LIST));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(1047), R0);
 MOV(IND(1048), IMM(999999));
 MOV(IND(1049), IMM(999999));
 MOV(IND(1050), IMM(999999));
 MOV(IND(1051), IMM(999999));
 MOV(IND(1052), IMM(999999));
+MOV(IND(1053), IMM(999999));
+MOV(IND(1054), IMM(999999));
 
 /* define */
 /* get old env address, put in R1 */
@@ -148,55 +160,63 @@ JUMP(closureEndLabel5);
 closureBodyLabel6:
 PUSH(FP);
 MOV(FP,SP);
-/* lambda opt body */
+/* lambda var body */
 /* pop old fp */
-POP(R1);
+POP(R10);
 /* pop return address */
-POP(R2);
+POP(R11);
 /* pop env */
-POP(R3);
+POP(R12);
 /* pop number of arguments */
-POP(R4);
- /* R5 will hold new variables */PUSH(IMM(5));
-CALL(MALLOC);
-DROP(IMM(1));
+POP(R13);
 
-MOV(R5, R0);
-MOV(R6, IMM(3));
-optLambdaCopyLabel10:
-CMP(R6, IMM(-1));
-JUMP_EQ(optLambdaCopyEndLabel9);
-POP(R7);
-MOV(INDD(R5,R6),R7);
-DECR(R6);
-JUMP(optLambdaCopyLabel10);optLambdaCopyEndLabel9:
-MOV(R0,IMM(T_NIL));PUSH(R0);
-MOV(R6, IMM(0));
-optLambdaCopyLabel8:
-CMP(R6, IMM(4));
-JUMP_EQ(optLambdaCopyEndLabel7);
-PUSH(INDD(R5,R6));
-ADD(R6,IMM(1));
-JUMP(optLambdaCopyLabel8);
-optLambdaCopyEndLabel7:
-PUSH(IMM(4));
-PUSH(R3);
-PUSH(R2);
-PUSH(R1);
+MOV(R14,R13);
+PUSH(R14);
+CALL(MALLOC);
+DROP(IMM(1));MOV(R1,R0);
+MOV(R2,IMM(0));
+closureParameterLoopLabel10:
+CMP(R2,R13);
+JUMP_GE(closureParameterLoopEndLabel9);
+POP(R3);
+MOV(INDD(R1,R2),R3);
+INCR(R2);
+JUMP(closureParameterLoopLabel10);closureParameterLoopEndLabel9:
+PUSH(IMM(T_NIL));
+DECR(R14);MOV(R2,IMM(R14));
+closurePushLoopLabel8:
+CMP(R2,IMM(-1));
+JUMP_EQ(closurePushLoopEndLabel7);
+PUSH(INDD(R1,R2));
+DECR(R2);
+JUMP(closurePushLoopLabel8);
+closurePushLoopEndLabel7:
+/* create list of vars */
+ADD(R13,2);PUSH(R13);
+PUSH(IMM(0));
+CALL(LIST);
+DROP(IMM(1));
+POP(R13);
+DROP(R13);
+INFO;PUSH(R0);
+PUSH(1);
+PUSH(R12);
+PUSH(R11);
+PUSH(R10);
 MOV(FP, SP);
 /* code-gen on body */
-/* code-gen on body */
 /* pvar */
-MOV(R10, IMM(3));
+MOV(R10, IMM(0));
 ADD(R10,IMM(2));
 MOV(R0, FPARG(R10));
+
 
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
 closureEndLabel5:
 
-MOV(IND(IMM(1052)),R0);
+MOV(IND(IMM(1054)),R0);
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -205,7 +225,15 @@ CALL(PRINT_R0);
 
 /* push params reverse order. */
 /*const*/
+MOV(R0, IMM(1008));
+
+PUSH(R0);
+/*const*/
 MOV(R0, IMM(1006));
+
+PUSH(R0);
+/*const*/
+MOV(R0, IMM(1012));
 
 PUSH(R0);
 /*const*/
@@ -213,17 +241,13 @@ MOV(R0, IMM(1010));
 
 PUSH(R0);
 /*const*/
-MOV(R0, IMM(1008));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(1008));
+MOV(R0, IMM(1010));
 
 PUSH(R0);
 /* push number of args. */
-PUSH(IMM(4));
+PUSH(IMM(5));
 /*fvar */
-MOV(R0, IND(1052));
+MOV(R0, IND(1054));
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
