@@ -480,6 +480,7 @@
           (string-append
             "/* applic */" nl nl
             "/* push params reverse order. */" nl
+            ;maybe we should push the T_NIL obj here as well, according to tirgul, it will help with the empty lambda var and opt 
             (push-applic-params (reverse compParams) (length paramsList))
             "/* push number of args. */" nl
             "PUSH(IMM(" (number->string (length paramsList)) "));" nl
@@ -619,45 +620,12 @@
       "/* pop number of arguments */"nl
       "POP(R13);"nl nl
 
-      ;need to first pop all vars (number of vars in R13), then push T_NIL, then push all vars again according to opposite order
-      "MOV(R14,R13);" nl
-      "PUSH(R14);" nl
-      "CALL(MALLOC);" nl
-      "DROP(IMM(1));"
-      "MOV(R1,R0);" nl
-      "MOV(R2,IMM(0));" nl
-      parameterLoopLabel ":" nl
-        "CMP(R2,R13);" nl
-        "JUMP_GE("parameterLoopEndLabel");" nl
-        "POP(R3);" nl
-        "MOV(INDD(R1,R2),R3);"nl
-        "INCR(R2);"nl
-        "JUMP("parameterLoopLabel");"
-      parameterLoopEndLabel ":" nl  
-
-
-
-      "PUSH(IMM(T_NIL));" nl
-      "DECR(R14);"
-      "MOV(R2,IMM(R14));" nl
-      pushLoopLabel ":" nl
-        "CMP(R2,IMM(-1));"nl
-        "JUMP_EQ("pushLoopEndLabel");"nl
-        "PUSH(INDD(R1,R2));"nl
-        "DECR(R2);" nl
-        "JUMP("pushLoopLabel");" nl
-      pushLoopEndLabel ":" nl
-
-      "/* create list of vars */" nl
-
-      "ADD(R13,2);"
       "PUSH(R13);" nl
       "PUSH(IMM(0));" nl
       "CALL(LIST);" nl
       "DROP(IMM(1));" nl
       "POP(R13);" nl
       "DROP(R13);" nl
-                  "INFO;"
 
       "PUSH(R0);" nl
       "PUSH(1);" nl

@@ -170,35 +170,13 @@ POP(R12);
 /* pop number of arguments */
 POP(R13);
 
-MOV(R14,R13);
-PUSH(R14);
-CALL(MALLOC);
-DROP(IMM(1));MOV(R1,R0);
-MOV(R2,IMM(0));
-closureParameterLoopLabel10:
-CMP(R2,R13);
-JUMP_GE(closureParameterLoopEndLabel9);
-POP(R3);
-MOV(INDD(R1,R2),R3);
-INCR(R2);
-JUMP(closureParameterLoopLabel10);closureParameterLoopEndLabel9:
-PUSH(IMM(T_NIL));
-DECR(R14);MOV(R2,IMM(R14));
-closurePushLoopLabel8:
-CMP(R2,IMM(-1));
-JUMP_EQ(closurePushLoopEndLabel7);
-PUSH(INDD(R1,R2));
-DECR(R2);
-JUMP(closurePushLoopLabel8);
-closurePushLoopEndLabel7:
-/* create list of vars */
-ADD(R13,2);PUSH(R13);
+PUSH(R13);
 PUSH(IMM(0));
 CALL(LIST);
 DROP(IMM(1));
 POP(R13);
 DROP(R13);
-INFO;PUSH(R0);
+PUSH(R0);
 PUSH(1);
 PUSH(R12);
 PUSH(R11);
