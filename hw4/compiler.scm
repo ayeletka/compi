@@ -228,10 +228,10 @@
     (cond 
       ((equal? var '+) (string-append (closureFromLabelMaker "PLUS") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
-      ((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
-                  "MOV(IND(" (number->string idx) "), R0);" nl )))
-      ((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
-                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ;((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
+      ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ;((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
+      ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
       (else
         (string-append 
                   "MOV(IND(" (number->string idx) "), IMM(" (number->string val) "));" nl
@@ -603,14 +603,12 @@
   (lambda (sexpr envLevel paramsLevel)
     (let (
       (body         (caddr sexpr))
-      (parameterLoopLabel (string-append "closureParameterLoopLabel" (labelNumberInString)))
       (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
       (pushLoopLabel (string-append "closurePushLoopLabel" (labelNumberInString)))
       (EndLabel (string-append "EndLabel" (labelNumberInString)))
       (noParamsLabel (string-append "noParamsLabel" (labelNumberInString)))
      )
     (string-append
-
       "/* lambda var body */" nl
       "/* pop old fp */"nl
       "POP(R10);"nl
@@ -668,47 +666,64 @@
           (loopEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
           (pushLabel (string-append "optLambdaCopyLabel" (labelNumberInString)))
           (pushEndLabel (string-append "optLambdaCopyEndLabel" (labelNumberInString)))
+          (EndLabel (string-append "EndLabel" (labelNumberInString)))
+          (noParamsLabel (string-append "noParamsLabel" (labelNumberInString)))
+          (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
+          (pushLoopLabel (string-append "closurePushLoopLabel" (labelNumberInString)))
           )
-    (string-append
-      "/* lambda opt body */" nl
+      (string-append
+      "/* lambda var body */" nl
       "/* pop old fp */"nl
-      "POP(R1);"nl
+      "POP(R10);"nl
       "/* pop return address */"nl
-      "POP(R2);"nl
+      "POP(R11);"nl
       "/* pop env */"nl
-      "POP(R3);"nl
+      "POP(R12);"nl
       "/* pop number of arguments */"nl
-      "POP(R4);"nl
-      " /* R5 will hold new variables */"
-      (malloc (+ 2 numberOfParams)) nl
-      "MOV(R5, R0);" nl
-      "MOV(R6, IMM("(number->string numberOfParams)"));" nl
-      loopLabel ":" nl
-        "CMP(R6, IMM(-1));" nl
-        "JUMP_EQ("loopEndLabel");" nl
-        "POP(R7);" nl
-        "MOV(INDD(R5,R6),R7);" nl
-        "DECR(R6);" nl
-        "JUMP("loopLabel");"
-      loopEndLabel ":" nl  
-      
-      "MOV(R0,IMM(T_NIL));"
-      "PUSH(R0);" nl
-      "MOV(R6, IMM(0));" nl
-      pushLabel ":" nl
-        "CMP(R6, IMM("(number->string (+ 1 numberOfParams))"));" nl
-        "JUMP_EQ("pushEndLabel");" nl
-        "PUSH(INDD(R5,R6));" nl
-        "ADD(R6,IMM(1));" nl
-        "JUMP("pushLabel");" nl
-      pushEndLabel ":" nl  
-      "PUSH(IMM("(number->string (+ 1 numberOfParams))"));" nl ;change to new number of args
-      "PUSH(R3);" nl
-      "PUSH(R2);" nl
-      "PUSH(R1);" nl
-      "MOV(FP, SP);" nl
-      "/* code-gen on body */" nl
+      "POP(R13);"nl nl
 
+      
+      "MOV(R5,R13);" nl
+      "ADD(R5, IMM("(number->string (* -1 numberOfParams))"));" nl
+      "/* no params */" nl
+      "CMP(R5,IMM(0));" nl
+      "JUMP_EQ("noParamsLabel");" nl
+      "/* with params */" nl
+      "MOV(R14,R13);" nl
+      "MOV(R15,R13);" nl
+      "MOV(R4, IMM(0));" nl
+      "ADD(R15,IMM(1));" nl
+      "ADD(R14,IMM(2));" nl
+      pushLoopLabel ":" nl
+      "CMP(R4,R5);"nl
+      "JUMP_EQ("parameterLoopEndLabel");"nl
+      "MOV(R1, FPARG(R14));" nl
+      "PUSH(R1);" nl
+      "MOV(R1, FPARG(R15));" nl
+      "PUSH(R1);" nl
+      "CALL(MAKE_SOB_PAIR);" nl
+      "DROP(IMM(2));" nl
+      "MOV(FPARG(R14),R0);" nl
+      "INFO;" nl
+      "INCR(R4);" nl
+      "DECR(R15);" nl
+      "JUMP("pushLoopLabel");"
+      parameterLoopEndLabel ":" nl
+      ;"CALL(PRINT_R0);" nl 
+      "MOV(R15, IMM("(number->string (+ 2 numberOfParams))"));" nl
+      "MOV(FPARG(R15), FPARG(R14));" nl
+      ;"INFO;" nl
+      "JUMP("EndLabel");" nl
+      nl
+      noParamsLabel ":" nl
+      "MOV(R1, "(number->string (getConstAddress '()))")" nl
+      "MOV(FPARG(IMM(1)),R1);" nl
+      EndLabel ":" nl
+      "PUSH(R13);" nl
+      "PUSH(R12);" nl
+      "PUSH(R11);" nl
+      "PUSH(R10);" nl
+      "MOV(FP, SP);" nl
       "/* code-gen on body */" nl
       (code-gen body (+ 1 envLevel) numberOfParams)
 ))))

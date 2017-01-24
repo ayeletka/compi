@@ -2,10 +2,9 @@
 ;(define tst-simple (lambda (a) a))
 ;(tst-simple 1)
 
-(define tst (lambda a a))
-(tst)
+(define tst (lambda (a c . b) a))
 
-(tst 1 2 3)
+(tst 1 2 3 4)
 
 ;(define tst-simple (lambda (a) a))
 ;(tst-simple 1)
