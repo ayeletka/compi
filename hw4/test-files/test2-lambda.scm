@@ -1,9 +1,20 @@
 
+;(define tst-simple (lambda (a) a))
+;(tst-simple 1)
+
+(define tst (lambda a a))
+(tst)
+
+(tst 1 2 3)
+
+;(define tst-simple (lambda (a) a))
+;(tst-simple 1)
+
+
 ;(define tst (lambda (a c d . b) b))
 ;(tst 23 23 22 21 22)
 
-(define tst (lambda a a))
-(tst 23 23 22 21 20)
+
 ;(define tst (lambda a a))
 ;(tst 22)
 

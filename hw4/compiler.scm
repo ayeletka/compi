@@ -102,11 +102,11 @@
   (lambda (const)
     (let ((cVar const))
     (cond
-      ((char? cVar) 
-          (set! const_table `(,@const_table (,address ,cVar (,T_CHAR ,(char->integer cVar)))))
-          (set! address (+ address 2)))
       ((number? cVar) 
           (set! const_table `(,@const_table (,address ,cVar (,T_INTEGER ,cVar))))
+          (set! address (+ address 2)))
+      ((char? cVar) 
+          (set! const_table `(,@const_table (,address ,cVar (,T_CHAR ,(char->integer cVar)))))
           (set! address (+ address 2)))
       ((string? cVar) 
           (set! const_table `(,@const_table (,address ,cVar (,T_STRING ,(string-length cVar) ,@(map char->integer (string->list cVar))))))
@@ -127,12 +127,11 @@
   )))
 )
 
-
 (define load-void (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_VOID));" nl)))
 (define load-nil (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_NIL));" nl)))
 (define load-bool 
   (lambda (idx) 
-    (if (equal? idx 12)
+    (if (equal? idx 1002)
       (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
       "MOV(IND(" (number->string (+ idx 1)) "), IMM(0));" nl )
        (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
@@ -479,8 +478,10 @@
           ;nl(display compFunction)nl
           (string-append
             "/* applic */" nl nl
-            "/* push params reverse order. */" nl
-            ;maybe we should push the T_NIL obj here as well, according to tirgul, it will help with the empty lambda var and opt 
+            "/* push T_NIL for empty lambda var and opt */" nl
+            "MOV(R0,IMM("(number->string (getConstAddress '()))"));" nl
+            "PUSH(R0);" nl
+            "/* push params in reverse order. */" nl
             (push-applic-params (reverse compParams) (length paramsList))
             "/* push number of args. */" nl
             "PUSH(IMM(" (number->string (length paramsList)) "));" nl
@@ -605,8 +606,8 @@
       (parameterLoopLabel (string-append "closureParameterLoopLabel" (labelNumberInString)))
       (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
       (pushLoopLabel (string-append "closurePushLoopLabel" (labelNumberInString)))
-      (pushLoopEndLabel (string-append "closurePushLoopEndLabel" (labelNumberInString)))
-      
+      (EndLabel (string-append "EndLabel" (labelNumberInString)))
+      (noParamsLabel (string-append "noParamsLabel" (labelNumberInString)))
      )
     (string-append
 
@@ -619,16 +620,38 @@
       "POP(R12);"nl
       "/* pop number of arguments */"nl
       "POP(R13);"nl nl
+      "/* no params */" nl
+      "CMP(R13,IMM(0));" nl
+      "JUMP_EQ("noParamsLabel");" nl
+      "/* with params */" nl
 
-      "PUSH(R13);" nl
-      "PUSH(IMM(0));" nl
-      "CALL(LIST);" nl
-      "DROP(IMM(1));" nl
-      "POP(R13);" nl
+      "MOV(R14,R13);" nl
+      "MOV(R15,R13);" nl
+      "MOV(R4, IMM(0));" nl
+      "ADD(R15,IMM(1));" nl
+      "ADD(R14,IMM(2));" nl
+      pushLoopLabel ":" nl
+      "CMP(R4,R13);"nl
+      "JUMP_EQ("parameterLoopEndLabel");"nl
+      "MOV(R1, FPARG(R14));" nl
+      "PUSH(R1);" nl
+      "MOV(R1, FPARG(R15));" nl
+      "PUSH(R1);" nl
+      "CALL(MAKE_SOB_PAIR);" nl
+      "DROP(IMM(2));" nl
+      "MOV(FPARG(R14),R0);" nl
+      "INCR(R4);" nl
+      "DECR(R15);" nl
+      "JUMP("pushLoopLabel");"
+      parameterLoopEndLabel ":" nl
       "DROP(R13);" nl
-
-      "PUSH(R0);" nl
-      "PUSH(1);" nl
+      "JUMP("EndLabel");" nl
+      nl
+      noParamsLabel ":" nl
+      "MOV(R1, "(number->string (getConstAddress '()))")" nl
+      "MOV(FPARG(IMM(1)),R1);" nl
+      EndLabel ":" nl
+      "PUSH(R13);" nl
       "PUSH(R12);" nl
       "PUSH(R11);" nl
       "PUSH(R10);" nl

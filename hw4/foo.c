@@ -41,23 +41,23 @@ CONTINUE:
 MOV(IND(1000), IMM(T_VOID));
 MOV(IND(1001), IMM(T_NIL));
 MOV(IND(1002), IMM(T_BOOL));
-MOV(IND(1003), IMM(1));
+MOV(IND(1003), IMM(0));
 MOV(IND(1004), IMM(T_BOOL));
 MOV(IND(1005), IMM(1));
 MOV(IND(1006), IMM(T_INTEGER));
-MOV(IND(1007), IMM(21));
+MOV(IND(1007), IMM(3));
 MOV(IND(1008), IMM(T_INTEGER));
-MOV(IND(1009), IMM(20));
+MOV(IND(1009), IMM(1));
 MOV(IND(1010), IMM(T_INTEGER));
-MOV(IND(1011), IMM(23));
-MOV(IND(1012), IMM(T_INTEGER));
-MOV(IND(1013), IMM(22));
+MOV(IND(1011), IMM(2));
 
 PUSH(LABEL(PLUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(1014), R0);
+MOV(IND(1012), R0);
+MOV(IND(1013), IMM(999999));
+MOV(IND(1014), IMM(999999));
 MOV(IND(1015), IMM(999999));
 MOV(IND(1016), IMM(999999));
 MOV(IND(1017), IMM(999999));
@@ -83,29 +83,27 @@ MOV(IND(1036), IMM(999999));
 MOV(IND(1037), IMM(999999));
 MOV(IND(1038), IMM(999999));
 MOV(IND(1039), IMM(999999));
-MOV(IND(1040), IMM(999999));
-MOV(IND(1041), IMM(999999));
 PUSH(LABEL(CONS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(1042), R0);
+MOV(IND(1040), R0);
+MOV(IND(1041), IMM(999999));
+MOV(IND(1042), IMM(999999));
 MOV(IND(1043), IMM(999999));
 MOV(IND(1044), IMM(999999));
-MOV(IND(1045), IMM(999999));
-MOV(IND(1046), IMM(999999));
 PUSH(LABEL(LIST));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(1047), R0);
+MOV(IND(1045), R0);
+MOV(IND(1046), IMM(999999));
+MOV(IND(1047), IMM(999999));
 MOV(IND(1048), IMM(999999));
 MOV(IND(1049), IMM(999999));
 MOV(IND(1050), IMM(999999));
 MOV(IND(1051), IMM(999999));
 MOV(IND(1052), IMM(999999));
-MOV(IND(1053), IMM(999999));
-MOV(IND(1054), IMM(999999));
 
 /* define */
 /* get old env address, put in R1 */
@@ -170,14 +168,36 @@ POP(R12);
 /* pop number of arguments */
 POP(R13);
 
-PUSH(R13);
-PUSH(IMM(0));
-CALL(LIST);
-DROP(IMM(1));
-POP(R13);
+/* no params */
+CMP(R13,IMM(0));
+JUMP_EQ(noParamsLabel8);
+/* with params */
+MOV(R14,R13);
+MOV(R15,R13);
+MOV(R4, IMM(0));
+ADD(R15,IMM(1));
+ADD(R14,IMM(2));
+closurePushLoopLabel10:
+CMP(R4,R13);
+JUMP_EQ(closureParameterLoopEndLabel11);
+MOV(R1, FPARG(R14));
+PUSH(R1);
+MOV(R1, FPARG(R15));
+PUSH(R1);
+CALL(MAKE_SOB_PAIR);
+DROP(IMM(2));
+MOV(FPARG(R14),R0);
+INCR(R4);
+DECR(R15);
+JUMP(closurePushLoopLabel10);closureParameterLoopEndLabel11:
 DROP(R13);
-PUSH(R0);
-PUSH(1);
+JUMP(EndLabel9);
+
+noParamsLabel8:
+MOV(R1, 1001)
+MOV(FPARG(IMM(1)),R1);
+EndLabel9:
+PUSH(R13);
 PUSH(R12);
 PUSH(R11);
 PUSH(R10);
@@ -194,38 +214,54 @@ RETURN;
 /* LABEL END LAMBDA */
 closureEndLabel5:
 
-MOV(IND(IMM(1054)),R0);
+MOV(IND(IMM(1052)),R0);
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
 
 /* applic */
 
-/* push params reverse order. */
-/*const*/
-MOV(R0, IMM(1008));
-
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(1001));
 PUSH(R0);
+/* push params in reverse order. */
+/* push number of args. */
+PUSH(IMM(0));
+/*fvar */
+MOV(R0, IND(1052));
+CMP(INDD(R0,0), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+MOV(R5,STARG(IMM(0)));
+ADD(R5, IMM(2));
+DROP(R5);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(1001));
+PUSH(R0);
+/* push params in reverse order. */
 /*const*/
 MOV(R0, IMM(1006));
 
 PUSH(R0);
 /*const*/
-MOV(R0, IMM(1012));
-
-PUSH(R0);
-/*const*/
 MOV(R0, IMM(1010));
 
 PUSH(R0);
 /*const*/
-MOV(R0, IMM(1010));
+MOV(R0, IMM(1008));
 
 PUSH(R0);
 /* push number of args. */
-PUSH(IMM(5));
+PUSH(IMM(3));
 /*fvar */
-MOV(R0, IND(1054));
+MOV(R0, IND(1052));
 CMP(INDD(R0,0), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
