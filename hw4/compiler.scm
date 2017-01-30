@@ -330,8 +330,9 @@
         ((equal? (car sexpr) 'seq) (code-gen-seq (cadr sexpr) envLevel paramsLevel))
         ((equal?  (car sexpr) 'applic) (code-gen-applic sexpr envLevel paramsLevel))
         ((equal?  (car sexpr) 'lambda-simple) (code-gen-lambda sexpr envLevel paramsLevel))
-        ((equal?  (car sexpr) 'lambda-opt) (code-gen-lambda sexpr envLevel paramsLevel)) ;not working!
+        ((equal?  (car sexpr) 'lambda-opt) (code-gen-lambda sexpr envLevel paramsLevel)) 
         ((equal?  (car sexpr) 'lambda-var) (code-gen-lambda sexpr envLevel paramsLevel))
+        ((equal? (car sexpr) 'tc-applic) (code-gen-tc-applic sexpr envLevel paramsLevel))
         (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
     )))
 
@@ -371,6 +372,7 @@
     (let ((var (car pvar))
           (mindex (cadr pvar)))
     (string-append
+      ;"INFO;" nl
       "/* pvar */" nl
       "MOV(R10, IMM("(number->string mindex)"));" nl
       "ADD(R10,IMM(2));" nl
@@ -384,9 +386,10 @@
           (mindex (caddr bvar)))
     (string-append
       "/* bvar */" nl
-      "MOV(R0, FPARG(IMM(0)));" nl
-      "MOV(R0,INDD(R0,"(number->string mjrdex) "));" nl
-      "MOV(R0,INDD(R0,"(number->string mindex) "));" nl
+      "MOV(R1, FPARG(IMM(0)));" nl
+      "MOV(R2,INDD(R1,"(number->string mjrdex) "));" nl
+      "MOV(R3,INDD(R2,"(number->string mindex) "));" nl
+      "MOV(R0,R3);" nl
       )))) 
 
 (define code-gen-set
@@ -455,19 +458,17 @@
   ))
 
 
-;;;;;; TODO: 
-(define push-applic-params 
-  (lambda (reversedParamsList length)
+(define push-params-reverse-order
+  (lambda (reversedLst length)
     (if 
       (= length 0)
       ""
       (string-append
-        (car reversedParamsList) nl
+        (car reversedLst) nl
         "PUSH(R0);" nl
-        (push-applic-params (cdr reversedParamsList) (- length 1))
+        (push-params-reverse-order (cdr reversedLst) (- length 1))
       ))))
 
-;;;;;; TODO: 
 (define code-gen-applic 
   (lambda (applicExp envLevel paramsLevel)
       (let*   (   
@@ -482,11 +483,11 @@
             "MOV(R0,IMM("(number->string (getConstAddress '()))"));" nl
             "PUSH(R0);" nl
             "/* push params in reverse order. */" nl
-            (push-applic-params (reverse compParams) (length paramsList))
-            "/* push number of args. */" nl
+            (push-params-reverse-order (reverse compParams) (length paramsList))
+            "/* push number of arguments */" nl
             "PUSH(IMM(" (number->string (length paramsList)) "));" nl
             compFunction
-            "CMP(INDD(R0,0), IMM(T_CLOSURE));" nl
+            "CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));" nl
             "JUMP_NE(ERROR);" nl
             "PUSH(INDD(R0,IMM(1)));" nl   ; push the closure environment
             "CALLA(INDD(R0,IMM(2)));" nl  ;call the func code
@@ -496,6 +497,64 @@
             "ADD(R5, IMM(2));" nl   
             "DROP(R5);"  nl       
         ))))
+
+
+
+
+
+;;;;;; TODO: 
+(define code-gen-tc-applic 
+  (lambda (applicExp envLevel paramsLevel)
+      (let*   (   
+            (paramsList     (caddr applicExp))
+            (compParams     (map (lambda (exp) (code-gen exp envLevel paramsLevel)) paramsList))
+            (compFunction     (code-gen (cadr applicExp) envLevel paramsLevel))
+            (offsetOfStarg      (+ 1 (length paramsList))) ;first object in the stack pointer offset.
+            (parameterLoopLabel (string-append "closureParameterLoopLabel" (labelNumberInString)))
+            (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
+            (retEnvNumOfArgs  (+ 3 (length paramsList))) ;return environment number of arguments
+          )
+          (string-append
+            "/* tc-applic */" nl nl
+            "/* push T_NIL for empty lambda var and opt */" nl
+            "MOV(R0,IMM("(number->string (getConstAddress '()))"));" nl
+            "PUSH(R0);" nl
+            "/* push params in reverse order. */" nl
+            (push-params-reverse-order (reverse compParams) (length paramsList))
+            "/* push number of arguments */" nl
+            "PUSH(IMM(" (number->string (length paramsList)) "));" nl
+            compFunction
+            "CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));" nl
+            "JUMP_NE(ERROR);" nl
+            "PUSH(INDD(R0,IMM(1)));" nl   ; push the closure environment
+            "PUSH(FPARG(-1));" nl ; push ret of current frame   
+            "MOV(R1,FPARG(-2));" nl ;R1 <- old fp
+            "MOV(R2,FPARG(1));" nl ;R2 <- old num of arguments
+            "MOV(R3,STARG(1));" nl ;R3 <- hold new num of arguments
+            "MOV(R4, IMM(" (number->string offsetOfStarg) "));" nl ; R4 <- old stack pointer offset
+            "MOV(R5, R2);" nl ; R5 <- frame pointer offset
+            "ADD(R5, IMM(1));" nl nl
+            "/* loop over frame, R6 <- running indx */" nl
+            "MOV(R6, IMM(0));" nl
+            parameterLoopLabel ":" nl
+            "CMP(R6, IMM(" (number->string retEnvNumOfArgs) "));" nl
+            "JUMP_EQ(" parameterLoopEndLabel ");" nl
+            "MOV(FPARG(R5), STARG(R4));" nl
+            "DECR(R4);" nl
+            "DECR(R5);" nl
+            "INCR(R6);" nl
+            "JUMP(" parameterLoopLabel ");" nl
+            parameterLoopEndLabel ":" nl
+            "MOV(R7, R3);" nl                      
+            "DECR(R7);" nl
+            "SUB(R7, R2);" nl
+            "MOV(SP, FP);" nl
+            "ADD(SP, R7);" nl
+            "MOV(FP, R1);" nl
+            "JUMPA(INDD(R0, 2));" nl nl
+        ))))
+
+
 
 (define malloc
   (lambda(int)
@@ -516,44 +575,43 @@
       (envLoopEndLabel (string-append "closureEnvLoopEndLabel" (labelNumberInString)))  
      )
     (string-append
-        "/* get old env address, put in R1 */" nl
-        "MOV(R1, FPARG(0));" nl
+        "/* get old env address, put in R8 */" nl
+        "MOV(R8, FPARG(0));" nl
 
         "/* make room for new env */" nl
         (malloc (+ 1 envLevel))
 
-        "/* put new env in R2 */" nl
-        "MOV(R2,R0);" nl
+        "/* put new env in R9 */" nl
+        "MOV(R9,R0);" nl
 
         "/* clone the env */" nl
-        "/* R4 is i, R5 is j */" nl
-        "MOV(R4, IMM(0));" nl
-        "MOV(R5, IMM(1));" nl
+        "/* R10 is i, R11 is j */" nl
+        "MOV(R10, IMM(0));" nl
+        "MOV(R11, IMM(1));" nl
         envLoopLabel ":" nl
-        "CMP(R4,IMM(" (number->string envLevel) "));" nl
+        "CMP(R10,IMM(" (number->string envLevel) "));" nl
         "JUMP_GE(" envLoopEndLabel ");" nl
-        "MOV(INDD(R2,R5), INDD(R1,R4));" nl
-        "INCR(R4);" nl
-        "INCR(R5);" nl
+        "MOV(INDD(R9,R11), INDD(R8,R10));" nl
+        "INCR(R10);" nl
+        "INCR(R11);" nl
         "JUMP(" envLoopLabel ");" nl
         envLoopEndLabel ": " nl
 
-        "/* get old parameters length, put in R3 */" nl
         (malloc paramsLevel) nl
 
-        "/* put old params in R2 */" nl
-        "MOV(INDD(R2,0),R0);"
+        "/* put old params in R9 */" nl
+        "MOV(INDD(R9,0),R0);"
 
         "/* clone parameters from stack */" nl        
-        "/* R4 is i, R5 is j */" nl
-        "MOV(R4, IMM(0));" nl
-        "MOV(R5, IMM(1));" nl
+        "/* R10 is i, R11 is j */" nl
+        "MOV(R10, IMM(0));" nl
+        "MOV(R11, IMM(1));" nl
         parameterLoopLabel ":" nl
-        "CMP(R4,IMM(" (number->string (+ 2 paramsLevel)) "));" nl
+        "CMP(R10,IMM(" (number->string (+ 2 paramsLevel)) "));" nl
         "JUMP_GE(" parameterLoopEndLabel ");" nl
-        "MOV(INDD(INDD(R2,0),R4), FPARG(R5));" nl
-        "INCR(R4);" nl
-        "INCR(R5);" nl
+        "MOV(INDD(INDD(R9,0),R10), FPARG(R11));" nl
+        "INCR(R10);" nl
+        "INCR(R11);" nl
         "JUMP(" parameterLoopLabel ");" nl
         parameterLoopEndLabel ": " nl
 
@@ -562,7 +620,7 @@
         "/* put closure in R0 */" nl
         "MOV(INDD(R0,IMM(0))," (number->string T_CLOSURE) ");" nl
         "/* put env in R0 */" nl
-        "MOV(INDD(R0,IMM(1)), R2);" nl
+        "MOV(INDD(R0,IMM(1)), R9);" nl
 
         "/* closure body ...*/" nl
         "MOV(INDD(R0,IMM(2)), LABEL(" bodyLabel "));" nl
@@ -704,7 +762,7 @@
       "CALL(MAKE_SOB_PAIR);" nl
       "DROP(IMM(2));" nl
       "MOV(FPARG(R14),R0);" nl
-      "INFO;" nl
+      ;"INFO;" nl
       "INCR(R4);" nl
       "DECR(R15);" nl
       "JUMP("pushLoopLabel");"
@@ -791,6 +849,7 @@
     "#define FALSE 12 " nl nl
     "#define TRUE 14 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
+    "#define LOCAL_ENV 0" nl nl
 
 		"#include \"arch/cisc.h\"" nl
     "#include \"arch/BenTest.h\"" nl nl
