@@ -383,7 +383,6 @@
     (let ((var (car bvar))
           (mjrdex (cadr bvar))
           (mindex (caddr bvar)))
-    (display bvar)
     (string-append
       "/* bvar */" nl
       "MOV(R0, FPARG(IMM(0)));" nl
@@ -419,10 +418,10 @@
          ; "SHOW(\"\",R0)" nl
           "CMP(R0, FALSE);" nl
           "JUMP_EQ("labelElse");" nl
-              code-gen-do-if-true nl
+          code-gen-do-if-false nl
           "JUMP("labelIfExit");" nl
           labelElse":" nl
-              code-gen-do-if-false nl
+            code-gen-do-if-true nl
           labelIfExit":" nl)
 )))
 
@@ -475,7 +474,6 @@
             (compParams     (map (lambda (exp) (code-gen exp envLevel paramsLevel)) paramsList))
             (compFunction     (code-gen (cadr applicExp) envLevel paramsLevel))
           )
-          ;nl(display compFunction)nl
           (string-append
             "/* applic */" nl nl
             "/* push T_NIL for empty lambda var and opt */" nl
@@ -492,8 +490,8 @@
             "CALLA(INDD(R0,IMM(2)));" nl  ;call the func code
             "/* move number of args to R5, this is the amount to drop from stack. */" nl
             "MOV(R5,STARG(IMM(0)));" nl     
-           ; "/* add r5 env, numOfArg */" nl
-            "ADD(R5, IMM(2));" nl   
+           ; "/* add r5 env, numOfArg and + 1 for T_NILL*/" nl
+            "ADD(R5, IMM(3));" nl   
             "DROP(R5);"  nl       
         ))))
 
@@ -578,7 +576,7 @@
             "DROP(R5);" nl
             "DROP(1);"
             endLabel ":" nl
-            "INFO;" nl
+            ;"INFO;" nl
             "MOV(FP, R1);" nl
             "JUMPA(INDD(R0, 2));" nl nl
         ))))
@@ -603,12 +601,10 @@
       (envLoopLabel (string-append "closureEnvLoopLabel" (labelNumberInString)))
       (envLoopEndLabel (string-append "closureEnvLoopEndLabel" (labelNumberInString)))  
      )
-    (display envLevel)
-    (display "\n")
     (string-append
         "/* get old env address, put in R8 */" nl
         "MOV(R8, FPARG(0));" nl
-
+        
         "/* make room for new env */" nl
         (malloc (+ 1 envLevel))
 
@@ -621,31 +617,35 @@
         "MOV(R11, IMM(1));" nl
         envLoopLabel ":" nl
         "CMP(R10,IMM(" (number->string envLevel) "));" nl
-        "JUMP_GE(" envLoopEndLabel ");" nl
+        "JUMP_EQ(" envLoopEndLabel ");" nl
         "MOV(INDD(R9,R11), INDD(R8,R10));" nl
         "INCR(R10);" nl
         "INCR(R11);" nl
         "JUMP(" envLoopLabel ");" nl
         envLoopEndLabel ": " nl
-
-        (malloc paramsLevel) nl
+        
+        
+        "MOV(R12, FPARG(1));" nl
+        "PUSH(R12);" nl
+        "CALL(MALLOC);" nl
+        "DROP(1);"
 
         "/* put old params in R9 */" nl
-        "MOV(INDD(R9,0),R0);"
+        "MOV(INDD(R9,0),R0);" nl;we add the space for number of params in the env
 
         "/* clone parameters from stack */" nl        
         "/* R10 is i, R11 is j */" nl
         "MOV(R10, IMM(0));" nl
-        "MOV(R11, IMM(1));" nl
+        "MOV(R11, IMM(2));" nl
         parameterLoopLabel ":" nl
-        "CMP(R10,IMM(" (number->string (+ 2 paramsLevel)) "));" nl
-        "JUMP_GE(" parameterLoopEndLabel ");" nl
-        "MOV(INDD(INDD(R9,0),R10), FPARG(R11));" nl
+        "CMP(R10,R12);" nl
+        "JUMP_EQ(" parameterLoopEndLabel ");" nl
+        "MOV(R13,INDD(R9,IMM(0)));" nl
+        "MOV(INDD(R13,R10), FPARG(R11));" nl
         "INCR(R10);" nl
         "INCR(R11);" nl
         "JUMP(" parameterLoopLabel ");" nl
         parameterLoopEndLabel ": " nl
-
         "/* Calling malloc for closure, env and body. */" nl
         (malloc 3)
         "/* put closure in R0 */" nl
@@ -910,10 +910,9 @@
 		;print to stdout
 		"PROG_ENDING: " nl
 		"  STOP_MACHINE;"nl
-		"  return 0;" nl
+		"  return 0;" nl  
         "}" nl
 		)
-
 	)
 
 
@@ -954,4 +953,4 @@
 
 
 
-(compile-scheme-file "test-files/test2-lambda.scm" "foo.c")
+(compile-scheme-file "test-files/foo1.scm" "foo.c")

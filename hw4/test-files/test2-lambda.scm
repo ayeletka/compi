@@ -2,7 +2,7 @@
 ;(define tst-simple (lambda (a) a))
 ;(tst-simple 1)
 
-(define tst (lambda (a b) ((lambda (b c d) a) b 1 2)))
+(define tst (lambda (a b) ((lambda (b) a) b)))
 
 (tst 1 2)
 
