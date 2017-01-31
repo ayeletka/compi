@@ -161,6 +161,14 @@ JUMP_NE(ERROR);
 MOV(R0,IMM(1001));
 PUSH(R0);
 /* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(1008));
+
+PUSH(R0);
+/*const*/
+MOV(R0, IMM(1006));
+
+PUSH(R0);
 /* pvar */
 MOV(R10, IMM(1));
 ADD(R10,IMM(2));
@@ -168,7 +176,7 @@ MOV(R0, FPARG(R10));
 
 PUSH(R0);
 /* push number of arguments */
-PUSH(IMM(1));
+PUSH(IMM(3));
 /* get old env address, put in R8 */
 MOV(R8, FPARG(0));
 /* make room for new env */
@@ -223,62 +231,13 @@ MOV(FP,SP);
 /* lambda simple body */
 /* check if number of params is correct */
 MOV(R1, FPARG(1));
-CMP(R1, IMM(1));
+CMP(R1, IMM(3));
 JUMP_NE(ERROR);
 /* code-gen on body */
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(1001));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
 /* bvar */
-MOV(R1, FPARG(IMM(0)));
-MOV(R2,INDD(R1,0));
-MOV(R3,INDD(R2,0));
-MOV(R0,R3);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(1010));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-MOV(R2,FPARG(1));
-MOV(R3,STARG(1));
-MOV(R4, IMM(3));
-MOV(R5, R2);
-ADD(R5, IMM(1));
-
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel13:
-CMP(R6, IMM(5));
-JUMP_EQ(closureParameterLoopEndLabel14);
-MOV(FPARG(R5), STARG(R4));
-DECR(R4);
-DECR(R5);
-INCR(R6);
-JUMP(closureParameterLoopLabel13);
-closureParameterLoopEndLabel14:
-MOV(R7, R3);
-DECR(R7);
-SUB(R7, R2);
-MOV(SP, FP);
-ADD(SP, R7);
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
+MOV(R0, FPARG(IMM(0)));
+MOV(R0,INDD(R0,0));
+MOV(R0,INDD(R0,0));
 
 
 POP(FP);
@@ -288,30 +247,49 @@ closureEndLabel11:
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
+
+/*tc-applic specific code starts here */
 PUSH(FPARG(-1));
 MOV(R1,FPARG(-2));
-MOV(R2,FPARG(1));
-MOV(R3,STARG(1));
-MOV(R4, IMM(2));
-MOV(R5, R2);
-ADD(R5, IMM(1));
-
+PUSH(R1);
+MOV(R2, FPARG(1));
+INCR(R2);
+MOV(R3, R2);
+INCR(R3);
+ADD(R2,IMM(4));
+MOV(R4,STARG(2));
+ADD(R4,IMM(3));
+MOV(R5, R4);
+ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel15:
-CMP(R6, IMM(4));
-JUMP_EQ(closureParameterLoopEndLabel16);
-MOV(FPARG(R5), STARG(R4));
+closureParameterLoopLabel13:
+CMP(R6, R5);
+JUMP_EQ(closureParameterLoopEndLabel14);
+MOV(FPARG(R3), STARG(R4));
 DECR(R4);
-DECR(R5);
+DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel15);
-closureParameterLoopEndLabel16:
-MOV(R7, R3);
-DECR(R7);
-SUB(R7, R2);
-MOV(SP, FP);
-ADD(SP, R7);
+JUMP(closureParameterLoopLabel13);
+closureParameterLoopEndLabel14:
+CMP(R5,R2);
+JUMP_GE(greaterLabel16);
+DROP(R5);
+SUB(R2,R5);
+DROP(R2);
+DROP(1);JUMP(endLabel15);
+greaterLabel16:
+CMP(R5,R2);
+JUMP_EQ(equalLabel17);
+MOV(R7,R5);
+SUB(R5,R2);
+SUB(R7,R5);
+DROP(R7);
+DROP(1);JUMP(endLabel15);
+equalLabel17:
+DROP(R5);
+DROP(1);endLabel15:
+INFO;
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 

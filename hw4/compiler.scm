@@ -372,7 +372,6 @@
     (let ((var (car pvar))
           (mindex (cadr pvar)))
     (string-append
-      ;"INFO;" nl
       "/* pvar */" nl
       "MOV(R10, IMM("(number->string mindex)"));" nl
       "ADD(R10,IMM(2));" nl
@@ -384,12 +383,12 @@
     (let ((var (car bvar))
           (mjrdex (cadr bvar))
           (mindex (caddr bvar)))
+    (display bvar)
     (string-append
       "/* bvar */" nl
-      "MOV(R1, FPARG(IMM(0)));" nl
-      "MOV(R2,INDD(R1,"(number->string mjrdex) "));" nl
-      "MOV(R3,INDD(R2,"(number->string mindex) "));" nl
-      "MOV(R0,R3);" nl
+      "MOV(R0, FPARG(IMM(0)));" nl
+      "MOV(R0,INDD(R0,"(number->string mjrdex) "));" nl
+      "MOV(R0,INDD(R0,"(number->string mindex) "));" nl
       )))) 
 
 (define code-gen-set
@@ -509,10 +508,12 @@
             (paramsList     (caddr applicExp))
             (compParams     (map (lambda (exp) (code-gen exp envLevel paramsLevel)) paramsList))
             (compFunction     (code-gen (cadr applicExp) envLevel paramsLevel))
-            (offsetOfStarg      (+ 1 (length paramsList))) ;first object in the stack pointer offset.
             (parameterLoopLabel (string-append "closureParameterLoopLabel" (labelNumberInString)))
             (parameterLoopEndLabel (string-append "closureParameterLoopEndLabel" (labelNumberInString)))
-            (retEnvNumOfArgs  (+ 3 (length paramsList))) ;return environment number of arguments
+            (endLabel (string-append "endLabel" (labelNumberInString)))
+            (greaterLabel (string-append "greaterLabel" (labelNumberInString)))
+
+            (equalLabel (string-append "equalLabel" (labelNumberInString)))
           )
           (string-append
             "/* tc-applic */" nl nl
@@ -527,29 +528,57 @@
             "CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));" nl
             "JUMP_NE(ERROR);" nl
             "PUSH(INDD(R0,IMM(1)));" nl   ; push the closure environment
-            "PUSH(FPARG(-1));" nl ; push ret of current frame   
+
+            nl 
+            "/*tc-applic specific code starts here */" nl
+            
+            "PUSH(FPARG(-1));" nl ; push old ret   
             "MOV(R1,FPARG(-2));" nl ;R1 <- old fp
-            "MOV(R2,FPARG(1));" nl ;R2 <- old num of arguments
-            "MOV(R3,STARG(1));" nl ;R3 <- hold new num of arguments
-            "MOV(R4, IMM(" (number->string offsetOfStarg) "));" nl ; R4 <- old stack pointer offset
-            "MOV(R5, R2);" nl ; R5 <- frame pointer offset
-            "ADD(R5, IMM(1));" nl nl
+            "PUSH(R1);" nl ; push old fp
+            "MOV(R2, FPARG(1));" nl ;R2 <- old num of arguments
+            "INCR(R2);" nl ; increase since we also have a null arg
+
+            "MOV(R3, R2);" nl ;R3 <- old num of arguments with T_NIL
+            "INCR(R3);" nl
+            "ADD(R2,IMM(4));" nl ;R2 <- number of old frame boxes
+            "MOV(R4,STARG(2));" nl ;R4 <- hold new num of arguments
+            "ADD(R4,IMM(3));" nl ;increase since we also have a null arg
+            "MOV(R5, R4);" nl ;R5 <-will hold size of new frame
+            "ADD(R5,IMM(2));" nl
+
+           
             "/* loop over frame, R6 <- running indx */" nl
             "MOV(R6, IMM(0));" nl
             parameterLoopLabel ":" nl
-            "CMP(R6, IMM(" (number->string retEnvNumOfArgs) "));" nl
+            "CMP(R6, R5);" nl
             "JUMP_EQ(" parameterLoopEndLabel ");" nl
-            "MOV(FPARG(R5), STARG(R4));" nl
+            "MOV(FPARG(R3), STARG(R4));" nl
             "DECR(R4);" nl
-            "DECR(R5);" nl
+            "DECR(R3);" nl
             "INCR(R6);" nl
             "JUMP(" parameterLoopLabel ");" nl
             parameterLoopEndLabel ":" nl
-            "MOV(R7, R3);" nl                      
-            "DECR(R7);" nl
-            "SUB(R7, R2);" nl
-            "MOV(SP, FP);" nl
-            "ADD(SP, R7);" nl
+            "CMP(R5,R2);" nl
+            "JUMP_GE("greaterLabel");" nl
+            "DROP(R5);" nl
+            "SUB(R2,R5);" nl
+            "DROP(R2);" nl
+            "DROP(1);"
+            "JUMP("endLabel");" nl
+            greaterLabel ":" nl
+            "CMP(R5,R2);" nl
+            "JUMP_EQ("equalLabel");" nl
+            "MOV(R7,R5);" nl
+            "SUB(R5,R2);" nl
+            "SUB(R7,R5);" nl
+            "DROP(R7);" nl
+            "DROP(1);"
+            "JUMP("endLabel");" nl
+            equalLabel ":" nl
+            "DROP(R5);" nl
+            "DROP(1);"
+            endLabel ":" nl
+            "INFO;" nl
             "MOV(FP, R1);" nl
             "JUMPA(INDD(R0, 2));" nl nl
         ))))
@@ -574,6 +603,8 @@
       (envLoopLabel (string-append "closureEnvLoopLabel" (labelNumberInString)))
       (envLoopEndLabel (string-append "closureEnvLoopEndLabel" (labelNumberInString)))  
      )
+    (display envLevel)
+    (display "\n")
     (string-append
         "/* get old env address, put in R8 */" nl
         "MOV(R8, FPARG(0));" nl
