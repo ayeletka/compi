@@ -416,12 +416,13 @@
           "/*ifExp*/" nl
           code-gen-test nl
          ; "SHOW(\"\",R0)" nl
+         ;"INFO;" nl
           "CMP(R0, FALSE);" nl
           "JUMP_EQ("labelElse");" nl
-          code-gen-do-if-false nl
+          code-gen-do-if-true nl
           "JUMP("labelIfExit");" nl
           labelElse":" nl
-            code-gen-do-if-true nl
+          code-gen-do-if-false nl
           labelIfExit":" nl)
 )))
 
@@ -877,8 +878,8 @@
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
     "#define SOB_NIL 2" nl nl
-    "#define FALSE 12 " nl nl
-    "#define TRUE 14 " nl nl
+    "#define FALSE 1002 " nl nl
+    "#define TRUE 1004 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
     "#define LOCAL_ENV 0" nl nl
 
@@ -929,7 +930,7 @@
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
-    ;(display parsedEvaledSexpr)
+    (display parsedEvaledSexpr)
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
@@ -954,4 +955,4 @@
 
 
 
-(compile-scheme-file "test-files/foo.scm" "foo.c")
+;(compile-scheme-file "test-files/halili/testCompiler.scm" "foo.c")
