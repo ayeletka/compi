@@ -492,7 +492,7 @@
             "MOV(R5,STARG(IMM(0)));" nl     
            ; "/* add r5 env, numOfArg and + 1 for T_NILL*/" nl
             "ADD(R5, IMM(3));" nl   
-            "DROP(R5);"  nl       
+            "DROP(R5);"  nl    
         ))))
 
 
@@ -929,6 +929,7 @@
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
+    ;(display parsedEvaledSexpr)
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
@@ -953,4 +954,4 @@
 
 
 
-(compile-scheme-file "test-files/foo1.scm" "foo.c")
+(compile-scheme-file "test-files/foo.scm" "foo.c")
