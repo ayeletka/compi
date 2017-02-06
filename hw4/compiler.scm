@@ -490,10 +490,14 @@
             "PUSH(INDD(R0,IMM(1)));" nl   ; push the closure environment
             "CALLA(INDD(R0,IMM(2)));" nl  ;call the func code
             "/* move number of args to R5, this is the amount to drop from stack. */" nl
-            "MOV(R5,STARG(IMM(0)));" nl     
+            ;"MOV(R5,STARG(IMM(0)));" nl     
            ; "/* add r5 env, numOfArg and + 1 for T_NILL*/" nl
-            "ADD(R5, IMM(3));" nl   
-            "DROP(R5);"  nl    
+            ;"ADD(R5, IMM(3));" nl   
+            ;"DROP(R5);"  nl    
+            "DROP(1);" nl ;drop env
+            "POP(R1);" nl ;pop num of args
+            "INCR(R1);" nl ;add 1 for T_NILL
+            "DROP(R1);" nl ;drop all args
         ))))
 
 
@@ -625,7 +629,6 @@
         "JUMP(" envLoopLabel ");" nl
         envLoopEndLabel ": " nl
         
-        
         "MOV(R12, FPARG(1));" nl
         "PUSH(R12);" nl
         "CALL(MALLOC);" nl
@@ -647,6 +650,7 @@
         "INCR(R11);" nl
         "JUMP(" parameterLoopLabel ");" nl
         parameterLoopEndLabel ": " nl
+        "MOV(INDD(R9,IMM(0)),R13);" nl ;check that this change made a differance 
         "/* Calling malloc for closure, env and body. */" nl
         (malloc 3)
         "/* put closure in R0 */" nl
@@ -863,9 +867,9 @@
       (noLambdaNil (map remove-applic-lambda-nil noNestedDefines))
       (boxedExps (map box-set noLambdaNil))
       (lexedExps (map pe->lex-pe boxedExps))
-      (noTailCalls (map annotate-tc lexedExps))
+      ;(noTailCalls (map annotate-tc lexedExps))
       )
-      noTailCalls)))
+      lexedExps)))
 
 (define prolog
 	(string-append
@@ -930,7 +934,7 @@
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
-    (display parsedEvaledSexpr)
+    ;(display parsedEvaledSexpr)
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
@@ -953,6 +957,4 @@
             (close-output-port out-port))))
 
 
-
-
-;(compile-scheme-file "test-files/halili/testCompiler.scm" "foo.c")
+(compile-scheme-file "test-files/test1.scm" "foo.c")
