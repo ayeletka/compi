@@ -324,6 +324,8 @@
         ((equal? (car sexpr) 'pvar) (code-gen-pvar (cdr sexpr) envLevel paramsLevel))
         ((equal? (car sexpr) 'bvar) (code-gen-bvar (cdr sexpr) envLevel paramsLevel))
         ((equal? (car sexpr) 'set) (code-gen-set (cdr sexpr) envLevel paramsLevel))
+        ((equal? (car sexpr) 'box-set) (code-gen-box-set (cdr sexpr) envLevel paramsLevel));need to check
+        ((equal? (car sexpr) 'box-get) (code-gen-box-get (cdr sexpr) envLevel paramsLevel));need to check
         ((equal? (car sexpr) 'def) (code-gen-def (cdr sexpr) envLevel paramsLevel))
         ((equal?  (car sexpr) 'if3) (code-gen-if sexpr envLevel paramsLevel))
         ((equal?  (car sexpr) 'or) (code-gen-or sexpr envLevel paramsLevel))
@@ -397,7 +399,7 @@
     (let ((e (cadr setvar))
           (mindex (caddar setvar)))
     (string-append
-      "/* set */" nl
+      "/* set-pvar */" nl
       (code-gen e envLevel paramsLevel) nl
       "MOV(R10, IMM("(number->string mindex)"));" nl
       "ADD(R10,IMM(2));" nl
@@ -408,7 +410,7 @@
           (mjrdex (caddar setvar))
           (mindex (car (cdddar setvar))))
     (string-append
-      "/* set */" nl
+      "/* set-bvar */" nl
       (code-gen e envLevel paramsLevel) nl
       "MOV(R1, FPARG(IMM(0)));" nl
       "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
@@ -416,6 +418,57 @@
       "MOV(R0,IMM(T_VOID));" nl
       ))
     ))) 
+
+;need to check once box and box-set are done
+(define code-gen-box-get
+  (lambda (setvar envLevel paramsLevel)
+    (if (equal? (caar setvar) 'pvar)
+    (let ((e (cadr setvar))
+          (mindex (caddar setvar)))
+    (string-append
+      "/* box-get-pvar */" nl
+      (code-gen e envLevel paramsLevel) nl
+      "MOV(R10, IMM("(number->string mindex)"));" nl
+      "ADD(R10,IMM(2));" nl
+      "MOV(R0,IND(R10));" nl
+      ))
+    (let ((e (cadr setvar))
+          (mjrdex (caddar setvar))
+          (mindex (car (cdddar setvar))))
+    (string-append
+      "/* box-get-bvar */" nl
+      (code-gen e envLevel paramsLevel) nl
+      "MOV(R1, FPARG(IMM(0)));" nl
+      "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      "MOV(R1,INDD(R1,IMM("(number->string mindex)")));" nl
+      "MOV(R0,IND(R1));" nl
+      ))
+    ))) 
+
+(define code-gen-box-set
+  (lambda (setvar envLevel paramsLevel)
+    (if (equal? (caar setvar) 'pvar)
+    (let ((e (cadr setvar))
+          (mindex (caddar setvar)))
+    (string-append
+      "/* box-get-pvar */" nl
+      (code-gen e envLevel paramsLevel) nl
+      "MOV(R10, IMM("(number->string mindex)"));" nl
+      "ADD(R10,IMM(2));" nl
+      "MOV(IND(R10),R0);" nl
+      ))
+    (let ((e (cadr setvar))
+          (mjrdex (caddar setvar))
+          (mindex (car (cdddar setvar))))
+    (string-append
+      "/* box-get-bvar */" nl
+      (code-gen e envLevel paramsLevel) nl
+      "MOV(R1, FPARG(IMM(0)));" nl
+      "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      "MOV(R1,INDD(R1,IMM("(number->string mindex)")));" nl
+      "MOV(IND(R1),R0);" nl
+      ))
+    )))
 
 (define code-gen-if
   (lambda (ifExp envLevel paramsLevel)
