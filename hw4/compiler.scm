@@ -390,8 +390,10 @@
       "MOV(R0,INDD(R0,"(number->string mindex) "));" nl
       )))) 
 
+;;also done for bvar, but not sure that it works, had no idea how to check this
 (define code-gen-set
   (lambda (setvar envLevel paramsLevel)
+    (if (equal? (caar setvar) 'pvar)
     (let ((e (cadr setvar))
           (mindex (caddar setvar)))
     (string-append
@@ -401,7 +403,19 @@
       "ADD(R10,IMM(2));" nl
       "MOV(FPARG(R10),R0);" nl
       "MOV(R0,IMM(T_VOID));" nl
-      )))) 
+      ))
+    (let ((e (cadr setvar))
+          (mjrdex (caddar setvar))
+          (mindex (car (cdddar setvar))))
+    (string-append
+      "/* set */" nl
+      (code-gen e envLevel paramsLevel) nl
+      "MOV(R1, FPARG(IMM(0)));" nl
+      "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      "MOV(INDD(R1,IMM("(number->string mindex)")),R0);" nl
+      "MOV(R0,IMM(T_VOID));" nl
+      ))
+    ))) 
 
 (define code-gen-if
   (lambda (ifExp envLevel paramsLevel)
@@ -629,7 +643,7 @@
         "JUMP(" envLoopLabel ");" nl
         envLoopEndLabel ": " nl
         
-        "MOV(R12, FPARG(1));" nl
+        "MOV(R12, FPARG(1));" nl ;number of params in previous lambda
         "PUSH(R12);" nl
         "CALL(MALLOC);" nl
         "DROP(1);"
@@ -867,9 +881,9 @@
       (noLambdaNil (map remove-applic-lambda-nil noNestedDefines))
       (boxedExps (map box-set noLambdaNil))
       (lexedExps (map pe->lex-pe boxedExps))
-      ;(noTailCalls (map annotate-tc lexedExps))
+      (noTailCalls (map annotate-tc lexedExps))
       )
-      lexedExps)))
+      noTailCalls)))
 
 (define prolog
 	(string-append

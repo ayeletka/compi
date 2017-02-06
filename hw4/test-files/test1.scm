@@ -1,3 +1,6 @@
 ((lambda (x)
 	((lambda (y) 
-		(x y 1)) 10)) +)
+		(set! x 3)
+		(set! y 2)
+		y) 10)
+	x) -)
