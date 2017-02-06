@@ -326,6 +326,7 @@
         ((equal? (car sexpr) 'set) (code-gen-set (cdr sexpr) envLevel paramsLevel))
         ((equal? (car sexpr) 'box-set) (code-gen-box-set (cdr sexpr) envLevel paramsLevel));need to check
         ((equal? (car sexpr) 'box-get) (code-gen-box-get (cdr sexpr) envLevel paramsLevel));need to check
+        ((equal? (car sexpr) 'box) (code-gen-box (cdr sexpr) envLevel paramsLevel));need to check
         ((equal? (car sexpr) 'def) (code-gen-def (cdr sexpr) envLevel paramsLevel))
         ((equal?  (car sexpr) 'if3) (code-gen-if sexpr envLevel paramsLevel))
         ((equal?  (car sexpr) 'or) (code-gen-or sexpr envLevel paramsLevel))
@@ -392,6 +393,32 @@
       "MOV(R0,INDD(R0,"(number->string mindex) "));" nl
       )))) 
 
+
+;;also done for bvar, but not sure that it works, had no idea how to check this
+(define code-gen-box
+  (lambda (setvar envLevel paramsLevel)
+    (if (equal? (caar setvar) 'pvar)
+    (let ((mindex (caddar setvar)))
+    (string-append
+      "/* box-pvar */" nl
+      "MOV(R10, IMM("(number->string mindex)"));" nl
+      "ADD(R10,IMM(2));" nl
+      (malloc 1) nl
+      "MOV(IND(R0),FPARG(R10));" nl
+      ))
+    (let (
+          (mjrdex (caddar setvar))
+          (mindex (car (cdddar setvar))))
+    (string-append
+      "/* box-bvar */" nl
+      "MOV(R1, FPARG(IMM(0)));" nl
+      "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      (malloc 1) nl
+      "MOV(IND(R0),INDD(R1,IMM("(number->string mindex)")));" nl
+      ))
+    )))
+
+
 ;;also done for bvar, but not sure that it works, had no idea how to check this
 (define code-gen-set
   (lambda (setvar envLevel paramsLevel)
@@ -413,7 +440,7 @@
       "/* set-bvar */" nl
       (code-gen e envLevel paramsLevel) nl
       "MOV(R1, FPARG(IMM(0)));" nl
-      "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      "MOV(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
       "MOV(INDD(R1,IMM("(number->string mindex)")),R0);" nl
       "MOV(R0,IMM(T_VOID));" nl
       ))
@@ -423,25 +450,27 @@
 (define code-gen-box-get
   (lambda (setvar envLevel paramsLevel)
     (if (equal? (caar setvar) 'pvar)
-    (let ((e (cadr setvar))
+    (let (;(e (cadr setvar))
           (mindex (caddar setvar)))
     (string-append
       "/* box-get-pvar */" nl
-      (code-gen e envLevel paramsLevel) nl
+      ;(code-gen e envLevel paramsLevel) nl
       "MOV(R10, IMM("(number->string mindex)"));" nl
       "ADD(R10,IMM(2));" nl
-      "MOV(R0,IND(R10));" nl
+      "MOV(R0,IND(FPARG(R10)));" nl
+      ;"INFO;" nl 
       ))
-    (let ((e (cadr setvar))
+    (let (;(e (cadr setvar))
           (mjrdex (caddar setvar))
           (mindex (car (cdddar setvar))))
     (string-append
       "/* box-get-bvar */" nl
-      (code-gen e envLevel paramsLevel) nl
+      ;(code-gen e envLevel paramsLevel) nl
       "MOV(R1, FPARG(IMM(0)));" nl
-      "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      "MOV(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
       "MOV(R1,INDD(R1,IMM("(number->string mindex)")));" nl
       "MOV(R0,IND(R1));" nl
+      ;"INFO;" nl
       ))
     ))) 
 
@@ -451,7 +480,7 @@
     (let ((e (cadr setvar))
           (mindex (caddar setvar)))
     (string-append
-      "/* box-get-pvar */" nl
+      "/* box-set-pvar */" nl
       (code-gen e envLevel paramsLevel) nl
       "MOV(R10, IMM("(number->string mindex)"));" nl
       "ADD(R10,IMM(2));" nl
@@ -461,12 +490,14 @@
           (mjrdex (caddar setvar))
           (mindex (car (cdddar setvar))))
     (string-append
-      "/* box-get-bvar */" nl
+      "/* box-set-bvar */" nl
       (code-gen e envLevel paramsLevel) nl
       "MOV(R1, FPARG(IMM(0)));" nl
-      "ADD(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      "MOV(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+      ;"INFO;" nl
       "MOV(R1,INDD(R1,IMM("(number->string mindex)")));" nl
       "MOV(IND(R1),R0);" nl
+      ;"INFO;" nl
       ))
     )))
 
@@ -1001,7 +1032,7 @@
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
-    ;(display parsedEvaledSexpr)
+    (display parsedEvaledSexpr)
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
