@@ -59,6 +59,7 @@
 (define T_BOOL  741553)
 (define T_CHAR  181048)
 (define T_INTEGER   945311)
+(define T_FRAC   234097)
 (define T_STRING  799345)
 (define T_SYMBOL  368031)
 (define T_PAIR  885397)
@@ -102,9 +103,12 @@
   (lambda (const)
     (let ((cVar const))
     (cond
-      ((number? cVar) 
+      ((integer? cVar) 
           (set! const_table `(,@const_table (,address ,cVar (,T_INTEGER ,cVar))))
           (set! address (+ address 2)))
+      ((number? cVar)
+          (set! const_table `(,@const_table (,address ,cVar (,T_FRAC ,(numerator cVar) ,(denominator cVar)))))
+          (set! address (+ address 3)))
       ((char? cVar) 
           (set! const_table `(,@const_table (,address ,cVar (,T_CHAR ,(char->integer cVar)))))
           (set! address (+ address 2)))
@@ -145,6 +149,12 @@
 (define load-int (lambda (idx val) 
 	(string-append "MOV(IND(" (number->string idx) "), IMM(T_INTEGER));" nl
 				   "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string val) "));" nl)))
+
+(define load-frac (lambda (idx val)
+  (string-append "MOV(IND(" (number->string idx) "), IMM(T_FRAC));" nl
+        "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string (car val)) "));" nl
+    "MOV(IND(" (number->string (+ idx 2)) "), IMM(" (number->string (cadr val)) "));" nl
+    )))
 
 (define load-string-chars
 	(lambda (idx chars)
@@ -200,6 +210,7 @@
 						((equal? type T_BOOL) (string-append (load-bool idx) (initiate-consts rest)))
 						((equal? (car type) T_CHAR) (string-append (load-char idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_INTEGER) (string-append (load-int idx (cadr type)) (initiate-consts rest)))
+            ((equal? (car type) T_FRAC) (string-append (load-frac idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_STRING) (string-append (load-string idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_SYMBOL) (string-append (load-symbol idx (cdr type)) (initiate-consts rest)))
 						((equal? (car type) T_PAIR) (string-append (load-pair idx (cdr type)) (initiate-consts rest)))
@@ -313,10 +324,10 @@
 
 (define code-gen
   (lambda (sexpr envLevel paramsLevel)
-    ;(newline)
-    ;(display ":::::")
-    ;(display sexpr)
-    ;(newline)
+    (newline)
+    (display ":::::")
+    (display sexpr)
+    (newline)
       (cond
         ((null? sexpr) (list))
         ((equal? (car sexpr) 'const) (code-gen-const sexpr envLevel paramsLevel))
@@ -356,6 +367,7 @@
 
 (define code-gen-const
 (lambda (const envLevel paramsLevel)
+  (display (number->string (getConstAddress (cadr const))))
           (string-append 
            "/*const*/" nl
            "MOV(R0, IMM(" (number->string (getConstAddress (cadr const)))"));" nl
@@ -1032,7 +1044,7 @@
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           ;;add prolog and epilog to the code then write to file
           )
-    (display parsedEvaledSexpr)
+   ; (display parsedEvaledSexpr)
         ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
@@ -1054,5 +1066,7 @@
             	)
             (close-output-port out-port))))
 
-
-(compile-scheme-file "test-files/test1.scm" "foo.c")
+;(if (< 0 -1/2) 0 1) 
+(parse 12/15)
+(numerator  -1/3)
+(compile-scheme-file "test-files/test2.scm" "foo.c")
