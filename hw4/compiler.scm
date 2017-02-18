@@ -239,6 +239,8 @@
     (cond 
       ((equal? var '+) (string-append (closureFromLabelMaker "PLUS") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var '-) (string-append (closureFromLabelMaker "MINUS") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
       ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
@@ -324,10 +326,10 @@
 
 (define code-gen
   (lambda (sexpr envLevel paramsLevel)
-    (newline)
-    (display ":::::")
-    (display sexpr)
-    (newline)
+    ;(newline)
+    ;(display ":::::")
+    ;(display sexpr)
+    ;(newline)
       (cond
         ((null? sexpr) (list))
         ((equal? (car sexpr) 'const) (code-gen-const sexpr envLevel paramsLevel))
@@ -367,7 +369,7 @@
 
 (define code-gen-const
 (lambda (const envLevel paramsLevel)
-  (display (number->string (getConstAddress (cadr const))))
+  ;(display (number->string (getConstAddress (cadr const))))
           (string-append 
            "/*const*/" nl
            "MOV(R0, IMM(" (number->string (getConstAddress (cadr const)))"));" nl
@@ -1067,6 +1069,6 @@
             (close-output-port out-port))))
 
 ;(if (< 0 -1/2) 0 1) 
-(parse 12/15)
-(numerator  -1/3)
+;(parse 12/15)
+;(numerator  -1/3)
 (compile-scheme-file "test-files/test2.scm" "foo.c")

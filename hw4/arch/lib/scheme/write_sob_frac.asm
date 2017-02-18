@@ -1,16 +1,24 @@
  
- WRITE_SOB_FRAC:
+ WRITE_SOB_FRAC: 
   PUSH(FP);
   MOV(FP, SP);
-  MOV(R0, FPARG(0));
-  PUSH(INDD(R0, 2));
-  PUSH(INDD(R0, 1));
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  MOV(R2, FPARG(0));
+  PUSH(INDD(R2, 1));
+
   CALL(WRITE_INTEGER);
   DROP(1);
   PUSH('/');
   CALL(PUTCHAR);
   DROP(1);
+  PUSH(INDD(R2, 2));
+
   CALL(WRITE_INTEGER);
   DROP(1);
+  POP(R3);
+  POP(R2);
+  POP(R1);
   POP(FP);
   RETURN;

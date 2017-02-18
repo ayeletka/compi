@@ -14,6 +14,7 @@
   : ((x) == T_PAIR)    ? snprintf(res, 16, "%s", "T_PAIR")                     \
   : ((x) == T_VECTOR)  ? snprintf(res, 16, "%s", "T_VECTOR")                   \
   : ((x) == T_CLOSURE) ? snprintf(res, 16, "%s", "T_CLOSURE")                  \
+    : ((x) == T_FRAC) ? snprintf(res, 16, "%s", "T_FRAC")                        \
   : snprintf(res, 16, "%ld", (x)))
 
 #if DO_SHOW == 0
@@ -34,7 +35,9 @@
   TRANS(R2, type1); TRANS(R3, type2);                                               \
   printf("R2 = %-10s R3 = %s\n", type1, type2);                                     \
   TRANS(R4, type1); TRANS(R5, type2);                                               \
-  printf("R4 = %-10s R5 = %s\n\n", type1, type2);                                   \
+  printf("R4 = %-10s R5 = %s\n", type1, type2);                                   \
+  TRANS(R6, type1); TRANS(R7, type2);                                               \
+  printf("R6 = %-10s R7 = %s\n\n", type1, type2);                                   \
   printf("----------------------------\n");                                         \
   printf("Stack Info:\n");                                                          \
   printf("----------------------------\n");                                         \
@@ -47,7 +50,16 @@
   printf("----------------------------\n");                                         \
   printf("Memory Info:\n");                                                         \
   printf("----------------------------\n");                                         \
-  for (i = 0; i <= 50; i += 4) {                                               \
+  for (i = 0; i <= 50; i += 4) {                                                    \
+    TRANS(IND(i), type1); TRANS(IND(i + 1), type2);                                 \
+    TRANS(IND(i + 2) ,type3); TRANS(IND(i + 3), type4);                             \
+    printf("MEM[%4d] = %-10s MEM[%d] = %-10s MEM[%4d] = %-10s MEM[%d] = %-10s\n",   \
+        i, type1,                                                                   \
+        i + 1, type2,                                                               \
+        i + 2, type3,                                                               \
+        i + 3, type4);                                                              \
+  }                                                                                 \
+  for (i = 1000; i <= 1020; i += 4) {                                               \
     TRANS(IND(i), type1); TRANS(IND(i + 1), type2);                                 \
     TRANS(IND(i + 2) ,type3); TRANS(IND(i + 3), type4);                             \
     printf("MEM[%4d] = %-10s MEM[%d] = %-10s MEM[%4d] = %-10s MEM[%d] = %-10s\n",   \

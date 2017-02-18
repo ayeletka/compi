@@ -221,32 +221,191 @@ END:
   POP(FP);
   RETURN;
 
-
-
-PLUS:
+MINUS:
   PUSH(FP);
   MOV(FP, SP);
   PUSH(R1);
   PUSH(R2);
   PUSH(R3);
   PUSH(R4);
-  MOV(R1, 0);
-  MOV(R2, FPARG(LOCAL_NUM_ARGS)); /*iterate from 2 to 2+ number of args */
-  ADD(R2, 2);
-  MOV(R3, 2);   
-PLUS_LOOP:
-  CMP(R2, R3);
-  JUMP_EQ(PLUS_END);
-  MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
-  ADD(R1, INDD(R4, 1)); /* SCHEME INTEGER NUMBER */ 
+  PUSH(R5);
+  PUSH(R6);
+  PUSH(R7);
+
+  /* TAKING THE FIRST ARGUMENT OUT FROM THE 'ADD' LOOP*/
+  MOV(R5, FPARG(LOCAL_NUM_ARGS)); /*iterate from 2 to 2+ number of args */
+  ADD(R5, 2);
+  MOV(R3, 2);
+  MOV(R6, FPARG(R3)); /* FIRST SCHEME INTEGER */
   ADD(R3, 1);
-  JUMP(PLUS_LOOP);
-PLUS_END:
+  MUL(R6, -1); /* MINUS FIRST SCHEME INTEGER */
+
+ /* STARING THE 'ADD' LOOP */
+
+// Put 0/1 in R1:
+  PUSH(0);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R1, R0);
+
+  PLUS_LOOP_IN_MINUS:
+  CMP(R5, R3);
+  JUMP_EQ(PLUS_END_IN_MINUS);
+  // Get arg:
+  MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+
+  // Check if it is a fraction already:
+  CMP(INDD(R4, 0), T_FRAC);
+  JUMP_EQ(IS_FRAC_IN_MINUS);
+  // It is not, turn it to fraction:
+  MOV(R2, INDD(R4, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R4, R0);
+
+
+  IS_FRAC_IN_MINUS:
   PUSH(R1);
-  CALL(MAKE_SOB_INTEGER);
-  DROP(1); 
+  PUSH(R4);
+  CALL(SUM_FRACS);
+  DROP(2);
+  MOV(R1, R0);
+  ADD(R3, 1);
+  JUMP(PLUS_LOOP_IN_MINUS);
+
+  PLUS_END_IN_MINUS:
+  MOV(R7, R1);
+  SUB(R6, R7);
+
+
+
+
+RETURN_FRACTION_IN_MINUS:
+  POP(R7);
+  POP(R6);
+  POP(R5);
   POP(R4);
   POP(R3);
   POP(R2);
   POP(R1);
-  JUMP(END);
+  POP(FP);
+  RETURN;
+
+
+PLUS:
+
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+
+  // Put 0/1 in R1:
+  PUSH(0);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R1, R0);
+
+  // Start loop stuff:
+  MOV(R5, FPARG(LOCAL_NUM_ARGS)); /*iterate from 2 to 2+ number of args */
+  ADD(R5, 2);
+  MOV(R3, 2); 
+
+PLUS_LOOP:
+  CMP(R5, R3);
+  
+  JUMP_EQ(PLUS_END);
+  // Get arg:
+  MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+
+  // Check if it is a fraction already:
+  CMP(INDD(R4, 0), T_FRAC);
+  JUMP_EQ(IS_FRAC);
+  // It is not, turn it to fraction:
+
+  MOV(R2, INDD(R4, 1));
+  PUSH(R2);
+  PUSH(1);
+
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+
+  MOV(R4, R0);
+
+
+  IS_FRAC:
+
+
+  PUSH(R1);
+  PUSH(R4);
+  CALL(SUM_FRACS);
+
+  DROP(2);
+  MOV(R1, R0);
+  ADD(R3, 1);
+  JUMP(PLUS_LOOP);
+
+PLUS_END:
+
+MOV(R0, R1);
+CMP(INDD(R0, 2), 1); // Somthing / 1
+JUMP_NE(RETURN_FRACTION);
+PUSH(INDD(R0, 1));
+CALL(MAKE_SOB_INTEGER);
+DROP(1);  
+RETURN_FRACTION:
+
+
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+  RETURN;
+
+SUM_FRACS: //RECEIVES 2 T_FRACS
+PUSH(FP);
+MOV(FP, SP);
+PUSH(R1);
+PUSH(R2);
+PUSH(R3);
+PUSH(R4);
+PUSH(R5);
+PUSH(R6);
+MOV(R1, FPARG(0));
+MOV(R2, FPARG(1));
+
+
+MOV(R3, INDD(R1, 1));
+MOV(R4, INDD(R1, 2));
+MOV(R5, INDD(R2, 1));
+MOV(R6, INDD(R2, 2));
+
+MUL(R3, R6);
+MUL(R5, R4);
+ADD(R3, R5);
+MUL(R4, R6);
+
+PUSH(R3);
+PUSH(R4);
+CALL(MAKE_SOB_FRAC);
+DROP(2);
+
+POP(R6);
+POP(R5);
+POP(R4);
+POP(R3);
+POP(R2);
+POP(R1);
+POP(FP);
+
+RETURN;
