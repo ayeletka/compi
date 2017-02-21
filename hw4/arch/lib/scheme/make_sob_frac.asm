@@ -17,10 +17,18 @@
 
   PUSH(R2);
   PUSH(R3);
-
   CALL(GCD);
   DROP(2);
 
+  //ABS ON R0
+  CMP(R0, IMM(0));
+  JUMP_GE(NOT_MINUS);
+  MOV(R1, R0);
+  MOV(R0, IMM(0));
+  SUB(R0, R1);
+  NOT_MINUS:
+
+  //DIV NUMBERS BY GCD 
   DIV(R2, R0);
   DIV(R3, R0);
 

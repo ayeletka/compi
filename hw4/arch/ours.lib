@@ -221,7 +221,15 @@ END:
   POP(FP);
   RETURN;
 
-MINUS:
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  MINUS  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+  MINUS:
+
   PUSH(FP);
   MOV(FP, SP);
   PUSH(R1);
@@ -237,12 +245,25 @@ MINUS:
   ADD(R5, 2);
   MOV(R3, 2);
   MOV(R6, FPARG(R3)); /* FIRST SCHEME INTEGER */
+  CMP(INDD(R6, 0), T_FRAC);
+  JUMP_EQ(FIRST_ARGUMENT_IS_FRAC_IN_MINUS);
+  // It is not, turn it to fraction:
+  MOV(R2, INDD(R6, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R6, R0);
+
+  FIRST_ARGUMENT_IS_FRAC_IN_MINUS:
   ADD(R3, 1);
-  MUL(R6, -1); /* MINUS FIRST SCHEME INTEGER */
+  CMP(R5, R3);
+  JUMP_EQ(ONLY_ONE_ARG);
+  
 
  /* STARING THE 'ADD' LOOP */
 
-// Put 0/1 in R1:
+  // Put 0/1 in R1:
   PUSH(0);
   PUSH(1);
   CALL(MAKE_SOB_FRAC);
@@ -276,14 +297,41 @@ MINUS:
   ADD(R3, 1);
   JUMP(PLUS_LOOP_IN_MINUS);
 
-  PLUS_END_IN_MINUS:
-  MOV(R7, R1);
-  SUB(R6, R7);
+  PLUS_END_IN_MINUS: // THE SUM IS IN R1
+  //MULING THE SUM BY -1
+  MOV(R2, INDD(R1, 1));
+  MUL(R2, -1);
+  PUSH(R2);
+  PUSH(INDD(R1, 2));
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R1, R0);
+
+  //USING SUM_FRACS TO GET THE ANSWER
+  PUSH(R1);
+  PUSH(R6);
+  CALL(SUM_FRACS);
+  DROP(2);
+  JUMP(MANY_ARGS);
+
+  ONLY_ONE_ARG:
+  //MULING R6 BY -1
+  MOV(R2, INDD(R6, 1));
+  MUL(R2, -1);
+  PUSH(R2);
+  PUSH(INDD(R6, 2));
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  
+  MANY_ARGS:
+  CMP(INDD(R0, 2), 1); // Somthing / 1
+  JUMP_NE(RETURN_FRACTION_IN_MINUS);
+  PUSH(INDD(R0, 1));
+  CALL(MAKE_SOB_INTEGER);
+  DROP(1);  
 
 
-
-
-RETURN_FRACTION_IN_MINUS:
+  RETURN_FRACTION_IN_MINUS:
   POP(R7);
   POP(R6);
   POP(R5);
@@ -294,6 +342,12 @@ RETURN_FRACTION_IN_MINUS:
   POP(FP);
   RETURN;
 
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  PLUS  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 PLUS:
 
@@ -372,7 +426,10 @@ RETURN_FRACTION:
   POP(FP);
   RETURN;
 
-SUM_FRACS: //RECEIVES 2 T_FRACS
+
+
+SUM_FRACS: //RECEIVES 2 T_FRACS AND RETURN A FRAC
+
 PUSH(FP);
 MOV(FP, SP);
 PUSH(R1);
@@ -383,7 +440,6 @@ PUSH(R5);
 PUSH(R6);
 MOV(R1, FPARG(0));
 MOV(R2, FPARG(1));
-
 
 MOV(R3, INDD(R1, 1));
 MOV(R4, INDD(R1, 2));
