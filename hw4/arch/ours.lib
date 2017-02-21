@@ -221,6 +221,112 @@ END:
   POP(FP);
   RETURN;
 
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  MULTIPLY  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+  MULTIPLY:
+
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  PUSH(R7);
+
+
+  MOV(R5, FPARG(LOCAL_NUM_ARGS)); //iterate from 2 to 2+ number of args
+  ADD(R5, 2);
+  MOV(R3, 2);
+  MOV(R6, FPARG(R3)); // first scheme arg
+  /* CHANGINY THE FIRST ARG TO BE A FRAC */
+  CMP(INDD(R6, 0), T_FRAC);
+  JUMP_EQ(MULTIPLY_FIRST_ARGUMENT_IS_FRAC);
+  MOV(R2, INDD(R6, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R6, R0);
+
+  MULTIPLY_FIRST_ARGUMENT_IS_FRAC:
+  ADD(R3, 1);
+  CMP(R5, R3);
+  JUMP_EQ(MULTIPLY_ONLY_ONE_ARG);
+
+
+  /* R1 = 1/1 (THE SUM REGISTER) */
+ // PUSH(1);
+  //PUSH(1);
+ // CALL(MAKE_SOB_FRAC);
+ // DROP(2);
+ // MOV(R1, R0);
+
+  /* MUL LOOP*/
+  MUL_LOOP:
+  CMP(R5, R3);
+  JUMP_EQ(MUL_END);
+  /* SCHEME ARG */
+  MOV(R4, FPARG(R3)); 
+
+  // Check if it is a fraction already:
+  CMP(INDD(R4, 0), T_FRAC);
+  JUMP_EQ(MUL_IS_FRAC);
+  // It is not, turn it to fraction:
+  MOV(R2, INDD(R4, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R4, R0);
+
+  MUL_IS_FRAC:
+  PUSH(R6);
+  PUSH(R4);
+  CALL(MUL_FRACS);
+  DROP(2);
+  MOV(R6, R0);
+  ADD(R3, 1);
+  JUMP(MUL_LOOP);
+
+   
+  
+
+  MULTIPLY_ONLY_ONE_ARG:
+  MOV(R0, R6);
+  CMP(INDD(R0, 2), 1); // Somthing / 1
+  JUMP_NE(MULTIPLY_RETURN_FRACTION);
+  PUSH(INDD(R0, 1));
+  CALL(MAKE_SOB_INTEGER);
+  DROP(1);
+  JUMP(MULTIPLY_RETURN_FRACTION);
+
+
+  MUL_END:
+  MOV(R0, R6);
+  CMP(INDD(R0, 2), 1); // Somthing / 1
+  JUMP_NE(RETURN_FRACTION_IN_MINUS);
+  PUSH(INDD(R0, 1));
+  CALL(MAKE_SOB_INTEGER);
+  DROP(1);  
+
+
+  MULTIPLY_RETURN_FRACTION:
+  POP(R7);
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+  RETURN;
+
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -426,42 +532,79 @@ RETURN_FRACTION:
   POP(FP);
   RETURN;
 
+/* RECEIVES 2 T_FRACS AND RETURN A FRAC*/
+  MUL_FRACS:
+
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  MOV(R1, FPARG(0));
+  MOV(R2, FPARG(1));
+
+  MOV(R3, INDD(R1, 1));
+  MOV(R4, INDD(R1, 2));
+  MOV(R5, INDD(R2, 1));
+  MOV(R6, INDD(R2, 2));
+
+  MUL(R5, R3);
+  MUL(R6, R4);
 
 
-SUM_FRACS: //RECEIVES 2 T_FRACS AND RETURN A FRAC
+  PUSH(R5);
+  PUSH(R6);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
 
-PUSH(FP);
-MOV(FP, SP);
-PUSH(R1);
-PUSH(R2);
-PUSH(R3);
-PUSH(R4);
-PUSH(R5);
-PUSH(R6);
-MOV(R1, FPARG(0));
-MOV(R2, FPARG(1));
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
 
-MOV(R3, INDD(R1, 1));
-MOV(R4, INDD(R1, 2));
-MOV(R5, INDD(R2, 1));
-MOV(R6, INDD(R2, 2));
+  RETURN;
 
-MUL(R3, R6);
-MUL(R5, R4);
-ADD(R3, R5);
-MUL(R4, R6);
+  /* RECEIVES 2 T_FRACS AND RETURN A FRAC*/
+  SUM_FRACS: 
 
-PUSH(R3);
-PUSH(R4);
-CALL(MAKE_SOB_FRAC);
-DROP(2);
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  MOV(R1, FPARG(0));
+  MOV(R2, FPARG(1));
 
-POP(R6);
-POP(R5);
-POP(R4);
-POP(R3);
-POP(R2);
-POP(R1);
-POP(FP);
+  MOV(R3, INDD(R1, 1));
+  MOV(R4, INDD(R1, 2));
+  MOV(R5, INDD(R2, 1));
+  MOV(R6, INDD(R2, 2));
 
-RETURN;
+  MUL(R3, R6);
+  MUL(R5, R4);
+  ADD(R3, R5);
+  MUL(R4, R6);
+
+  PUSH(R3);
+  PUSH(R4);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+
+  RETURN;
