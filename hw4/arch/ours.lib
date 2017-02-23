@@ -223,7 +223,104 @@ END:
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-////////////////////////////  MULTIPLY  ///////////////////////////////////////
+////////////////////////////  DIVIDE  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+  DIVIDE:
+
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  PUSH(R7);
+
+
+  MOV(R5, FPARG(LOCAL_NUM_ARGS)); //iterate from 2 to 2+ number of args
+  ADD(R5, 2);
+  MOV(R3, 2);
+  MOV(R6, FPARG(R3)); // first scheme arg
+  /* CHANGINY THE FIRST ARG TO BE A FRAC */
+  CMP(INDD(R6, 0), T_FRAC);
+  JUMP_EQ(DIVIDE_FIRST_ARGUMENT_IS_FRAC);
+  MOV(R2, INDD(R6, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R6, R0);
+
+  DIVIDE_FIRST_ARGUMENT_IS_FRAC:
+  ADD(R3, 1);
+  CMP(R5, R3);
+  JUMP_EQ(DIVIDE_ONLY_ONE_ARG);
+
+  /* DIVIDE LOOP*/
+  DIVIDE_LOOP:
+  CMP(R5, R3);
+  JUMP_EQ(DIVIDE_END);
+  /* SCHEME ARG */
+  MOV(R4, FPARG(R3)); 
+
+  // Check if it is a fraction already:
+  CMP(INDD(R4, 0), T_FRAC);
+  JUMP_EQ(DIVIDE_IS_FRAC);
+  // It is not, turn it to fraction:
+  MOV(R2, INDD(R4, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R4, R0);
+
+  DIVIDE_IS_FRAC:
+  /* R4 <- 1/R4 */
+  MOV(R2, INDD(R4, 1));
+  MOV(INDD(R4,1), INDD(R4,2));
+  MOV(INDD(R4,2), R2);
+  PUSH(R6);
+  PUSH(R4);
+  CALL(MUL_FRACS);
+  DROP(2);
+  MOV(R6, R0);
+  ADD(R3, 1);
+  JUMP(DIVIDE_LOOP);
+
+
+  DIVIDE_ONLY_ONE_ARG:
+  MOV(R2, INDD(R6, 1));
+  MOV(INDD(R6, 1), INDD(R6, 2));
+  MOV(INDD(R6, 2), R2);
+  
+
+  DIVIDE_END:
+  MOV(R0, R6);
+  CMP(INDD(R0, 2), 1); // Somthing / 1
+  JUMP_NE(DIVIDE_RETURN_FRACTION);
+  PUSH(INDD(R0, 1));
+  CALL(MAKE_SOB_INTEGER);
+  DROP(1);  
+
+
+  DIVIDE_RETURN_FRACTION:
+  POP(R7);
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+  RETURN;
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  MULTIPLY  ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
@@ -258,14 +355,6 @@ END:
   ADD(R3, 1);
   CMP(R5, R3);
   JUMP_EQ(MULTIPLY_ONLY_ONE_ARG);
-
-
-  /* R1 = 1/1 (THE SUM REGISTER) */
- // PUSH(1);
-  //PUSH(1);
- // CALL(MAKE_SOB_FRAC);
- // DROP(2);
- // MOV(R1, R0);
 
   /* MUL LOOP*/
   MUL_LOOP:
@@ -310,7 +399,7 @@ END:
   MUL_END:
   MOV(R0, R6);
   CMP(INDD(R0, 2), 1); // Somthing / 1
-  JUMP_NE(RETURN_FRACTION_IN_MINUS);
+  JUMP_NE(MULTIPLY_RETURN_FRACTION);
   PUSH(INDD(R0, 1));
   CALL(MAKE_SOB_INTEGER);
   DROP(1);  
