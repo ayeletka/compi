@@ -135,7 +135,7 @@
 (define load-nil (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_NIL));" nl)))
 (define load-bool 
   (lambda (idx) 
-    (if (equal? idx 1002)
+    (if (equal? idx 200000002)
       (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
       "MOV(IND(" (number->string (+ idx 1)) "), IMM(0));" nl )
        (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
@@ -244,6 +244,8 @@
       ((equal? var '/) (string-append (closureFromLabelMaker "DIVIDE") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var '*) (string-append (closureFromLabelMaker "MULTIPLY") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var '=) (string-append (closureFromLabelMaker "EQUAL") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
       ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
@@ -1094,4 +1096,4 @@
 
 
 
-(compile-scheme-file "test-files/avTest1.scm" "foo.c")
+(compile-scheme-file "test-files/test2.scm" "foo.c")
