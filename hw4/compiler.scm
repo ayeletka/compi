@@ -362,7 +362,7 @@
       (varAddress (getGlobalVarAddress (cadar defVar)))
       (e (cadr defVar))
       )
-    (display varAddress)
+    ;(display varAddress)
     (string-append 
     "/* define */"nl
     (code-gen e envLevel paramsLevel) nl
@@ -1082,4 +1082,4 @@
 
 
 
-(compile-scheme-file "test-files/fact.scm" "foo.c")
+(compile-scheme-file "test-files/torture0.scm" "foo.c")
