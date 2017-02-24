@@ -441,7 +441,7 @@
 ;;also done for bvar, but not sure that it works, had no idea how to check this
 (define code-gen-set
   (lambda (setvar envLevel paramsLevel)
-    (if (equal? (caar setvar) 'pvar)
+    (cond ((equal? (caar setvar) 'pvar)
     (let ((e (cadr setvar))
           (mindex (caddar setvar)))
     (string-append
@@ -451,7 +451,8 @@
       "ADD(R10,IMM(2));" nl
       "MOV(FPARG(R10),R0);" nl
       "MOV(R0,IMM(T_VOID));" nl
-      ))
+      )))
+    ((equal? (caar setvar) 'bvar)
     (let ((e (cadr setvar))
           (mjrdex (caddar setvar))
           (mindex (car (cdddar setvar))))
@@ -462,8 +463,19 @@
       "MOV(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
       "MOV(INDD(R1,IMM("(number->string mindex)")),R0);" nl
       "MOV(R0,IMM(T_VOID));" nl
-      ))
-    ))) 
+      )))
+    (else
+    (let (
+      (varAddress (getGlobalVarAddress (cadar setvar)))
+      (e (cadr setvar))
+      )
+    (string-append 
+    "/* define */"nl
+    (code-gen e envLevel paramsLevel) nl
+    "MOV(IND(IMM("(number->string varAddress)")),IMM(R0));" nl
+    "MOV(R0, IMM(T_VOID));"nl
+    )))
+    )))
 
 ;need to check once box and box-set are done
 (define code-gen-box-get
@@ -1082,4 +1094,4 @@
 
 
 
-(compile-scheme-file "test-files/torture0.scm" "foo.c")
+(compile-scheme-file "test-files/avTest1.scm" "foo.c")
