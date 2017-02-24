@@ -50,7 +50,7 @@
   printf("----------------------------\n");                                         \
   printf("Memory Info:\n");                                                         \
   printf("----------------------------\n");                                         \
-  for (i = 0; i <= 50; i += 4) {                                                    \
+    for (i = 0; i <= 50; i += 4) {                                                    \
     TRANS(IND(i), type1); TRANS(IND(i + 1), type2);                                 \
     TRANS(IND(i + 2) ,type3); TRANS(IND(i + 3), type4);                             \
     printf("MEM[%4d] = %-10s MEM[%d] = %-10s MEM[%4d] = %-10s MEM[%d] = %-10s\n",   \
@@ -58,8 +58,8 @@
         i + 1, type2,                                                               \
         i + 2, type3,                                                               \
         i + 3, type4);                                                              \
-  }                                                                                 \
-  for (i = 1000; i <= 1020; i += 4) {                                               \
+  }      \
+  for (i = 200000000; i <= 200000050; i += 4) {                                                    \
     TRANS(IND(i), type1); TRANS(IND(i + 1), type2);                                 \
     TRANS(IND(i + 2) ,type3); TRANS(IND(i + 3), type4);                             \
     printf("MEM[%4d] = %-10s MEM[%d] = %-10s MEM[%4d] = %-10s MEM[%d] = %-10s\n",   \
@@ -67,7 +67,8 @@
         i + 1, type2,                                                               \
         i + 2, type3,                                                               \
         i + 3, type4);                                                              \
-  }                                                                                 \
+  }                                                                               \
+                                                                              \
   printf("\n");                                                                     \
 }
 #endif

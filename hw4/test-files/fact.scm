@@ -1,5 +1,4 @@
- 
-(define fact
+ (define fact
   (let ((x (lambda (x)
 	     ((x (lambda (x) (lambda (y) (lambda (z) ((x z) (y z))))))
 	      (lambda (x) (lambda (y) x)))))
@@ -66,5 +65,4 @@
       )(x (x (x x))))))
 	 (-> n))
 	(lambda (x) (+ x 1))) 0))))
-	
 (fact 3)

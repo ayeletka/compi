@@ -43,7 +43,7 @@
     ))
     )
 
-(define address 1000)
+(define address 200000000)
 
 (define labelNum 0)
 (define labelNumberInString 
@@ -320,7 +320,7 @@
                       ""
                       (string-append
                         (code-gen (car exps) 0 0) nl
-                        ;"PUSH(R0);" nl
+                        ;"INFO;" nl
                         "CALL(PRINT_R0);" nl nl
                        ; "SHOW(\"\", R0);" nl
                         (loop (cdr exps))
@@ -362,10 +362,11 @@
       (varAddress (getGlobalVarAddress (cadar defVar)))
       (e (cadr defVar))
       )
+    (display varAddress)
     (string-append 
     "/* define */"nl
     (code-gen e envLevel paramsLevel) nl
-    "MOV(IND(IMM("(number->string varAddress)")),R0);" nl
+    "MOV(IND(IMM("(number->string varAddress)")),IMM(R0));" nl
     "MOV(R0, IMM(T_VOID));"nl
     ))
 ))
@@ -697,7 +698,6 @@
             "DROP(R5);" nl
             "DROP(1);"
             endLabel ":" nl
-            ;"INFO;" nl
             "MOV(FP, R1);" nl
             "JUMPA(INDD(R0, 2));" nl nl
         ))))
@@ -998,8 +998,8 @@
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
     "#define SOB_NIL 2" nl nl
-    "#define FALSE 1002 " nl nl
-    "#define TRUE 1004 " nl nl
+    "#define FALSE 200000002 " nl nl
+    "#define TRUE 200000004 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
     "#define LOCAL_ENV 0" nl nl
 
@@ -1009,6 +1009,11 @@
 		"int main()" nl
 		"{" nl
   		" START_MACHINE;" nl nl
+      "PUSH(IMM(0));" nl
+      "PUSH(IMM(0));" nl
+      "PUSH(LABEL(PROG_ENDING));" nl
+      "PUSH(FP);" nl
+      "MOV(FP,SP);" nl nl 
 
   		" JUMP(CONTINUE);" nl nl
 
@@ -1019,6 +1024,7 @@
 		"#include \"arch/system.lib\"" nl
 		"#include \"arch/scheme.lib\""nl 
     "#include \"arch/ours.lib\"" nl nl
+
     "ERROR:" nl
         "HALT;" nl nl
 
@@ -1030,6 +1036,8 @@
 	(string-append
 		;print to stdout
 		"PROG_ENDING: " nl
+    "  MOV(SP,FP);" nl
+    "  POP(FP);" nl
 		"  STOP_MACHINE;"nl
 		"  return 0;" nl  
         "}" nl
@@ -1072,7 +1080,6 @@
             	)
             (close-output-port out-port))))
 
-;(if (< 0 -1/2) 0 1) 
-;(parse 12/15)
-;(numerator  -1/3)
-(compile-scheme-file "test-files/test2.scm" "foo.c")
+
+
+(compile-scheme-file "test-files/fact.scm" "foo.c")
