@@ -5,6 +5,8 @@
 
 (string->symbol "2")
 
+(eq? 'a 'a)
+
 
 ;(string->symbol (symbol->string '2a))
 ;2
