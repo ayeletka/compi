@@ -266,7 +266,19 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'null?) (string-append (closureFromLabelMaker "IS_NULL") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'pair?) (string-append (closureFromLabelMaker "IS_PAIR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'number?) (string-append (closureFromLabelMaker "IS_NUM") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'string?) (string-append (closureFromLabelMaker "IS_STRING") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'rational?) (string-append (closureFromLabelMaker "IS_NUM") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'vector?) (string-append (closureFromLabelMaker "IS_VECTOR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'procedure?) (string-append (closureFromLabelMaker "IS_PROC") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'symbol?) (string-append (closureFromLabelMaker "IS_SYMBOL") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'symbol->string) (string-append (closureFromLabelMaker "SYMBOL_2_STRING") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
@@ -1200,4 +1212,4 @@
 
 
 
-(compile-scheme-file "test-files/avTest1.scm" "foo.c")
+(compile-scheme-file "test-files/test2.scm" "foo.c")
