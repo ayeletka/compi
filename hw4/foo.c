@@ -53,59 +53,79 @@ MOV(IND(200000003), IMM(0));
 MOV(IND(200000004), IMM(T_BOOL));
 MOV(IND(200000005), IMM(1));
 MOV(IND(200000006), IMM(T_INTEGER));
-MOV(IND(200000007), IMM(-4));
-MOV(IND(200000008), IMM(T_FRAC));
-MOV(IND(200000009), IMM(-3));
-MOV(IND(200000010), IMM(2));
-MOV(IND(200000011), IMM(T_FRAC));
-MOV(IND(200000012), IMM(-1));
-MOV(IND(200000013), IMM(3));
-MOV(IND(200000014), IMM(T_INTEGER));
-MOV(IND(200000015), IMM(-1));
-MOV(IND(200000016), IMM(T_FRAC));
-MOV(IND(200000017), IMM(1));
-MOV(IND(200000018), IMM(4));
-MOV(IND(200000019), IMM(T_FRAC));
-MOV(IND(200000020), IMM(-1));
-MOV(IND(200000021), IMM(2));
-MOV(IND(200000022), IMM(T_INTEGER));
-MOV(IND(200000023), IMM(0));
+MOV(IND(200000007), IMM(2));
+MOV(IND(200000008), IMM(T_INTEGER));
+MOV(IND(200000009), IMM(1));
+MOV(IND(200000010), IMM(T_FRAC));
+MOV(IND(200000011), IMM(1));
+MOV(IND(200000012), IMM(2));
 
 PUSH(LABEL(PLUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(200000024), R0);
+MOV(IND(200000013), R0);
 PUSH(LABEL(MINUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(200000025), R0);
+MOV(IND(200000014), R0);
 PUSH(LABEL(MULTIPLY));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(200000026), R0);
+MOV(IND(200000015), R0);
 PUSH(LABEL(DIVIDE));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(200000027), R0);
+MOV(IND(200000016), R0);
 PUSH(LABEL(LOWER));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(200000028), R0);
+MOV(IND(200000017), R0);
 PUSH(LABEL(GREATER));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(200000029), R0);
+MOV(IND(200000018), R0);
 PUSH(LABEL(EQUAL));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(200000030), R0);
+MOV(IND(200000019), R0);
+PUSH(LABEL(IS_NUM));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(200000020), R0);
+PUSH(LABEL(IS_INT));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(200000021), R0);
+PUSH(LABEL(IS_BOOLEAN));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(200000022), R0);
+MOV(IND(200000023), IMM(999999));
+PUSH(LABEL(IS_CHAR));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(200000024), R0);
+PUSH(LABEL(IS_NULL));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(200000025), R0);
+MOV(IND(200000026), IMM(999999));
+MOV(IND(200000027), IMM(999999));
+MOV(IND(200000028), IMM(999999));
+MOV(IND(200000029), IMM(999999));
+MOV(IND(200000030), IMM(999999));
 MOV(IND(200000031), IMM(999999));
 MOV(IND(200000032), IMM(999999));
 MOV(IND(200000033), IMM(999999));
@@ -128,17 +148,6 @@ MOV(IND(200000049), IMM(999999));
 MOV(IND(200000050), IMM(999999));
 MOV(IND(200000051), IMM(999999));
 MOV(IND(200000052), IMM(999999));
-MOV(IND(200000053), IMM(999999));
-MOV(IND(200000054), IMM(999999));
-MOV(IND(200000055), IMM(999999));
-MOV(IND(200000056), IMM(999999));
-MOV(IND(200000057), IMM(999999));
-MOV(IND(200000058), IMM(999999));
-MOV(IND(200000059), IMM(999999));
-MOV(IND(200000060), IMM(999999));
-MOV(IND(200000061), IMM(999999));
-MOV(IND(200000062), IMM(999999));
-MOV(IND(200000063), IMM(999999));
 
 /* applic */
 
@@ -146,180 +155,144 @@ MOV(IND(200000063), IMM(999999));
 MOV(R0,IMM(200000001));
 PUSH(R0);
 /* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(200000022));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000019));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(200000029));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CALL(PRINT_R0);
-
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(200000001));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(200000016));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000022));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000014));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(3));
-/*fvar */
-MOV(R0, IND(200000029));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CALL(PRINT_R0);
-
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(200000001));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(200000022));
-
-PUSH(R0);
 /*const*/
 MOV(R0, IMM(200000008));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000014));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(3));
-/*fvar */
-MOV(R0, IND(200000029));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CALL(PRINT_R0);
-
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(200000001));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(200000006));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000008));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000011));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(3));
-/*fvar */
-MOV(R0, IND(200000029));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CALL(PRINT_R0);
-
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(200000001));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(200000006));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000008));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(200000011));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(3));
-/*fvar */
-MOV(R0, IND(200000029));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CALL(PRINT_R0);
-
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(200000001));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(200000022));
 
 PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(200000029));
+MOV(R0, IND(200000020));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(200000001));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(200000010));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(200000020));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(200000001));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(200000010));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(200000021));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(200000001));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(200000006));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(200000021));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(200000001));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(200000001));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(200000025));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(200000001));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(200000008));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(200000025));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
