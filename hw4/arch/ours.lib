@@ -223,6 +223,182 @@ END:
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
+////////////////////////////  GREATER  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+GREATER:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  PUSH(R7);
+
+  MOV(R1, TRUE); //R1 HOLDS THE ANSWER
+  MOV(R5, FPARG(LOCAL_NUM_ARGS)); //iterate from 2 to 2+ number of args
+  ADD(R5, 2);
+  MOV(R3, 2);
+  MOV(R6, FPARG(R3)); // first scheme arg
+  /* CHANGINY THE FIRST ARG TO BE A FRAC */
+  CMP(INDD(R6, 0), T_FRAC);
+  JUMP_EQ(GREATER_FIRST_ARGUMENT_IS_FRAC);
+  MOV(R2, INDD(R6, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R6, R0);
+
+  GREATER_FIRST_ARGUMENT_IS_FRAC:
+  ADD(R3, 1);
+  CMP(R5, R3);
+  JUMP_EQ(GREATER_ONLY_ONE_ARG);
+
+  GREATER_LOOP:
+  CMP(R5, R3);
+  JUMP_EQ(GREATER_END);
+  MOV(R4, FPARG(R3)); 
+  
+  CMP(INDD(R4, 0), T_FRAC);// Check if it is a fraction already:
+  JUMP_EQ(GREATER_IS_FRAC);
+  MOV(R2, INDD(R4, 1)); // It is not, turn it to fraction:
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R4, R0);
+
+  GREATER_IS_FRAC:
+  MOV(R2, INDD(R4, 1));
+  MUL(R2, IMM(-1));
+  PUSH(R2);
+  PUSH(INDD(R4, 2));
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  PUSH(R0);
+  PUSH(R6);
+  CALL(SUM_FRACS);
+  DROP(2);
+  MOV(R2, R0);
+  CMP(INDD(R2, 1), 0);
+  JUMP_LE(GREATER_FALSE);
+  ADD(R3, 1);
+  MOV(R6, R4);
+  JUMP(GREATER_LOOP);
+
+  GREATER_ONLY_ONE_ARG:
+  JUMP(GREATER_END)
+
+  GREATER_FALSE:
+  MOV(R1, FALSE);
+  GREATER_END:
+  MOV(R0, R1);
+
+  GREATER_RETURN_FRACTION:
+  POP(R7);
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+  RETURN;
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  LOWER  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+LOWER:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  PUSH(R7);
+
+  MOV(R6, IMM(0));
+  MOV(R4, IMM(0));
+  MOV(R1, TRUE); //R1 HOLDS THE ANSWER
+  MOV(R5, FPARG(LOCAL_NUM_ARGS)); //iterate from 2 to 2+ number of args
+  ADD(R5, 2);
+  MOV(R3, 2);
+  MOV(R6, FPARG(R3)); // first scheme arg
+  /* CHANGINY THE FIRST ARG TO BE A FRAC */
+  CMP(INDD(R6, 0), T_FRAC);
+  JUMP_EQ(LOWER_FIRST_ARGUMENT_IS_FRAC);
+  MOV(R2, INDD(R6, 1));
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R6, R0);
+
+  LOWER_FIRST_ARGUMENT_IS_FRAC:
+  ADD(R3, 1);
+  CMP(R5, R3);
+  JUMP_EQ(LOWER_ONLY_ONE_ARG);
+
+  LOWER_LOOP:
+  CMP(R5, R3);
+  JUMP_EQ(LOWER_END);
+  MOV(R4, FPARG(R3)); 
+  CMP(INDD(R4, 0), T_FRAC);// Check if it is a fraction already:
+  JUMP_EQ(LOWER_IS_FRAC);
+  MOV(R2, INDD(R4, 1)); // It is not, turn it to fraction:
+  PUSH(R2);
+  PUSH(1);
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  MOV(R4, R0);
+
+  LOWER_IS_FRAC:
+  MOV(R2, INDD(R4, 1));
+  MUL(R2, IMM(-1));
+  PUSH(R2);
+  PUSH(INDD(R4, 2));
+  CALL(MAKE_SOB_FRAC);
+  DROP(2);
+  PUSH(R0);
+  PUSH(R6);
+  CALL(SUM_FRACS);
+  DROP(2);
+  MOV(R2, R0);
+  CMP(INDD(R2, 1), 0);
+
+  JUMP_GE(LOWER_FALSE);
+  ADD(R3, 1);
+  MOV(R6, R4);
+  JUMP(LOWER_LOOP);
+
+  LOWER_ONLY_ONE_ARG:
+  JUMP(LOWER_END)
+
+  LOWER_FALSE:
+  MOV(R1, FALSE);
+  LOWER_END:
+  MOV(R0, R1);
+
+  LOWER_RETURN_FRACTION:
+  POP(R7);
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+  RETURN;
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 ////////////////////////////  EQUAL  ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -258,18 +434,14 @@ EQUAL:
   CMP(R5, R3);
   JUMP_EQ(EQUAL_ONLY_ONE_ARG);
 
-  /* EQUAL LOOP*/
   EQUAL_LOOP:
   CMP(R5, R3);
   JUMP_EQ(EQUAL_END);
-  /* SCHEME ARG */
   MOV(R4, FPARG(R3)); 
-
-  // Check if it is a fraction already:
-  CMP(INDD(R4, 0), T_FRAC);
+  
+  CMP(INDD(R4, 0), T_FRAC);// Check if it is a fraction already:
   JUMP_EQ(EQUAL_IS_FRAC);
-  // It is not, turn it to fraction:
-  MOV(R2, INDD(R4, 1));
+  MOV(R2, INDD(R4, 1)); // It is not, turn it to fraction:
   PUSH(R2);
   PUSH(1);
   CALL(MAKE_SOB_FRAC);
@@ -515,6 +687,7 @@ EQUAL:
   PUSH(R5);
   PUSH(R6);
   PUSH(R7);
+  
 
   /* TAKING THE FIRST ARGUMENT OUT FROM THE 'ADD' LOOP*/
   MOV(R5, FPARG(LOCAL_NUM_ARGS)); /*iterate from 2 to 2+ number of args */
@@ -588,6 +761,7 @@ EQUAL:
   PUSH(R6);
   CALL(SUM_FRACS);
   DROP(2);
+
   JUMP(MANY_ARGS);
 
   ONLY_ONE_ARG:
@@ -598,14 +772,13 @@ EQUAL:
   PUSH(INDD(R6, 2));
   CALL(MAKE_SOB_FRAC);
   DROP(2);
-  
+
   MANY_ARGS:
   CMP(INDD(R0, 2), 1); // Somthing / 1
   JUMP_NE(RETURN_FRACTION_IN_MINUS);
   PUSH(INDD(R0, 1));
   CALL(MAKE_SOB_INTEGER);
   DROP(1);  
-
 
   RETURN_FRACTION_IN_MINUS:
   POP(R7);
