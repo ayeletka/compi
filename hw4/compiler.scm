@@ -296,8 +296,14 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'numerator) (string-append (closureFromLabelMaker "NUMERATOR") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
-
-
+      ((equal? var 'zero?) (string-append (closureFromLabelMaker "OURS_IS_ZERO") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'char->integer) (string-append (closureFromLabelMaker "CHAR_2_INTEGER") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'integer->char) (string-append (closureFromLabelMaker "INTEGER_2_CHAR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'not) (string-append (closureFromLabelMaker "NOT") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       
       
 

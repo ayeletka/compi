@@ -1,4 +1,3 @@
-(denominator 1/2)
-(numerator -1/2)
-(numerator 2)
-(denominator 2)
+(not #f)
+(not #t)
+(not (= 1 2))
