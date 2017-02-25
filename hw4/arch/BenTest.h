@@ -59,7 +59,7 @@
         i + 2, type3,                                                               \
         i + 3, type4);                                                              \
   }      \
-  for (i = 200000000; i <= 200000050; i += 4) {                                                    \
+  for (i = 180000000; i <= 180000050; i += 4) {                                                    \
     TRANS(IND(i), type1); TRANS(IND(i + 1), type2);                                 \
     TRANS(IND(i + 2) ,type3); TRANS(IND(i + 3), type4);                             \
     printf("MEM[%4d] = %-10s MEM[%d] = %-10s MEM[%4d] = %-10s MEM[%d] = %-10s\n",   \
@@ -69,6 +69,15 @@
         i + 3, type4);                                                              \
   }                                                                               \
                                                                               \
+  for (i = 190000000; i <= 190000050; i += 4) {                                                    \
+    TRANS(IND(i), type1); TRANS(IND(i + 1), type2);                                 \
+    TRANS(IND(i + 2) ,type3); TRANS(IND(i + 3), type4);                             \
+    printf("MEM[%4d] = %-10s MEM[%d] = %-10s MEM[%4d] = %-10s MEM[%d] = %-10s\n",   \
+        i, type1,                                                                   \
+        i + 1, type2,                                                               \
+        i + 2, type3,                                                               \
+        i + 3, type4);                                                              \
+  }                                                                               \
   printf("\n");                                                                     \
 }
 #endif

@@ -1018,3 +1018,115 @@ RETURN_FRACTION:
   POP(FP);
 
   RETURN;
+
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  Symbol->String  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+//receives a symbol, returns a string //
+
+SYMBOL_2_STRING:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  MOV(R1, FPARG(2));
+  INCR(R1);
+  MOV(R1, IND(R1));
+  MOV(R0, R1);
+  POP(R1);
+  POP(FP);
+
+  RETURN;
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  String->Symbol  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+//receives a symbol, returns a string //
+
+STRING_2_SYMBOL:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  MOV(R1, FPARG(2));
+  //assuming no symbols//
+  CMP(IND(SYMTAB),IMM(0));
+  JUMP_EQ(ADD_NEW_SYMB_FIRST);
+  MOV(R2,SYMTAB);
+LOOP_SYMTAB:
+  ///if reached end of symtable//
+  CMP(IND(R2),IMM(0));
+  JUMP_EQ(ADD_NEW_SYMB);
+  //r3 will hold symb address, r4 will hold the string address//
+  MOV(R3, IND(R2));
+  MOV(R4, INDD(R3,1));
+  CMP(R4,R1);
+  JUMP_EQ(FOUND_SAME_SYMB);
+  ADD(R2, 2);
+  JUMP(LOOP_SYMTAB);
+
+FOUND_SAME_SYMB:
+  MOV(R0, R3);
+  JUMP(STRING_2_SYMBOL_END);  
+
+//assuming list of symbols is empty///
+ADD_NEW_SYMB_FIRST:
+  MOV(R0,R1);
+  CALL(MAKE_SOB_SYMBOL);
+  MOV(R2,SYMTAB);
+  MOV(IND(R2), R0);
+  INCR(R2);
+  MOV(IND(R2), IMM(0));
+  MOV(R0,IND(SYMTAB));
+  JUMP(STRING_2_SYMBOL_END);
+
+//assuming R2 is end of list///
+ADD_NEW_SYMB:
+  MOV(R0,R1);
+  CALL(MAKE_SOB_SYMBOL);
+  DECR(R2);
+  MOV(R3,R2);
+  INCR(R3);
+  MOV(IND(R2),R3);
+  MOV(IND(R3), R0);
+  INCR(R3);
+  MOV(IND(R3), IMM(0));
+  DECR(R3);
+  MOV(R0,IND(R3));
+  JUMP(STRING_2_SYMBOL_END);
+
+
+STRING_2_SYMBOL_END:
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+
+  RETURN;
+
+
+///assuming we received a string object///
+
+MAKE_SOB_SYMBOL:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  MOV(R1,R0);
+  PUSH(IMM(2));
+  CALL(MALLOC);
+  DROP(IMM(1));
+  MOV(INDD(R0,IMM(0)), T_SYMBOL);
+  MOV(INDD(R0,IMM(1)), R1);
+  POP(R1);
+  POP(FP);
+  RETURN;

@@ -43,7 +43,7 @@
     ))
     )
 
-(define address 200000000)
+(define address 180000000)
 
 (define labelNum 0)
 (define labelNumberInString 
@@ -138,7 +138,7 @@
 (define load-nil (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_NIL));" nl)))
 (define load-bool 
   (lambda (idx) 
-    (if (equal? idx 200000002)
+    (if (equal? idx 180000002)
       (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
       "MOV(IND(" (number->string (+ idx 1)) "), IMM(0));" nl )
        (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
@@ -268,6 +268,10 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'number?) (string-append (closureFromLabelMaker "IS_NUM") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'symbol->string) (string-append (closureFromLabelMaker "SYMBOL_2_STRING") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'string->symbol) (string-append (closureFromLabelMaker "STRING_2_SYMBOL") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
       ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
@@ -334,7 +338,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;symbol (string) linked list;;;;;;;;;;;;;
 
 (define symbolLinkedList '())
-(define symbStartAdd '())
+(define symbStartAdd 190000000)
 (define lastSymbAdd '())
 
 (define getAllSymbolStrings
@@ -345,7 +349,7 @@
                 stringAddresses
                 (let ((e (car c_table)))
                   (if (and (list? (caddr e)) (equal? (caaddr e) T_SYMBOL))
-                    (begin (set! stringAddresses `(,@stringAddresses ,(cadr (caddr e))))
+                    (begin (set! stringAddresses `(,@stringAddresses ,(car e)))
                         (loop (cdr c_table)))
                     (loop (cdr c_table))
                   )
@@ -372,9 +376,9 @@
   (lambda (symbs)
     (if (not (null? symbs)) 
       (begin 
-        (set! symbolLinkedList `(,@symbolLinkedList ,(list address (car symbs))))
-        (set! symbolLinkedList `(,@symbolLinkedList ,(list (+ address 1) (+ address 2))))
-        (set! address (+ address 2))
+        (set! symbolLinkedList `(,@symbolLinkedList ,(list symbStartAdd (car symbs))))
+        (set! symbolLinkedList `(,@symbolLinkedList ,(list (+ symbStartAdd 1) (+ symbStartAdd 2))))
+        (set! symbStartAdd (+ symbStartAdd 2))
         (buildSchemeList (cdr symbs))
         )
     symbolLinkedList
@@ -395,8 +399,10 @@
   (lambda ()
     (let* ((allSymbolStrings (getAllSymbolStrings))
           (symbsList (buildSchemeList allSymbolStrings)))
-      (set! symbStartAdd address)
-      (if (null? allSymbolStrings) ""
+      (if (null? allSymbolStrings) 
+        (string-append 
+          "/* ----------initiating symbols string linked list---------- */" nl
+          "MOV(IND("(number->string symbStartAdd)"), IMM(0));" nl)
             (string-append 
               "/* ----------initiating symbols string linked list---------- */" nl
             (loadSymbolStrings symbsList)
@@ -1106,10 +1112,11 @@
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
     "#define SOB_NIL 2" nl nl
-    "#define FALSE 200000002 " nl nl
-    "#define TRUE 200000004 " nl nl
+    "#define FALSE 180000002 " nl nl
+    "#define TRUE 180000004 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
     "#define LOCAL_ENV 0" nl nl
+    "#define SYMTAB 190000000" nl nl
 
 		"#include \"arch/cisc.h\"" nl
     "#include \"arch/BenTest.h\"" nl nl
