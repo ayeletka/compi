@@ -116,8 +116,11 @@
           (set! const_table `(,@const_table (,address ,cVar (,T_STRING ,(string-length cVar) ,@(map char->integer (string->list cVar))))))
           (set! address (+ address 2 (string-length cVar))))
       ((symbol? cVar)
-          (set! const_table `(,@const_table (,address ,cVar (,T_SYMBOL ,(string-length (symbol->string cVar)) ,@(map char->integer (string->list (symbol->string cVar)))))))
-          (set! address (+ address 2 (string-length (symbol->string cVar)))))
+          (addToConstTable (symbol->string cVar))
+          ;(set! const_table `(,@const_table (,address ,cVar (,T_SYMBOL ,(string-length (symbol->string cVar)) ,@(map char->integer (string->list (symbol->string cVar)))))))
+          (set! const_table `(,@const_table (,address ,cVar (,T_SYMBOL ,(getConstAddress (symbol->string cVar))))))
+          ;(set! address (+ address 2 (string-length (symbol->string cVar)))))
+          (set! address (+ address 2)))
       ((pair? cVar)
           (addToConstTable (car cVar))
           (addToConstTable (cdr cVar))
@@ -173,13 +176,17 @@
 							   (load-string-chars (+ idx 2) chars)))))
 
 (define load-symbol 
-	(lambda (idx val) 
+  (lambda (idx val) 
     (let (
-      (len (car val))
-      (chars (cdr val)))
-        (string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
-                 "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string len) "));" nl
-                 (load-string-chars (+ idx 2) chars)))))
+      (stringIND (car val)))
+      ;(len (car val))
+      ;(chars (cdr val)))
+        ;(string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
+         ;        "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string len) "));" nl
+          ;       (load-string-chars (+ idx 2) chars)))))
+          (string-append "MOV(IND(" (number->string idx) "), IMM(T_SYMBOL));" nl
+                 "MOV(IND(" (number->string (+ idx 1)) "), IMM(" (number->string stringIND) "));" nl
+                 ))))
 
 (define load-pair 
 	(lambda (idx val) 
@@ -323,6 +330,79 @@
             )
     ))
     (loop global_table))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;symbol (string) linked list;;;;;;;;;;;;;
+
+(define symbolLinkedList '())
+(define symbStartAdd '())
+(define lastSymbAdd '())
+
+(define getAllSymbolStrings
+  (lambda ()
+    (letrec ((stringAddresses '())
+      (loop (lambda (c_table)
+              (if (null? c_table)
+                stringAddresses
+                (let ((e (car c_table)))
+                  (if (and (list? (caddr e)) (equal? (caaddr e) T_SYMBOL))
+                    (begin (set! stringAddresses `(,@stringAddresses ,(cadr (caddr e))))
+                        (loop (cdr c_table)))
+                    (loop (cdr c_table))
+                  )
+                )))))
+    (loop const_table)
+)))
+
+
+(define load-symb
+  (lambda (symb)
+    (string-append 
+      "MOV(IND("(number->string (car symb))"), IMM("(number->string (cadr symb))"));" nl
+      )
+    ))
+
+(define load-last-symb
+  (lambda (symb)
+    (string-append 
+      "MOV(IND("(number->string (car symb))"), IMM(0));" nl
+      )
+    ))
+
+(define buildSchemeList
+  (lambda (symbs)
+    (if (not (null? symbs)) 
+      (begin 
+        (set! symbolLinkedList `(,@symbolLinkedList ,(list address (car symbs))))
+        (set! symbolLinkedList `(,@symbolLinkedList ,(list (+ address 1) (+ address 2))))
+        (set! address (+ address 2))
+        (buildSchemeList (cdr symbs))
+        )
+    symbolLinkedList
+)))
+
+(define loadSymbolStrings
+  (lambda (symbsList)
+  (if (null? (cdr symbsList))
+    (load-last-symb (car symbsList))
+    (string-append
+      (load-symb (car symbsList))
+      (loadSymbolStrings (cdr symbsList))
+      )
+    )
+  ))
+
+(define buildLinkedList
+  (lambda ()
+    (let* ((allSymbolStrings (getAllSymbolStrings))
+          (symbsList (buildSchemeList allSymbolStrings)))
+      (set! symbStartAdd address)
+      (if (null? allSymbolStrings) ""
+            (string-append 
+              "/* ----------initiating symbols string linked list---------- */" nl
+            (loadSymbolStrings symbsList)
+            )
+))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; generate ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1101,6 +1181,7 @@
             					"/* ----------initiating const table---------- */" nl
             					(initiate-consts const_table) nl
                       (initiate-fvar global_table) nl
+                      (buildLinkedList) nl
             					(codeGenOnAllSexps parsedEvaledSexpr) nl
             					epilog
             					)))
@@ -1110,4 +1191,4 @@
 
 
 
-(compile-scheme-file "test-files/test2.scm" "foo.c")
+(compile-scheme-file "test-files/avTest1.scm" "foo.c")

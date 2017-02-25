@@ -124,7 +124,9 @@ END:
   PUSH(R3);
   MOV(R0, FPARG(0));
   MOV(R1, INDD(R0, 1));
-  MOV(R2, R0);
+  INCR(R1);
+  MOV(R1, IMM(IND(R1)));
+  MOV(R2, INDD(R0, 1));
   ADD(R2, IMM(2));
  L_SYMB_LOOP:
   CMP(R1, IMM(0));
