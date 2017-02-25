@@ -1,12 +1,5 @@
-;'avishag
-;'ayeley
-
-(define a "a")
-
-(string->symbol "2")
-
-(eq? 'a 'a)
-
+(eq? '(1 2) '(3 2))
+(eq? '(1 2) '(1 2))
 
 ;(string->symbol (symbol->string '2a))
 ;2

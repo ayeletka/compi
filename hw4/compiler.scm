@@ -1233,4 +1233,4 @@
 
 
 
-(compile-scheme-file "test-files/test2.scm" "foo.c")
+(compile-scheme-file "test-files/avTest1.scm" "foo.c")
