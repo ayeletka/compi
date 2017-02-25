@@ -272,6 +272,8 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'string->symbol) (string-append (closureFromLabelMaker "STRING_2_SYMBOL") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'eq?) (string-append (closureFromLabelMaker "CHECK_EQ_OBJECT") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
       ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
