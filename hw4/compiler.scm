@@ -286,6 +286,21 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'eq?) (string-append (closureFromLabelMaker "CHECK_EQ_OBJECT") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'car) (string-append (closureFromLabelMaker "CAR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'cdr) (string-append (closureFromLabelMaker "CDR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'denominator) (string-append (closureFromLabelMaker "DENOMINATOR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'numerator) (string-append (closureFromLabelMaker "NUMERATOR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+
+
+      
+      
+
       ;((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
       ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 

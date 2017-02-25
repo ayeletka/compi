@@ -1,8 +1,4 @@
-(rational? 1/2)
-(rational? 1)
-(rational? 'a)
-
- (vector? '#(1 1 2))
- (vector? '(1 1 2))
- (procedure? (lambda () (+ 1 1)))
-  (procedure? ((lambda () (+ 1 1))))
+(denominator 1/2)
+(numerator -1/2)
+(numerator 2)
+(denominator 2)
