@@ -43,7 +43,10 @@
     ))
     )
 
-(define address 0)
+(define address 1)
+
+(define getAddress (lambda () address))
+
 
 (define labelNum 0)
 (define labelNumberInString 
@@ -138,7 +141,7 @@
 (define load-nil (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_NIL));" nl)))
 (define load-bool 
   (lambda (idx) 
-    (if (equal? idx 180000002)
+    (if (equal? idx 3)
       (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
       "MOV(IND(" (number->string (+ idx 1)) "), IMM(0));" nl )
        (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
@@ -387,8 +390,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;symbol (string) linked list;;;;;;;;;;;;;
 
 (define symbolLinkedList '())
-(define symbStartAdd 50000)
+(define symbStartAdd '())
 (define lastSymbAdd '())
+
+(define getsymbStartAdd (lambda () symbStartAdd))
 
 (define getAllSymbolStrings
   (lambda ()
@@ -425,9 +430,9 @@
   (lambda (symbs)
     (if (not (null? symbs)) 
       (begin 
-        (set! symbolLinkedList `(,@symbolLinkedList ,(list symbStartAdd (car symbs))))
-        (set! symbolLinkedList `(,@symbolLinkedList ,(list (+ symbStartAdd 1) (+ symbStartAdd 2))))
-        (set! symbStartAdd (+ symbStartAdd 2))
+        (set! symbolLinkedList `(,@symbolLinkedList ,(list (getAddress) (car symbs))))
+        (set! symbolLinkedList `(,@symbolLinkedList ,(list (+ (getAddress) 1) (+ (getAddress) 2))))
+        (set! address (+ (getAddress) 2))
         (buildSchemeList (cdr symbs))
         )
     symbolLinkedList
@@ -447,6 +452,7 @@
 (define buildLinkedList
   (lambda ()
     (let* ((allSymbolStrings (getAllSymbolStrings))
+          (symb (set! symbStartAdd (getAddress)))
           (symbsList (buildSchemeList allSymbolStrings)))
     "")))
 
@@ -455,7 +461,7 @@
       (if (null? symbsList) 
         (string-append 
           "/* ----------initiating symbols string linked list---------- */" nl
-          "MOV(IND("(number->string symbStartAdd)"), IMM(0));" nl)
+          "MOV(IND("(number->string (getsymbStartAdd))"), IMM(0));" nl)
             (string-append 
               "/* ----------initiating symbols string linked list---------- */" nl
             (loadSymbolStrings symbsList)
@@ -1155,6 +1161,7 @@
       noTailCalls)))
 
 (define prolog
+  (lambda ()
 	(string-append
 		"/* final compilar project" nl
 		"Programmers: Ayelet Kalderon & Avishag Daniely */" nl nl
@@ -1165,11 +1172,11 @@
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
     "#define SOB_NIL 2" nl nl
-    "#define FALSE 2 " nl nl
-    "#define TRUE 4 " nl nl
+    "#define FALSE 3 " nl nl
+    "#define TRUE 5 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
     "#define LOCAL_ENV 0" nl nl
-    "#define SYMTAB 50000" nl nl
+    "#define SYMTAB " (number->string (getsymbStartAdd)) nl nl
 
 		"#include \"arch/cisc.h\"" nl
     "#include \"arch/BenTest.h\"" nl nl
@@ -1177,7 +1184,7 @@
 		"int main()" nl
 		"{" nl
   		" START_MACHINE;" nl nl                      
-      "PUSH(IMM("(number->string 100000)"));" nl
+      "PUSH(IMM("(number->string (getAddress))"));" nl
       "CALL(MALLOC);" nl
       "DROP(1);" nl
       "PUSH(IMM(0));" nl
@@ -1201,7 +1208,7 @@
 
  		"CONTINUE:" nl
 		)
-	)
+	))
 
 (define epilog 
 	(string-append
@@ -1242,7 +1249,7 @@
             (newline)
             ;create cisc code
             (let ((cisc-exp (string-append
-            					prolog nl
+            					(prolog) nl
             					"/* ----------initiating const table---------- */" nl
             					(initiate-consts const_table) nl
                       (initiate-fvar global_table) nl
@@ -1256,4 +1263,4 @@
 
 
 
-(compile-scheme-file "test-files/torture0.scm" "foo.c")
+(compile-scheme-file "test-files/avTest1.scm" "foo.c")

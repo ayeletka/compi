@@ -1499,6 +1499,7 @@ ADD_NEW_SYMB:
   CALL(MAKE_SOB_SYMBOL);
   DECR(R2);
   MOV(R3,R2);
+  /////////////////////////need to check that really works - since it might override other fileds in heap////////////
   INCR(R3);
   MOV(IND(R2),R3);
   MOV(IND(R3), R0);
