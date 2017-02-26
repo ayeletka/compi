@@ -1,6 +1,7 @@
 
-(vector 5 "shugs" 2 3 'a)
-;(string->symbol (symbol->string '2a))
+'a
+(define b 'b)
+(string->symbol (symbol->string b))
 ;2
 ;(((((lambda (x) ((x x) (x x)))
 ;    (lambda (x) (lambda (y) (x (x y)))))

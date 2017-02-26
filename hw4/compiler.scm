@@ -43,7 +43,7 @@
     ))
     )
 
-(define address 180000000)
+(define address 0)
 
 (define labelNum 0)
 (define labelNumberInString 
@@ -387,7 +387,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;symbol (string) linked list;;;;;;;;;;;;;
 
 (define symbolLinkedList '())
-(define symbStartAdd 190000000)
+(define symbStartAdd 50000)
 (define lastSymbAdd '())
 
 (define getAllSymbolStrings
@@ -448,7 +448,11 @@
   (lambda ()
     (let* ((allSymbolStrings (getAllSymbolStrings))
           (symbsList (buildSchemeList allSymbolStrings)))
-      (if (null? allSymbolStrings) 
+    "")))
+
+(define code-gen-symb-list
+  (lambda (symbsList)
+      (if (null? symbsList) 
         (string-append 
           "/* ----------initiating symbols string linked list---------- */" nl
           "MOV(IND("(number->string symbStartAdd)"), IMM(0));" nl)
@@ -456,7 +460,7 @@
               "/* ----------initiating symbols string linked list---------- */" nl
             (loadSymbolStrings symbsList)
             )
-))))
+)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; generate ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1161,18 +1165,21 @@
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
     "#define SOB_NIL 2" nl nl
-    "#define FALSE 180000002 " nl nl
-    "#define TRUE 180000004 " nl nl
+    "#define FALSE 2 " nl nl
+    "#define TRUE 4 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
     "#define LOCAL_ENV 0" nl nl
-    "#define SYMTAB 190000000" nl nl
+    "#define SYMTAB 50000" nl nl
 
 		"#include \"arch/cisc.h\"" nl
     "#include \"arch/BenTest.h\"" nl nl
 
 		"int main()" nl
 		"{" nl
-  		" START_MACHINE;" nl nl
+  		" START_MACHINE;" nl nl                      
+      "PUSH(IMM("(number->string 100000)"));" nl
+      "CALL(MALLOC);" nl
+      "DROP(1);" nl
       "PUSH(IMM(0));" nl
       "PUSH(IMM(0));" nl
       "PUSH(LABEL(PROG_ENDING));" nl
@@ -1229,6 +1236,8 @@
 
             ;make global table
             (addLstToGlobalTable fvar-no-duplicates)
+
+            (buildLinkedList) nl
             ;(display const_table)
             (newline)
             ;create cisc code
@@ -1237,7 +1246,7 @@
             					"/* ----------initiating const table---------- */" nl
             					(initiate-consts const_table) nl
                       (initiate-fvar global_table) nl
-                      (buildLinkedList) nl
+                      (code-gen-symb-list symbolLinkedList) nl
             					(codeGenOnAllSexps parsedEvaledSexpr) nl
             					epilog
             					)))
@@ -1247,4 +1256,4 @@
 
 
 
-(compile-scheme-file "test-files/avTest1.scm" "foo.c")
+(compile-scheme-file "test-files/torture0.scm" "foo.c")
