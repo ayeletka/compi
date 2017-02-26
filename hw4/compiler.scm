@@ -316,6 +316,8 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
        ((equal? var 'make-vector) (string-append (closureFromLabelMaker "MAKE_VECTOR") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'vector) (string-append (closureFromLabelMaker "VECTOR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       
       
 

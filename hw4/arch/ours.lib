@@ -343,6 +343,48 @@ MAKE_VECTOR_END:
  POP(FP);     
  RETURN; 
 
+VECTOR:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ PUSH(R2);
+ PUSH(R3);
+ //R1 holds the vector
+ MOV(R1, FPARG(1)); 
+ CMP(R1,IMM(0));
+ JUMP_EQ(EMPTY_VECTOR);
+ MOV(R2,0);
+
+VECTOR_LOOP:
+ MOV(R3, 2);
+ CMP(R2,R1);
+ JUMP_EQ(NON_EMPTY_VECTOR);
+ ADD(R3,R2);
+ PUSH(FPARG(R3));
+ INCR(R2);
+ JUMP(VECTOR_LOOP);
+
+NON_EMPTY_VECTOR:
+  PUSH(R2);
+ CALL(MAKE_SOB_VECTOR);
+ DROP(1);
+ DROP(R2);
+JUMP(VECTOR_END);
+
+ EMPTY_VECTOR:
+ PUSH(T_NIL);
+ PUSH(IMM(0));
+ CALL(MAKE_SOB_VECTOR);
+ DROP(2);
+ JUMP(VECTOR_END);
+
+VECTOR_END:
+ POP(R3);  
+ POP(R2);  
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////  LIST'S SHIT - love this name ///////////////////////////////////////

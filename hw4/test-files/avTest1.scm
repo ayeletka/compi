@@ -1,7 +1,5 @@
-(define a 1)
-(make-vector 5 "shugs")
 
-
+(vector 5 "shugs" 2 3 'a)
 ;(string->symbol (symbol->string '2a))
 ;2
 ;(((((lambda (x) ((x x) (x x)))
