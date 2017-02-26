@@ -225,7 +225,7 @@ END:
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-////////////////////////////  LIST'S SHIT  ///////////////////////////////////////
+////////////////////////////  LIST'S SHIT - love this name ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
@@ -246,56 +246,45 @@ CONS:
   RETURN;
 
 CAR:
-
- JUMP(LmakeCarClos);
  LcarBody:  
  PUSH(FP);
  MOV(FP,SP);
  PUSH(R1);
- //CMP(FPARG(1),IMM(1));
- //JUMP_NE(Lerror_incorr_num_of_args);
+ CMP(FPARG(1),IMM(1));
+ JUMP_NE(Lerror_incorr_num_of_args);
  MOV(R1, FPARG(2)); 
  CMP(INDD(R1, 0),IMM(T_PAIR));  
- //JUMP_NE(Lerror_incorr_type);  
+ JUMP_NE(Lerror_incorr_type);  
  MOV(R0, INDD(R1, 1));
- INFO; 
+
  POP(R1);   
  POP(FP);     
  RETURN; 
- 
-LmakeCarClos: 
-  PUSH(IMM(3));
-   CALL(MALLOC);   
-   DROP(1);    
-   MOV(INDD(R0, 0), IMM(T_CLOSURE));     
-   MOV(INDD(R0, 1), IMM(054));     
-   MOV(INDD(R0, 2), LABEL(LcarBody));
-  // MOV(IND(3001),R0);   
+  
 
-  CDR:
-JUMP(LmakeCdrClos)
+
+
+
+CDR:
  LcdrBody:   
  PUSH(FP);    
  MOV(FP,SP);
  PUSH(R1);    
  CMP(FPARG(1),IMM(1));    
- //JUMP_NE(Lerror_incorr_num_of_args); 
+ JUMP_NE(Lerror_incorr_num_of_args); 
  MOV(R1,FPARG(2));    
  CMP(INDD(R1,0),IMM(T_PAIR));   
-// JUMP_NE(Lerror_incorr_type);
+ JUMP_NE(Lerror_incorr_type);
  MOV(R0,INDD(R1,2));
  POP(R1); 
  POP(FP);   
  RETURN; 
  
-LmakeCdrClos:  
-  PUSH(IMM(3)); 
-  CALL(MALLOC);    
-  DROP(1);     
-  MOV(INDD(R0,0),IMM(T_CLOSURE)); 
-  MOV(INDD(R0,1),IMM(05));   
-  MOV(INDD(R0,2),LABEL(LcdrBody));   
-  //MOV(IND(3002),R0); 
+Lerror_incorr_num_of_args:
+  HALT;
+
+Lerror_incorr_type:
+  HALT;
  
 
  ///////////////////////////////////////////////////////////////////////////

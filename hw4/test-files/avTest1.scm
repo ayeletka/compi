@@ -1,5 +1,5 @@
-(eq? '(1 2) '(3 2))
-(eq? '(1 2) '(1 2))
+(cdr '(1 2))
+
 
 ;(string->symbol (symbol->string '2a))
 ;2
