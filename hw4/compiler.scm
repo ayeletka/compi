@@ -304,6 +304,10 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
        ((equal? var 'not) (string-append (closureFromLabelMaker "NOT") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'set-car!) (string-append (closureFromLabelMaker "SET_CAR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'set-cdr!) (string-append (closureFromLabelMaker "SET_CDR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       
       
 

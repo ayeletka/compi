@@ -262,9 +262,6 @@ CAR:
  RETURN; 
   
 
-
-
-
 CDR:
  LcdrBody:   
  PUSH(FP);    
@@ -280,6 +277,38 @@ CDR:
  POP(FP);   
  RETURN; 
  
+SET_CAR:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(2));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the pair
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_PAIR));  
+ JUMP_NE(Lerror_incorr_type);  
+ MOV(INDD(R1, 1), FPARG(3));
+ MOV(R0, T_VOID);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+SET_CDR:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(2));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the pair
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_PAIR));  
+ JUMP_NE(Lerror_incorr_type);  
+ MOV(INDD(R1, 2), FPARG(3));
+ MOV(R0, T_VOID);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
 Lerror_incorr_num_of_args:
   HALT;
 

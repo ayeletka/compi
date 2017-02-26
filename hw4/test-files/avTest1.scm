@@ -1,5 +1,6 @@
-(cdr '(1 2))
-
+(define a '(1 2))
+(set-cdr! a 6)
+a
 
 ;(string->symbol (symbol->string '2a))
 ;2
