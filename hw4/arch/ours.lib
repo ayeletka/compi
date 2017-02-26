@@ -225,6 +225,128 @@ END:
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
+////////////////////////////  VECTORS  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+VECTOR_SET:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(3));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the vector
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_VECTOR));  
+ JUMP_NE(Lerror_incorr_type);
+ CMP(INDD(R1, 1),IMM(INDD(FPARG(3),1)));  
+ JUMP_LT(Lerror_incorr_type); 
+ MOV(R1,FPARG(2));
+ ADD(R1,IMM(2));
+ ADD(R1, IMM(INDD(FPARG(3),1)));
+ MOV(IND(R1),FPARG(4));
+ MOV(R0, T_VOID);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+ VECTOR_REF:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(2));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the vector
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_VECTOR));  
+ JUMP_NE(Lerror_incorr_type);
+ CMP(INDD(R1, 1),IMM(INDD(FPARG(3),1)));  
+ JUMP_LT(Lerror_incorr_type); 
+ MOV(R1,FPARG(2));
+ ADD(R1,IMM(2));
+ ADD(R1, IMM(INDD(FPARG(3),1)));
+ MOV(R0, IND(R1));
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+
+ VECTOR_LENGTH:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(1));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the vector
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_VECTOR));  
+ JUMP_NE(Lerror_incorr_type);
+ MOV(R1,FPARG(2));
+ MOV(R1, INDD(R1,1));
+ PUSH(R1);
+ CALL(MAKE_SOB_INTEGER);
+ DROP(1);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+
+ MAKE_VECTOR:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ PUSH(R2);
+ CMP(FPARG(1),IMM(1));
+ JUMP_EQ(MAKE_VECTOR_ZERO);
+ CMP(FPARG(1),IMM(2));
+ JUMP_EQ(MAKE_VECTOR_VARS);
+ JUMP(Lerror_incorr_num_of_args);
+
+MAKE_VECTOR_ZERO:
+ //R1 holds the num
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_INTEGER));  
+ JUMP_NE(Lerror_incorr_type);
+ MOV(R1,INDD(R1, 1));
+ MOV(R2,IMM(0));
+MAKE_VECTOR_ZERO_LOOP:
+  CMP(R2,R1);
+  JUMP_EQ(MAKE_VECTOR_END);
+  PUSH(IMM(0));
+  CALL(MAKE_SOB_INTEGER);
+  DROP(1);
+  PUSH(R0);
+  INCR(R2);
+  JUMP(MAKE_VECTOR_ZERO_LOOP);
+
+MAKE_VECTOR_VARS:
+ //R1 holds the num
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_INTEGER));  
+ JUMP_NE(Lerror_incorr_type);
+ MOV(R1,INDD(R1, 1));
+ MOV(R2,IMM(0));
+MAKE_VECTOR_VARS_LOOP:
+  CMP(R2,R1);
+  JUMP_EQ(MAKE_VECTOR_END);
+  PUSH(FPARG(3));
+  INCR(R2);
+  JUMP(MAKE_VECTOR_VARS_LOOP);
+
+MAKE_VECTOR_END:
+  PUSH(R2);
+  CALL(MAKE_SOB_VECTOR);
+  DROP(1);  
+  DROP(R2);
+    INFO;
+
+ POP(R2); 
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 ////////////////////////////  LIST'S SHIT - love this name ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -1455,3 +1577,6 @@ CHECK_EQ_END:
   POP(R1);
   POP(FP);
   RETURN;
+
+
+

@@ -308,6 +308,14 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
        ((equal? var 'set-cdr!) (string-append (closureFromLabelMaker "SET_CDR") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'vector-set!) (string-append (closureFromLabelMaker "VECTOR_SET") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'vector-ref) (string-append (closureFromLabelMaker "VECTOR_REF") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'vector-length) (string-append (closureFromLabelMaker "VECTOR_LENGTH") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'make-vector) (string-append (closureFromLabelMaker "MAKE_VECTOR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       
       
 
