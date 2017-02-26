@@ -1,5 +1,5 @@
 (define a 1)
-(make-vector 5 'a)
+(make-vector 5 "shugs")
 
 
 ;(string->symbol (symbol->string '2a))

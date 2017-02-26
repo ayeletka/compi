@@ -338,8 +338,6 @@ MAKE_VECTOR_END:
   CALL(MAKE_SOB_VECTOR);
   DROP(1);  
   DROP(R2);
-    INFO;
-
  POP(R2); 
  POP(R1);   
  POP(FP);     
