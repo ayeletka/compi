@@ -242,8 +242,6 @@
       string->symbol eq?)
 )
 
-
-
 (define load-fvar
   (lambda (idx var val) 
     (cond 
@@ -320,6 +318,14 @@
        ((equal? var 'make-vector) (string-append (closureFromLabelMaker "MAKE_VECTOR") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
        ((equal? var 'vector) (string-append (closureFromLabelMaker "VECTOR") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'string-length) (string-append (closureFromLabelMaker "STRING_LENGTH") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'string-ref) (string-append (closureFromLabelMaker "STRING_REF") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'string-set!) (string-append (closureFromLabelMaker "STRING_SET") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
+       ((equal? var 'make-string) (string-append (closureFromLabelMaker "MAKE_STRING") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       
       
@@ -1111,7 +1117,6 @@
       (code-gen body (+ 1 envLevel) numberOfParams)
 ))))
 
-
   
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; compile-scheme-file ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1130,8 +1135,6 @@
                     (cons ch (run)))))))
       (list->string
         (run))))))
-
-
 
 (define string->schemeList 
   (lambda (str)
@@ -1229,23 +1232,21 @@
     	  (out-port (if (file-exists? cisc_target_file) (begin (delete-file cisc_target_file) (open-output-file cisc_target_file))
             		(open-output-file cisc_target_file)))
     	  (stringFile (file->string scheme_source_file))
-          (sexprLst (string->schemeList stringFile))
+        (stringProcFile (file->string "arch/ourProcs.scm"))
+          (sexprLstNoProcs (string->schemeList stringFile))
+          (builtInProcSexprLst (string->schemeList stringProcFile))
+          (sexprLst (append builtInProcSexprLst sexprLstNoProcs))
           (parsedEvaledSexpr (total-evaluation sexprLst))
-          (constant-list (remove_duplicate (create-list-of-certain-type parsedEvaledSexpr 'const))) ;need to call the table creator
+          (constant-list (remove_duplicate (create-list-of-certain-type parsedEvaledSexpr 'const))) 
           (fvar-list (create-list-of-certain-type parsedEvaledSexpr 'fvar))
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
-          ;;add prolog and epilog to the code then write to file
           )
-   ; (display parsedEvaledSexpr)
-        ;make const table
             (initConstTable)
             (map addToConstTable constant-list)
 
             ;make global table
             (addLstToGlobalTable fvar-no-duplicates)
-
             (buildLinkedList) nl
-            ;(display const_table)
             (newline)
             ;create cisc code
             (let ((cisc-exp (string-append
@@ -1263,4 +1264,4 @@
 
 
 
-(compile-scheme-file "test-files/avTest1.scm" "foo.c")
+(compile-scheme-file "tests/mayer_test00.scm" "foo.c")

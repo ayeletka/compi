@@ -225,6 +225,164 @@ END:
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
+////////////////////////////  REMAINDER  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+ REMAINDER:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(2));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the first num
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_INTEGER));  
+ JUMP_NE(CHECK_IF_FRACTION);
+
+
+
+ CHECK_IF_FRACTION:
+ CMP(INDD(R1, 0),IMM(T_FRAC));  
+ JUMP_NE(CHECK_IF_FRACTION);
+
+ MOV(R1,FPARG(2));
+ MOV(R1, INDD(R1,1));
+ PUSH(R1);
+ CALL(MAKE_SOB_INTEGER);
+ DROP(1);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  STRINGS  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+ STRING_LENGTH:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(1));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the string
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_STRING));  
+ JUMP_NE(Lerror_incorr_type);
+ MOV(R1,FPARG(2));
+ MOV(R1, INDD(R1,1));
+ PUSH(R1);
+ CALL(MAKE_SOB_INTEGER);
+ DROP(1);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+
+ STRING_REF:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(2));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the vector
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_STRING));  
+ JUMP_NE(Lerror_incorr_type);
+ CMP(INDD(R1, 1),IMM(INDD(FPARG(3),1)));  
+ JUMP_LT(Lerror_incorr_type); 
+ MOV(R1,FPARG(2));
+ ADD(R1,IMM(2));
+ ADD(R1, IMM(INDD(FPARG(3),1)));
+ MOV(R0, IND(R1));
+ PUSH(R0);
+ CALL(MAKE_SOB_CHAR);
+ DROP(1);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+STRING_SET:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ CMP(FPARG(1),IMM(3));
+ JUMP_NE(Lerror_incorr_num_of_args);
+ //R1 holds the vector
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_STRING));  
+ JUMP_NE(Lerror_incorr_type);
+ CMP(INDD(R1, 1),IMM(INDD(FPARG(3),1)));  
+ JUMP_LT(Lerror_incorr_type); 
+ CMP(IND(FPARG(4)),T_CHAR);  
+ JUMP_LT(Lerror_incorr_type); 
+ MOV(R1,FPARG(2));
+ ADD(R1,IMM(2));
+ ADD(R1, IMM(INDD(FPARG(3),1)));
+ MOV(IND(R1),INDD(FPARG(4),1));
+ MOV(R0, T_VOID);
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+
+ MAKE_STRING:
+ PUSH(FP);
+ MOV(FP,SP);
+ PUSH(R1);
+ PUSH(R2);
+ CMP(FPARG(1),IMM(1));
+ JUMP_EQ(MAKE_STRING_ZERO);
+ CMP(FPARG(1),IMM(2));
+ JUMP_EQ(MAKE_STRING_VARS);
+ JUMP(Lerror_incorr_num_of_args);
+
+MAKE_STRING_ZERO:
+ //R1 holds the num
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_INTEGER));  
+ JUMP_NE(Lerror_incorr_type);
+ CMP(INDD(R1, 1),IMM(0));  
+ JUMP_NE(Lerror_incorr_type);
+ MOV(R2,IMM(0));
+ JUMP_EQ(MAKE_STRING_END);
+
+MAKE_STRING_VARS:
+ //R1 holds the num
+ MOV(R1, FPARG(2)); 
+ CMP(INDD(R1, 0),IMM(T_INTEGER));  
+ JUMP_NE(Lerror_incorr_type); 
+ CMP(INDD(R1, 1),IMM(0));  
+ JUMP_EQ(MAKE_STRING_ZERO);
+ CMP(IND(FPARG(3)),T_CHAR);  
+ JUMP_NE(Lerror_incorr_type);
+
+ MOV(R1,INDD(R1, 1));
+ MOV(R2,IMM(0));
+MAKE_STRING_VARS_LOOP:
+  CMP(R2,R1);
+  JUMP_EQ(MAKE_STRING_END);
+  PUSH(INDD(FPARG(3),1));
+  INCR(R2);
+  JUMP(MAKE_STRING_VARS_LOOP);
+
+MAKE_STRING_END:
+  PUSH(R2);
+  CALL(MAKE_SOB_STRING);
+  DROP(1);  
+  DROP(R2);
+ POP(R2); 
+ POP(R1);   
+ POP(FP);     
+ RETURN; 
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 ////////////////////////////  VECTORS  ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
@@ -1475,7 +1633,8 @@ LOOP_SYMTAB:
   MOV(R4, INDD(R3,1));
   CMP(R4,R1);
   JUMP_EQ(FOUND_SAME_SYMB);
-  ADD(R2, 2);
+  INCR(R2);
+  MOV(R2, IND(R2));
   JUMP(LOOP_SYMTAB);
 
 FOUND_SAME_SYMB:
@@ -1497,16 +1656,18 @@ ADD_NEW_SYMB_FIRST:
 ADD_NEW_SYMB:
   MOV(R0,R1);
   CALL(MAKE_SOB_SYMBOL);
+  MOV(R3, R0);
+  PUSH(IMM(2));
+  CALL(MALLOC);
+  DROP(1);
   DECR(R2);
-  MOV(R3,R2);
+  //MOV(R3,R2);
   /////////////////////////need to check that really works - since it might override other fileds in heap////////////
-  INCR(R3);
-  MOV(IND(R2),R3);
-  MOV(IND(R3), R0);
-  INCR(R3);
-  MOV(IND(R3), IMM(0));
-  DECR(R3);
-  MOV(R0,IND(R3));
+  //INCR(R3);
+  MOV(IND(R2),R0);
+  MOV(INDD(R0,0), R3);
+  MOV(INDD(R0,1), IMM(0));
+  MOV(R0,R3);
   JUMP(STRING_2_SYMBOL_END);
 
 

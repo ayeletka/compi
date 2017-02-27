@@ -1,21 +1,7 @@
+(remainder 2 4)
 
-'a
-(define b 'b)
-(string->symbol (symbol->string b))
+(define a (list 1 2 3))
 
-(eq? (string->symbol (symbol->string b)) b)
-
-
-2
-(((((lambda (x) ((x x) (x x)))
-    (lambda (x) (lambda (y) (x (x y)))))
-   (lambda (x) (x (lambda (x) (lambda (y) (lambda (z) ((z y) x)))))))
-  (lambda (x) ((x #f) #t)))
- (lambda (x) (lambda (y) y)))
+(append a '(1))
 
 
-(define a 2)
-
-(set! a 3)
-
-a
