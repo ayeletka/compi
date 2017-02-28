@@ -1,7 +1,6 @@
 Doing test tests/mayer_test02.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/mayer_test02.scm
 *** scheme output: #t
 *** our output: 
@@ -9,7 +8,6 @@ Doing test tests/mayer_test02.scm:
 
 Doing test tests/mayer_test03.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/mayer_test03.scm
 *** scheme output: #t
@@ -19,15 +17,11 @@ Doing test tests/mayer_test03.scm:
 Doing test tests/mayer_test07.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/mayer_test07.scm
-*** scheme output: #t
-*** our output: 
+Test tests/mayer_test07.scm Passed
 --------------------------------
 
 Doing test tests/mayer_test09.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/mayer_test09.scm
 *** scheme output: (3628800 fact-1 fact-2 fact-3 fact-1 fact-2 fact-3 fact-1
@@ -38,58 +32,44 @@ Doing test tests/mayer_test09.scm:
 Doing test tests/mayer_unsorted1.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/mayer_unsorted1.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/mayer_unsorted4.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/mayer_unsorted4.scm
 *** scheme output: #f
-*** our output: 
---------------------------------
-
-Doing test tests/test10.scm:
---------------------------------
-
-
-Test tests/test10.scm Passed
+*** our output: #t
 --------------------------------
 
 Doing test tests/test15.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test15.scm
-*** scheme output: #f
-*** our output: 
+*** scheme output: 1
+#f
+*** our output: 1#t
 --------------------------------
 
 Doing test tests/test16.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test16.scm
-*** scheme output: a
-*** our output: 
+Test tests/test16.scm Passed
 --------------------------------
 
 Doing test tests/test38.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test38.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test39.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test39.scm
 *** scheme output: ((1 2) (3 4) (5 6) (7 8) ((9 10) '(11 12)))
@@ -99,7 +79,6 @@ Doing test tests/test39.scm:
 Doing test tests/test100.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test100.scm
 *** scheme output: (1 2 3 4 5 6)
 *** our output: 
@@ -107,7 +86,6 @@ Doing test tests/test100.scm:
 
 Doing test tests/test101.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test101.scm
 *** scheme output: (1 2 3 4 5 6)
@@ -117,7 +95,6 @@ Doing test tests/test101.scm:
 Doing test tests/test102.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test102.scm
 *** scheme output: a
 *** our output: 
@@ -125,7 +102,6 @@ Doing test tests/test102.scm:
 
 Doing test tests/test103.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test103.scm
 *** scheme output: (1 2 3 1 2 . 3)
@@ -135,7 +111,6 @@ Doing test tests/test103.scm:
 Doing test tests/test104.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test104.scm
 *** scheme output: (1 2 $ 4)
 *** our output: 
@@ -143,7 +118,6 @@ Doing test tests/test104.scm:
 
 Doing test tests/test105.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test105.scm
 *** scheme output: (1 . 2)
@@ -153,7 +127,6 @@ Doing test tests/test105.scm:
 Doing test tests/test106.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test106.scm
 *** scheme output: ("hello" "world" "!")
 *** our output: 
@@ -161,7 +134,6 @@ Doing test tests/test106.scm:
 
 Doing test tests/test107.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test107.scm
 *** scheme output: ()
@@ -171,7 +143,6 @@ Doing test tests/test107.scm:
 Doing test tests/test108.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test108.scm
 *** scheme output: (1 2)
 *** our output: 
@@ -179,7 +150,6 @@ Doing test tests/test108.scm:
 
 Doing test tests/test109.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test109.scm
 *** scheme output: (2)
@@ -189,7 +159,6 @@ Doing test tests/test109.scm:
 Doing test tests/test110.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test110.scm
 *** scheme output: (1)
 *** our output: 
@@ -197,7 +166,6 @@ Doing test tests/test110.scm:
 
 Doing test tests/test111.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test111.scm
 *** scheme output: (1 . 2)
@@ -207,7 +175,6 @@ Doing test tests/test111.scm:
 Doing test tests/test112.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test112.scm
 *** scheme output: (#<procedure cons> . cons)
 *** our output: 
@@ -215,7 +182,6 @@ Doing test tests/test112.scm:
 
 Doing test tests/test113.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test113.scm
 *** scheme output: 120
@@ -225,7 +191,6 @@ Doing test tests/test113.scm:
 Doing test tests/test114.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test114.scm
 *** scheme output: 120
 *** our output: 
@@ -234,15 +199,11 @@ Doing test tests/test114.scm:
 Doing test tests/test115.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test115.scm
-*** scheme output: 16
-*** our output: 
+Test tests/test115.scm Passed
 --------------------------------
 
 Doing test tests/test116.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test116.scm
 *** scheme output: 16
@@ -252,7 +213,6 @@ Doing test tests/test116.scm:
 Doing test tests/test117.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test117.scm
 *** scheme output: 17
 *** our output: 
@@ -261,150 +221,117 @@ Doing test tests/test117.scm:
 Doing test tests/test118.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test118.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test118.scm Passed
 --------------------------------
 
 Doing test tests/test119.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test119.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test119.scm Passed
 --------------------------------
 
 Doing test tests/test120.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test120.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test120.scm Passed
 --------------------------------
 
 Doing test tests/test121.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test121.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test122.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test122.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test122.scm Passed
 --------------------------------
 
 Doing test tests/test123.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test123.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test124.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test124.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test125.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test125.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test125.scm Passed
 --------------------------------
 
 Doing test tests/test126.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test126.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test126.scm Passed
 --------------------------------
 
 Doing test tests/test127.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test127.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test127.scm Passed
 --------------------------------
 
 Doing test tests/test128.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test128.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test129.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test129.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test130.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test130.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test130.scm Passed
 --------------------------------
 
 Doing test tests/test131.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test131.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test142.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test142.scm
 *** scheme output: -3
-*** our output: 
+*** our output: 3/-1
 --------------------------------
 
 Doing test tests/test145.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test145.scm
 *** scheme output: -1/12
-*** our output: 
+*** our output: 1/-12
 --------------------------------
 
 Doing test tests/test146.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test146.scm
 *** scheme output: 1
@@ -414,337 +341,265 @@ Doing test tests/test146.scm:
 Doing test tests/test160.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test160.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test160.scm Passed
 --------------------------------
 
 Doing test tests/test161.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test161.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test161.scm Passed
 --------------------------------
 
 Doing test tests/test162.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test162.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test163.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test163.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test163.scm Passed
 --------------------------------
 
 Doing test tests/test164.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test164.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test165.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test165.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test166.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test166.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test166.scm Passed
 --------------------------------
 
 Doing test tests/test167.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test167.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test167.scm Passed
 --------------------------------
 
 Doing test tests/test168.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test168.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test173.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test173.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test173.scm Passed
 --------------------------------
 
 Doing test tests/test174.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test174.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test174.scm Passed
 --------------------------------
 
 Doing test tests/test175.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test175.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test176.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test176.scm
 *** scheme output: (#<procedure> . #<void>)
-*** our output: 
---------------------------------
-
-Doing test tests/test177.scm:
---------------------------------
-
-
-Test tests/test177.scm Passed
+*** our output: (#<closure at 300 env: 299 code: 4354244> . #<void>)
 --------------------------------
 
 Doing test tests/test181.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test181.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test181.scm Passed
 --------------------------------
 
 Doing test tests/test182.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test182.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test182.scm Passed
 --------------------------------
 
 Doing test tests/test183.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test183.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test183.scm Passed
 --------------------------------
 
 Doing test tests/test184.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test184.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test185.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test185.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test186.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test186.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test186.scm Passed
 --------------------------------
 
 Doing test tests/test187.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test187.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test187.scm Passed
 --------------------------------
 
 Doing test tests/test188.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test188.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test189.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test189.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test190.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test190.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test191.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test191.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test192.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test192.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test192.scm Passed
 --------------------------------
 
 Doing test tests/test193.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test193.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test194.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test194.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test195.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test195.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test196.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test196.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test197.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test197.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test198.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test198.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test198.scm Passed
 --------------------------------
 
 Doing test tests/test199.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test199.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test200.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test200.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test202.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test202.scm
 *** scheme output: #\Ã¿
-*** our output: 
+*** our output: #\ÿ
 --------------------------------
 
 Doing test tests/test203.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test203.scm
 *** scheme output: (#<procedure list>)
-*** our output: 
+*** our output: (#<closure at 269 env: 268 code: 4325265> . ())
 --------------------------------
 
 Doing test tests/test205.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test205.scm
 *** scheme output: (#t #t #f #t)
-*** our output: 
+*** our output: (#t . (#t . (#t . (#t . ()))))
 --------------------------------
 
 Doing test tests/test207.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test207.scm
 *** scheme output: "\x0;\x0;\x0;"
@@ -754,7 +609,6 @@ Doing test tests/test207.scm:
 Doing test tests/test211.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test211.scm
 *** scheme output: ("batman" "batman" "batman")
 *** our output: 
@@ -762,7 +616,6 @@ Doing test tests/test211.scm:
 
 Doing test tests/test212.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test212.scm
 *** scheme output: (-1 -2 -3/5)
@@ -772,7 +625,6 @@ Doing test tests/test212.scm:
 Doing test tests/test213.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test213.scm
 *** scheme output: (0 0 0)
 *** our output: 
@@ -780,7 +632,6 @@ Doing test tests/test213.scm:
 
 Doing test tests/test214.scm:
 --------------------------------
-
 
 *** RESULTS DIFFER in tests/test214.scm
 *** scheme output: (("a" 'a 1 1/2) ("b" 'b 2 1/3) ("c" 'c 3 1/4))
@@ -790,412 +641,139 @@ Doing test tests/test214.scm:
 Doing test tests/test215.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test215.scm
 *** scheme output: #t
-*** our output: 
+*** our output: #f
 --------------------------------
 
 Doing test tests/test217.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test217.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test218.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test218.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test219.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test219.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test219.scm Passed
 --------------------------------
 
 Doing test tests/test220.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test220.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test221.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test221.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test222.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test222.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test222.scm Passed
 --------------------------------
 
 Doing test tests/test223.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test223.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test223.scm Passed
 --------------------------------
 
 Doing test tests/test224.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test224.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test225.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test225.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test229.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test229.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test229.scm Passed
 --------------------------------
 
 Doing test tests/test230.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test230.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test231.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test231.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test232.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test232.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test232.scm Passed
 --------------------------------
 
 Doing test tests/test233.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test233.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test233.scm Passed
 --------------------------------
 
 Doing test tests/test234.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test234.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test235.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test235.scm
-*** scheme output: #t
-*** our output: 
+Test tests/test235.scm Passed
 --------------------------------
 
 Doing test tests/test236.scm:
 --------------------------------
 
-
-*** RESULTS DIFFER in tests/test236.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test237.scm:
---------------------------------
-
-
-Test tests/test237.scm Passed
+Test tests/test236.scm Passed
 --------------------------------
 
 Doing test tests/test238.scm:
 --------------------------------
 
-
 *** RESULTS DIFFER in tests/test238.scm
 *** scheme output: #f
-*** our output: 
+*** our output: #t
 --------------------------------
 
 Doing test tests/test239.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test239.scm
-*** scheme output: 2
-*** our output: 
---------------------------------
-
-Doing test tests/test241.scm:
---------------------------------
-
-
-Test tests/test241.scm Passed
---------------------------------
-
-Doing test tests/test244.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test244.scm
-*** scheme output: ((4 5) 2 3)
-(4 5)
-(2 3)
-*** our output: 
---------------------------------
-
-Doing test tests/test247.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test247.scm
-*** scheme output: (1 4 5)
-1
-(4 5)
-*** our output: 
---------------------------------
-
-Doing test tests/test254.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test254.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test255.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test255.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test256.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test256.scm
-*** scheme output: fresh
-*** our output: 
---------------------------------
-
-Doing test tests/test257.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test257.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test258.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test258.scm
-*** scheme output: #f
-*** our output: 
---------------------------------
-
-Doing test tests/test259.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test259.scm
-*** scheme output: #f
-*** our output: 
---------------------------------
-
-Doing test tests/test260.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test260.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test261.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test261.scm
-*** scheme output: #f
-*** our output: 
---------------------------------
-
-Doing test tests/test262.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test262.scm
-*** scheme output: #f
-*** our output: 
---------------------------------
-
-Doing test tests/test263.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test263.scm
-*** scheme output: "sym"
-*** our output: 
---------------------------------
-
-Doing test tests/test264.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test264.scm
-*** scheme output: #(#<procedure vector> #<procedure vector>)
-*** our output: 
---------------------------------
-
-Doing test tests/test265.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test265.scm
-*** scheme output: #(a 1 1 "uno" einz)
-*** our output: 
---------------------------------
-
-Doing test tests/test266.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test266.scm
-*** scheme output: #()
-*** our output: 
---------------------------------
-
-Doing test tests/test267.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test267.scm
-*** scheme output: 0
-*** our output: 
---------------------------------
-
-Doing test tests/test268.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test268.scm
-*** scheme output: 2
-*** our output: 
---------------------------------
-
-Doing test tests/test269.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test269.scm
-*** scheme output: 1
-*** our output: 
---------------------------------
-
-Doing test tests/test270.scm:
---------------------------------
-
-
-Test tests/test270.scm Passed
---------------------------------
-
-Doing test tests/test271.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test271.scm
-*** scheme output: #f
-*** our output: 
---------------------------------
-
-Doing test tests/test272.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test272.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test273.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test273.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test274.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test274.scm
-*** scheme output: #t
-*** our output: 
---------------------------------
-
-Doing test tests/test275.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test275.scm
-*** scheme output: #t
-*** our output: 
 --------------------------------
 

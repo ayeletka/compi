@@ -141,7 +141,7 @@
 (define load-nil (lambda (idx) (string-append "MOV(IND(" (number->string idx) "), IMM(T_NIL));" nl)))
 (define load-bool 
   (lambda (idx) 
-    (if (equal? idx 3)
+    (if (equal? idx 102)
       (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
       "MOV(IND(" (number->string (+ idx 1)) "), IMM(0));" nl )
        (string-append "MOV(IND(" (number->string idx) "), IMM(T_BOOL));" nl 
