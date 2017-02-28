@@ -43,7 +43,7 @@
     ))
     )
 
-(define address 1)
+(define address 100)
 
 (define getAddress (lambda () address))
 
@@ -1263,5 +1263,5 @@
             (close-output-port out-port))))
 
 
-
-(compile-scheme-file "tests/mayer_test00.scm" "foo.c")
+(compile-scheme-file "test-files/avTest1.scm" "foo.c")
+;(compile-scheme-file "tests/test0.scm" "foo.c")
