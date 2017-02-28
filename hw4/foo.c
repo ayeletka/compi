@@ -17,7 +17,7 @@ Programmers: Ayelet Kalderon & Avishag Daniely */
 
 #define LOCAL_ENV 0
 
-#define SYMTAB 166
+#define SYMTAB 167
 
 #include "arch/cisc.h"
 #include "arch/BenTest.h"
@@ -26,7 +26,7 @@ int main()
 {
  START_MACHINE;
 
-PUSH(IMM(166));
+PUSH(IMM(167));
 CALL(MALLOC);
 DROP(1);
 PUSH(IMM(0));
@@ -58,7 +58,7 @@ MOV(IND(103), IMM(0));
 MOV(IND(104), IMM(T_BOOL));
 MOV(IND(105), IMM(1));
 MOV(IND(106), IMM(T_INTEGER));
-MOV(IND(107), IMM(3));
+MOV(IND(107), IMM(5));
 MOV(IND(108), IMM(T_STRING));
 MOV(IND(109), IMM(0));
 MOV(IND(110), IMM(T_INTEGER));
@@ -266,9 +266,14 @@ MOV(IND(162), IMM(999999));
 MOV(IND(163), IMM(999999));
 MOV(IND(164), IMM(999999));
 MOV(IND(165), IMM(999999));
+PUSH(LABEL(NOT));
+PUSH(IMM(0));
+CALL(MAKE_SOB_CLOSURE);
+DROP(IMM(2));
+MOV(IND(166), R0);
 
 /* ----------initiating symbols string linked list---------- */
-MOV(IND(166), IMM(0));
+MOV(IND(167), IMM(0));
 
 /* define */
 /* get old env address, put in R8 */
@@ -3812,7 +3817,59 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(135));
+MOV(R0, IND(166));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(104));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(166));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(102));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(166));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));

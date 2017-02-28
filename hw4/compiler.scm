@@ -1264,4 +1264,4 @@
 
 
 ;(compile-scheme-file "test-files/test2.scm" "foo.c")
-(compile-scheme-file "tests/test207.scm" "foo.c")
+(compile-scheme-file "tests/test217.scm" "foo.c")
