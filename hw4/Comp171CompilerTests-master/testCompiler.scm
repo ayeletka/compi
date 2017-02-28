@@ -1292,7 +1292,7 @@
 (define eq-tests
   (list
     ;void
-    ;(cons "(begin (define x 5) (eq? (set! x 6) (set! x -1/2)))" "#t\n")
+    (cons "(begin (define x 5) (eq? (set! x 6) (set! x -1/2)))" "#t\n")
     
     ;nil
     (cons "(eq? '() (list))" "#t\n")
@@ -1433,7 +1433,7 @@
   (list
 ))
 
-(load "comp161-torture-if-test.scm")
+(load "CompilerTests/comp161-torture-if-test.scm")
 
 
 (display (format "\033[1mComp171 - Compiler Tests\033[0m\n================================\n"))

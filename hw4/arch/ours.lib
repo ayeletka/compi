@@ -6,9 +6,9 @@ PRINT_R0:
 	PUSH(R0);
 	CALL(WRITE_SOB_HELPER);
 	DROP(IMM(1));
-	/*PUSH('\n');
+	PUSH('\n');
 	CALL(PUTCHAR);
-	DROP(IMM(1)); */
+	DROP(IMM(1)); 
 PRINT_R0_END:
 	JUMP(END);
 END:
