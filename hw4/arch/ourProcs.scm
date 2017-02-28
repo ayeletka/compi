@@ -21,6 +21,43 @@
       (if (null? lst) '()
 	  (internalApply (car lst) (cdr lst)))))))
 
+(define cadr 
+	(lambda (x) (car (cdr x))))
+
+
+(define caar 
+	(lambda (x) (car (car x))))
+
+(define cddr 
+	(lambda (x) (cdr (cdr x))))
+
+(define caddr 
+	(lambda (x) (car (cdr (cdr x))))) 
+
+(define caadr 
+	(lambda (x) (car (car (cdr x))))) 
+
+(define cdddr 
+	(lambda (x) (cdr (cdr (cdr x))))) 
+
+(define caaar 
+	(lambda (x) (car (car (car x))))) 
+
+(define caaadr 
+	(lambda (x) (car (car (car (cdr x))))))
+
+(define caaddr 
+	(lambda (x) (car (car (cdr (cdr x))))))
+
+(define cadddr 
+	(lambda (x) (car (cdr (cdr (cdr x))))))
+
+(define cddddr 
+	(lambda (x) (cdr (cdr (cdr (cdr x))))))
+
+(define caaaar 
+	(lambda (x) (car (car (car (car x))))))
+
 
 ;waiting 4 apply
 ;(define map (lambda (proc lst1 . restLsts)
