@@ -345,12 +345,22 @@ STRING_SET:
 MAKE_STRING_ZERO:
  //R1 holds the num
  MOV(R1, FPARG(2)); 
- CMP(INDD(R1, 0),IMM(T_INTEGER));  
+ CMP(INDD(R1, 0),IMM(T_INTEGER)); 
  JUMP_NE(Lerror_incorr_type);
  CMP(INDD(R1, 1),IMM(0));  
- JUMP_NE(Lerror_incorr_type);
+ JUMP_NE(MAKE_STRING_ZERO_TIMES);
  MOV(R2,IMM(0));
  JUMP_EQ(MAKE_STRING_END);
+
+MAKE_STRING_ZERO_TIMES:
+ MOV(R1,INDD(R1, 1));
+ MOV(R2,IMM(0));
+MAKE_STRING_ZERO_TIMES_LOOP:
+   CMP(R2,R1);
+  JUMP_EQ(MAKE_STRING_END);
+  PUSH(IMM(0));
+  INCR(R2);
+  JUMP(MAKE_STRING_ZERO_TIMES_LOOP);
 
 MAKE_STRING_VARS:
  //R1 holds the num
@@ -1075,6 +1085,86 @@ EQUAL:
   POP(R1);
   POP(FP);
   RETURN;
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  eq?  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+CHECK_EQ_OBJECT:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  MOV(R1, FPARG(2));
+  MOV(R2, FPARG(3));
+  //compare types
+  CMP(IND(R1),IND(R2));
+  JUMP_NE(EQUAL_NOT_SAME_TYPE);
+  CMP(IND(R1),T_SYMBOL);
+  JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
+  CMP(IND(R1),T_INTEGER);
+  JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
+  CMP(IND(R1),T_FRAC);
+  JUMP_EQ(CHECK_EQ_FRAC);
+  CMP(IND(R1),T_CHAR);
+  JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
+  CMP(IND(R1),T_VOID);
+  JUMP_EQ(CHECK_EQ_ADDRESS);
+  CMP(IND(R1),T_NIL);
+  JUMP_EQ(CHECK_EQ_ADDRESS);
+  CMP(IND(R1),T_NIL);
+  JUMP_EQ(CHECK_EQ_ADDRESS);
+  CMP(IND(R1),T_BOOL);
+  JUMP_EQ(CHECK_EQ_BOOL);
+  CMP(IND(R1),T_STRING);
+  JUMP_EQ(CHECK_EQ_BOOL);
+  CMP(IND(R1),T_VECTOR);
+  JUMP_EQ(CHECK_EQ_BOOL);
+  CMP(IND(R1),T_PAIR);
+  JUMP_EQ(CHECK_EQ_BOOL);
+
+
+CHECK_EQ_BOOL:
+  CMP(R1,R2);  
+  JUMP_NE(EQUAL_NOT_SAME_TYPE);
+  MOV(R0,TRUE);
+  JUMP(CHECK_EQ_END);
+
+
+CHECK_EQ_ADDRESS:
+  MOV(R0,TRUE);
+  JUMP(CHECK_EQ_END);
+
+CHECK_EQ_FRAC:
+  CMP(INDD(R1,1),INDD(R2,1));
+  JUMP_NE(EQUAL_NOT_SAME_TYPE);
+  CMP(INDD(R1,2),INDD(R2,2));
+  JUMP_NE(EQUAL_NOT_SAME_TYPE);
+  MOV(R0,TRUE);
+  JUMP(CHECK_EQ_END);
+
+
+CHECK_EQ_SINGLE_FIELD:
+  CMP(INDD(R1,1),INDD(R2,1));
+  JUMP_NE(EQUAL_NOT_SAME_TYPE);
+  MOV(R0,TRUE);
+  JUMP(CHECK_EQ_END);
+
+
+EQUAL_NOT_SAME_TYPE:
+  MOV(R0,FALSE);
+  JUMP(CHECK_EQ_END);
+
+CHECK_EQ_END:
+  POP(R2);
+  POP(R1);
+  POP(FP);
+  RETURN;
+
+
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////  DIVIDE  ///////////////////////////////////////
@@ -1190,6 +1280,9 @@ EQUAL:
   PUSH(R6);
   PUSH(R7);
 
+  MOV(R1,FPARG(1));
+  CMP(R1,IMM(0));
+  JUMP_EQ(MULTIPLY_NO_ARGS);
 
   MOV(R5, FPARG(LOCAL_NUM_ARGS)); //iterate from 2 to 2+ number of args
   ADD(R5, 2);
@@ -1250,6 +1343,12 @@ EQUAL:
   JUMP(MULTIPLY_RETURN_FRACTION);
 
 
+MULTIPLY_NO_ARGS: 
+  PUSH(IMM(1));
+  CALL(MAKE_SOB_INTEGER);
+  DROP(1);
+  JUMP(MULTIPLY_RETURN_FRACTION);
+
   MUL_END:
   MOV(R0, R6);
   CMP(INDD(R0, 2), 1); // Somthing / 1
@@ -1269,6 +1368,7 @@ EQUAL:
   POP(R1);
   POP(FP);
   RETURN;
+
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1703,82 +1803,6 @@ MAKE_SOB_SYMBOL:
   POP(FP);
   RETURN;
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-////////////////////////////  eq?  ///////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-
-CHECK_EQ_OBJECT:
-  PUSH(FP);
-  MOV(FP, SP);
-  PUSH(R1);
-  PUSH(R2);
-  MOV(R1, FPARG(2));
-  MOV(R2, FPARG(3));
-  //compare types
-  CMP(IND(R1),IND(R2));
-  JUMP_NE(EQUAL_NOT_SAME_TYPE);
-  CMP(IND(R1),T_SYMBOL);
-  JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
-  CMP(IND(R1),T_INTEGER);
-  JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
-  CMP(IND(R1),T_FRAC);
-  JUMP_EQ(CHECK_EQ_FRAC);
-  CMP(IND(R1),T_CHAR);
-  JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
-  CMP(IND(R1),T_VOID);
-  JUMP_EQ(CHECK_EQ_ADDRESS);
-  CMP(IND(R1),T_NIL);
-  JUMP_EQ(CHECK_EQ_ADDRESS);
-  CMP(IND(R1),T_NIL);
-  JUMP_EQ(CHECK_EQ_ADDRESS);
-  CMP(IND(R1),T_BOOL);
-  JUMP_EQ(CHECK_EQ_BOOL);
-  CMP(IND(R1),T_STRING);
-  JUMP_EQ(CHECK_EQ_BOOL);
-  CMP(IND(R1),T_VECTOR);
-  JUMP_EQ(CHECK_EQ_BOOL);
-  CMP(IND(R1),T_PAIR);
-  JUMP_EQ(CHECK_EQ_BOOL);
-
-
-CHECK_EQ_BOOL:
-  CMP(R1,R2);  
-  JUMP_NE(EQUAL_NOT_SAME_TYPE);
-  MOV(R0,TRUE);
-  JUMP(CHECK_EQ_END);
-
-
-CHECK_EQ_ADDRESS:
-  MOV(R0,TRUE);
-  JUMP(CHECK_EQ_END);
-
-CHECK_EQ_FRAC:
-  CMP(INDD(R1,1),INDD(R2,1));
-  JUMP_NE(EQUAL_NOT_SAME_TYPE);
-  CMP(INDD(R1,2),INDD(R2,2));
-  JUMP_NE(EQUAL_NOT_SAME_TYPE);
-  MOV(R0,TRUE);
-  JUMP(CHECK_EQ_END);
-
-
-CHECK_EQ_SINGLE_FIELD:
-  CMP(INDD(R1,1),INDD(R2,1));
-  JUMP_NE(EQUAL_NOT_SAME_TYPE);
-  MOV(R0,TRUE);
-  JUMP(CHECK_EQ_END);
-
-
-EQUAL_NOT_SAME_TYPE:
-  MOV(R0,FALSE);
-  JUMP(CHECK_EQ_END);
-
-CHECK_EQ_END:
-  POP(R2);
-  POP(R1);
-  POP(FP);
-  RETURN;
 
 
 
