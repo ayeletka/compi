@@ -223,38 +223,6 @@ END:
   POP(FP);
   RETURN;
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-////////////////////////////  REMAINDER  ///////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-
- REMAINDER:
- PUSH(FP);
- MOV(FP,SP);
- PUSH(R1);
- CMP(FPARG(1),IMM(2));
- JUMP_NE(Lerror_incorr_num_of_args);
- //R1 holds the first num
- MOV(R1, FPARG(2)); 
- CMP(INDD(R1, 0),IMM(T_INTEGER));  
- JUMP_NE(CHECK_IF_FRACTION);
-
-
-
- CHECK_IF_FRACTION:
- CMP(INDD(R1, 0),IMM(T_FRAC));  
- JUMP_NE(CHECK_IF_FRACTION);
-
- MOV(R1,FPARG(2));
- MOV(R1, INDD(R1,1));
- PUSH(R1);
- CALL(MAKE_SOB_INTEGER);
- DROP(1);
- POP(R1);   
- POP(FP);     
- RETURN; 
-
 
 
 
@@ -387,7 +355,7 @@ MAKE_STRING_END:
   DROP(1);  
   DROP(R2);
  POP(R2); 
- POP(R1);   
+ POP(R1); 
  POP(FP);     
  RETURN; 
 
@@ -1100,13 +1068,16 @@ CHECK_EQ_OBJECT:
   MOV(FP, SP);
   PUSH(R1);
   PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
   MOV(R1, FPARG(2));
   MOV(R2, FPARG(3));
   //compare types
   CMP(IND(R1),IND(R2));
   JUMP_NE(EQUAL_NOT_SAME_TYPE);
   CMP(IND(R1),T_SYMBOL);
-  JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
+  JUMP_EQ(CHECK_EQ_SYMBOL);
   CMP(IND(R1),T_INTEGER);
   JUMP_EQ(CHECK_EQ_SINGLE_FIELD);
   CMP(IND(R1),T_FRAC);
@@ -1148,6 +1119,32 @@ CHECK_EQ_FRAC:
   MOV(R0,TRUE);
   JUMP(CHECK_EQ_END);
 
+CHECK_EQ_SYMBOL:
+  CMP(INDD(R1,1),INDD(R2,1));
+  JUMP_NE(CHECK_EQ_SYMBOL_MORE);
+  MOV(R0,TRUE);
+  JUMP(CHECK_EQ_END);
+CHECK_EQ_SYMBOL_MORE:
+  MOV(R1,INDD(R1,1));  
+  MOV(R2,INDD(R2,1));
+  MOV(R3,INDD(R1,1));  
+  MOV(R4,INDD(R2,1));
+  CMP(R3,R4);
+  JUMP_NE(EQUAL_NOT_SAME_TYPE);
+  MOV(R5,IMM(0));
+  ADD(R1,IMM(2));
+  ADD(R2,IMM(2));
+CHECK_EQ_SYMBOL_MORE_LOOP:
+  CMP(R5,R4);
+  JUMP_EQ(SYMBOL_EQUAL_TRUE);
+  CMP(INDD(R1,R5),INDD(R2,R5));
+  JUMP_NE(EQUAL_NOT_SAME_TYPE);
+  INCR(R5);
+  JUMP(CHECK_EQ_SYMBOL_MORE_LOOP);
+
+SYMBOL_EQUAL_TRUE:
+  MOV(R0,TRUE);
+  JUMP(CHECK_EQ_END);
 
 CHECK_EQ_SINGLE_FIELD:
   CMP(INDD(R1,1),INDD(R2,1));
@@ -1161,6 +1158,9 @@ EQUAL_NOT_SAME_TYPE:
   JUMP(CHECK_EQ_END);
 
 CHECK_EQ_END:
+  POP(R5);
+  POP(R4);
+  POP(R3);
   POP(R2);
   POP(R1);
   POP(FP);
@@ -1725,17 +1725,19 @@ STRING_2_SYMBOL:
   //assuming no symbols//
   CMP(IND(SYMTAB),IMM(0));
   JUMP_EQ(ADD_NEW_SYMB_FIRST);
-  MOV(R2,SYMTAB);
-LOOP_SYMTAB:
-  ///if reached end of symtable//
+  MOV(R2,SYMTAB); 
+  ///symtable is empty//
   CMP(IND(R2),IMM(0));
   JUMP_EQ(ADD_NEW_SYMB);
+LOOP_SYMTAB:
   //r3 will hold symb address, r4 will hold the string address//
-  MOV(R3, IND(R2));
-  MOV(R4, INDD(R3,1));
+  MOV(R3, R2);
+  MOV(R4, INDD(IND(R3),1));
   CMP(R4,R1);
   JUMP_EQ(FOUND_SAME_SYMB);
   INCR(R2);
+  CMP(IND(R2),IMM(0));
+  JUMP_EQ(ADD_NEW_SYMB);
   MOV(R2, IND(R2));
   JUMP(LOOP_SYMTAB);
 

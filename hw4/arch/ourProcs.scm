@@ -1,7 +1,10 @@
 (define remainder 
 (lambda (num1 num2)
-(cond ((and (number? num1) (number? 2) (< num1 num2)) num1)
-((and (number? num1) (number? 2)) (remainder (- num1 num2) num2))
+(cond 
+	((and (number? num1) (number? num2) (< num2 0)) (remainder num1 (- num2)))
+	((and (number? num1) (number? num2) (< num1 0) (< (- num1) num2)) num1)
+	((and (number? num1) (number? num2) (or (> num1 0) (= num1 0)) (< num1 num2)) num1)
+((and (number? num1) (number? num2)) (remainder (- num1 num2) num2))
 (else ""))))
 
 (define list (lambda vars vars))

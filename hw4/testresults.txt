@@ -1,4 +1,16 @@
-Doing test tests/mayer_test02.scm:
+Doing test tests/test189.scm:
 --------------------------------
 
+*** RESULTS DIFFER in tests/test189.scm
+*** scheme output: #f
+*** our output: #t
+--------------------------------
+
+Doing test tests/test202.scm:
+--------------------------------
+
+*** RESULTS DIFFER in tests/test202.scm
+*** scheme output: #\Ã¿
+*** our output: #\ÿ
+--------------------------------
 
