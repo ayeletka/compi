@@ -1180,6 +1180,7 @@
     "#define LOCAL_NUM_ARGS 1 " nl nl
     "#define LOCAL_ENV 0" nl nl
     "#define SYMTAB " (number->string (getsymbStartAdd)) nl nl
+    "#define cadr (lambda (x) (car (cdr x)))" nl nl
 
 		"#include \"arch/cisc.h\"" nl
     "#include \"arch/BenTest.h\"" nl nl
@@ -1263,5 +1264,5 @@
             (close-output-port out-port))))
 
 
-(compile-scheme-file "tests/test15.scm" "foo.c")
+(compile-scheme-file "test-files/test2.scm" "foo.c")
 ;(compile-scheme-file "tests/test0.scm" "foo.c")

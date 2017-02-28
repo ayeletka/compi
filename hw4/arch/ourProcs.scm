@@ -21,6 +21,17 @@
       (if (null? lst) '()
 	  (internalApply (car lst) (cdr lst)))))))
 
+(define cadr 
+	(lambda (x) (car (cdr x))))
+
+;(define caadr 
+;	(lambda (x) (car (car (cdr x))))) 
+
+(define caddr 
+	(lambda (x) (car (cdr (cdr x))))) 
+
+;(define caaddr 
+	;(lambda (x) (car (car (cdr (cdr x)))))) 
 
 ;waiting 4 apply
 ;(define map (lambda (proc lst1 . restLsts)
