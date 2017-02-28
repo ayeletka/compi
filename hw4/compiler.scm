@@ -1175,8 +1175,8 @@
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
     "#define SOB_NIL 2" nl nl
-    "#define FALSE 3 " nl nl
-    "#define TRUE 5 " nl nl
+    "#define FALSE 102 " nl nl
+    "#define TRUE 104 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
     "#define LOCAL_ENV 0" nl nl
     "#define SYMTAB " (number->string (getsymbStartAdd)) nl nl

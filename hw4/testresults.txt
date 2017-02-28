@@ -1,24 +1,3 @@
-Doing test tests/mayer_fact-x.scm:
---------------------------------
-
-
-Test tests/mayer_fact-x.scm Passed
---------------------------------
-
-Doing test tests/mayer_test00.scm:
---------------------------------
-
-
-Test tests/mayer_test00.scm Passed
---------------------------------
-
-Doing test tests/mayer_test01.scm:
---------------------------------
-
-
-Test tests/mayer_test01.scm Passed
---------------------------------
-
 Doing test tests/mayer_test02.scm:
 --------------------------------
 
@@ -26,7 +5,6 @@ Doing test tests/mayer_test02.scm:
 *** RESULTS DIFFER in tests/mayer_test02.scm
 *** scheme output: #t
 *** our output: 
-Fatal error: Corrupt sexpr type: 376
 --------------------------------
 
 Doing test tests/mayer_test03.scm:
@@ -38,28 +16,13 @@ Doing test tests/mayer_test03.scm:
 *** our output: 
 --------------------------------
 
-Doing test tests/mayer_test05.scm:
---------------------------------
-
-
-Test tests/mayer_test05.scm Passed
---------------------------------
-
 Doing test tests/mayer_test07.scm:
 --------------------------------
 
 
-Test tests/mayer_test07.scm Passed
---------------------------------
-
-Doing test tests/mayer_test08.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/mayer_test08.scm
-*** scheme output: ((#t) (#t) (#t))
-*** our output: ((#t . 
-Fatal error: Corrupt sexpr type: 193
+*** RESULTS DIFFER in tests/mayer_test07.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/mayer_test09.scm:
@@ -79,21 +42,6 @@ Doing test tests/mayer_unsorted1.scm:
 *** RESULTS DIFFER in tests/mayer_unsorted1.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
---------------------------------
-
-Doing test tests/mayer_unsorted2.scm:
---------------------------------
-
-
-Test tests/mayer_unsorted2.scm Passed
---------------------------------
-
-Doing test tests/mayer_unsorted3.scm:
---------------------------------
-
-
-Test tests/mayer_unsorted3.scm Passed
 --------------------------------
 
 Doing test tests/mayer_unsorted4.scm:
@@ -103,152 +51,13 @@ Doing test tests/mayer_unsorted4.scm:
 *** RESULTS DIFFER in tests/mayer_unsorted4.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
---------------------------------
-
-Doing test tests/mayer_unsorted5.scm:
---------------------------------
-
-
-Test tests/mayer_unsorted5.scm Passed
---------------------------------
-
-Doing test tests/mayer_unsorted6.scm:
---------------------------------
-
-
-Test tests/mayer_unsorted6.scm Passed
---------------------------------
-
-Doing test tests/test0.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test0.scm
-*** scheme output: #('(4 5) (1 2))
-*** our output: #2((quote . ((4 . (5 . 
-Fatal error: Corrupt sexpr type: 234
---------------------------------
-
-Doing test tests/test1.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test1.scm
-*** scheme output: #("B" 3 'cake cookie donut pie)
-*** our output: #6("B" 3 (quote . (cake . 
-Fatal error: Corrupt sexpr type: 265
---------------------------------
-
-Doing test tests/test2.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test2.scm
-*** scheme output: (1 2 3 4 4 5 6 7 8 9 10 11 12 13 (14 15 (16)) 17 18 19 20)
-*** our output: (1 . (2 . (3 . (4 . (4 . (5 . (6 . (7 . (8 . (9 . (10 . (11 . (12 . (13 . ((14 . (15 . ((16 . 
-Fatal error: Corrupt sexpr type: 304
---------------------------------
-
-Doing test tests/test3.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test3.scm
-*** scheme output: ('''a)
-*** our output: ((quote . ((quote . ((quote . (a . 
-Fatal error: Corrupt sexpr type: 254
---------------------------------
-
-Doing test tests/test4.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test4.scm
-*** scheme output: ''''b
-*** our output: (quote . ((quote . ((quote . ((quote . (b . 
-Fatal error: Corrupt sexpr type: 268
---------------------------------
-
-Doing test tests/test5.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test5.scm
-*** scheme output: ("A")
-*** our output: ("A" . 
-Fatal error: Corrupt sexpr type: 199
---------------------------------
-
-Doing test tests/test6.scm:
---------------------------------
-
-
-Test tests/test6.scm Passed
---------------------------------
-
-Doing test tests/test7.scm:
---------------------------------
-
-
-Test tests/test7.scm Passed
---------------------------------
-
-Doing test tests/test8.scm:
---------------------------------
-
-
-Test tests/test8.scm Passed
---------------------------------
-
-Doing test tests/test9.scm:
---------------------------------
-
-
-Test tests/test9.scm Passed
 --------------------------------
 
 Doing test tests/test10.scm:
 --------------------------------
 
 
-*** RESULTS DIFFER in tests/test10.scm
-*** scheme output: 
-*** our output: #<void>
---------------------------------
-
-Doing test tests/test11.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test11.scm
-*** scheme output: (1 2 'k)
-*** our output: (1 . (2 . ((quote . (k . 
-Fatal error: Corrupt sexpr type: 230
---------------------------------
-
-Doing test tests/test12.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test12.scm
-*** scheme output: (1 2 'k)
-*** our output: (1 . (2 . ((quote . (k . 
-Fatal error: Corrupt sexpr type: 230
---------------------------------
-
-Doing test tests/test13.scm:
---------------------------------
-
-
-Test tests/test13.scm Passed
---------------------------------
-
-Doing test tests/test14.scm:
---------------------------------
-
-
-Test tests/test14.scm Passed
+Test tests/test10.scm Passed
 --------------------------------
 
 Doing test tests/test15.scm:
@@ -258,115 +67,15 @@ Doing test tests/test15.scm:
 *** RESULTS DIFFER in tests/test15.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test16.scm:
 --------------------------------
 
 
-Test tests/test16.scm Passed
---------------------------------
-
-Doing test tests/test18.scm:
---------------------------------
-
-
-Test tests/test18.scm Passed
---------------------------------
-
-Doing test tests/test19.scm:
---------------------------------
-
-
-Test tests/test19.scm Passed
---------------------------------
-
-Doing test tests/test22.scm:
---------------------------------
-
-
-Test tests/test22.scm Passed
---------------------------------
-
-Doing test tests/test23.scm:
---------------------------------
-
-
-Test tests/test23.scm Passed
---------------------------------
-
-Doing test tests/test24.scm:
---------------------------------
-
-
-Test tests/test24.scm Passed
---------------------------------
-
-Doing test tests/test25.scm:
---------------------------------
-
-
-Test tests/test25.scm Passed
---------------------------------
-
-Doing test tests/test30.scm:
---------------------------------
-
-
-Test tests/test30.scm Passed
---------------------------------
-
-Doing test tests/test31.scm:
---------------------------------
-
-
-Test tests/test31.scm Passed
---------------------------------
-
-Doing test tests/test32.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test32.scm
-*** scheme output: (2 3 4 6 7 8 9 10)
-*** our output: (2 . (3 . (4 . (6 . (7 . (8 . (9 . (10 . 
-Fatal error: Corrupt sexpr type: 209
---------------------------------
-
-Doing test tests/test33.scm:
---------------------------------
-
-
-Test tests/test33.scm Passed
---------------------------------
-
-Doing test tests/test34.scm:
---------------------------------
-
-
-Test tests/test34.scm Passed
---------------------------------
-
-Doing test tests/test35.scm:
---------------------------------
-
-
-Test tests/test35.scm Passed
---------------------------------
-
-Doing test tests/test36.scm:
---------------------------------
-
-
-Test tests/test36.scm Passed
---------------------------------
-
-Doing test tests/test37.scm:
---------------------------------
-
-
-Test tests/test37.scm Passed
+*** RESULTS DIFFER in tests/test16.scm
+*** scheme output: a
+*** our output: 
 --------------------------------
 
 Doing test tests/test38.scm:
@@ -376,7 +85,6 @@ Doing test tests/test38.scm:
 *** RESULTS DIFFER in tests/test38.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test39.scm:
@@ -386,16 +94,6 @@ Doing test tests/test39.scm:
 *** RESULTS DIFFER in tests/test39.scm
 *** scheme output: ((1 2) (3 4) (5 6) (7 8) ((9 10) '(11 12)))
 *** our output: 
---------------------------------
-
-Doing test tests/test40.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test40.scm
-*** scheme output: (5 9)
-*** our output: (5 . (9 . 
-Fatal error: Corrupt sexpr type: 207
 --------------------------------
 
 Doing test tests/test100.scm:
@@ -537,7 +235,9 @@ Doing test tests/test115.scm:
 --------------------------------
 
 
-Test tests/test115.scm Passed
+*** RESULTS DIFFER in tests/test115.scm
+*** scheme output: 16
+*** our output: 
 --------------------------------
 
 Doing test tests/test116.scm:
@@ -562,21 +262,27 @@ Doing test tests/test118.scm:
 --------------------------------
 
 
-Test tests/test118.scm Passed
+*** RESULTS DIFFER in tests/test118.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test119.scm:
 --------------------------------
 
 
-Test tests/test119.scm Passed
+*** RESULTS DIFFER in tests/test119.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test120.scm:
 --------------------------------
 
 
-Test tests/test120.scm Passed
+*** RESULTS DIFFER in tests/test120.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test121.scm:
@@ -586,14 +292,15 @@ Doing test tests/test121.scm:
 *** RESULTS DIFFER in tests/test121.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 202
 --------------------------------
 
 Doing test tests/test122.scm:
 --------------------------------
 
 
-Test tests/test122.scm Passed
+*** RESULTS DIFFER in tests/test122.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test123.scm:
@@ -603,7 +310,6 @@ Doing test tests/test123.scm:
 *** RESULTS DIFFER in tests/test123.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 202
 --------------------------------
 
 Doing test tests/test124.scm:
@@ -613,28 +319,33 @@ Doing test tests/test124.scm:
 *** RESULTS DIFFER in tests/test124.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 204
 --------------------------------
 
 Doing test tests/test125.scm:
 --------------------------------
 
 
-Test tests/test125.scm Passed
+*** RESULTS DIFFER in tests/test125.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test126.scm:
 --------------------------------
 
 
-Test tests/test126.scm Passed
+*** RESULTS DIFFER in tests/test126.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test127.scm:
 --------------------------------
 
 
-Test tests/test127.scm Passed
+*** RESULTS DIFFER in tests/test127.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test128.scm:
@@ -644,7 +355,6 @@ Doing test tests/test128.scm:
 *** RESULTS DIFFER in tests/test128.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 202
 --------------------------------
 
 Doing test tests/test129.scm:
@@ -654,14 +364,15 @@ Doing test tests/test129.scm:
 *** RESULTS DIFFER in tests/test129.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 206
 --------------------------------
 
 Doing test tests/test130.scm:
 --------------------------------
 
 
-Test tests/test130.scm Passed
+*** RESULTS DIFFER in tests/test130.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test131.scm:
@@ -671,77 +382,6 @@ Doing test tests/test131.scm:
 *** RESULTS DIFFER in tests/test131.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 217
---------------------------------
-
-Doing test tests/test132.scm:
---------------------------------
-
-
-Test tests/test132.scm Passed
---------------------------------
-
-Doing test tests/test133.scm:
---------------------------------
-
-
-Test tests/test133.scm Passed
---------------------------------
-
-Doing test tests/test134.scm:
---------------------------------
-
-
-Test tests/test134.scm Passed
---------------------------------
-
-Doing test tests/test135.scm:
---------------------------------
-
-
-Test tests/test135.scm Passed
---------------------------------
-
-Doing test tests/test136.scm:
---------------------------------
-
-
-Test tests/test136.scm Passed
---------------------------------
-
-Doing test tests/test137.scm:
---------------------------------
-
-
-Test tests/test137.scm Passed
---------------------------------
-
-Doing test tests/test138.scm:
---------------------------------
-
-
-Test tests/test138.scm Passed
---------------------------------
-
-Doing test tests/test139.scm:
---------------------------------
-
-
-Test tests/test139.scm Passed
---------------------------------
-
-Doing test tests/test140.scm:
---------------------------------
-
-
-Test tests/test140.scm Passed
---------------------------------
-
-Doing test tests/test141.scm:
---------------------------------
-
-
-Test tests/test141.scm Passed
 --------------------------------
 
 Doing test tests/test142.scm:
@@ -750,21 +390,7 @@ Doing test tests/test142.scm:
 
 *** RESULTS DIFFER in tests/test142.scm
 *** scheme output: -3
-*** our output: 3/-1
---------------------------------
-
-Doing test tests/test143.scm:
---------------------------------
-
-
-Test tests/test143.scm Passed
---------------------------------
-
-Doing test tests/test144.scm:
---------------------------------
-
-
-Test tests/test144.scm Passed
+*** our output: 
 --------------------------------
 
 Doing test tests/test145.scm:
@@ -773,7 +399,7 @@ Doing test tests/test145.scm:
 
 *** RESULTS DIFFER in tests/test145.scm
 *** scheme output: -1/12
-*** our output: 1/-12
+*** our output: 
 --------------------------------
 
 Doing test tests/test146.scm:
@@ -785,102 +411,13 @@ Doing test tests/test146.scm:
 *** our output: 
 --------------------------------
 
-Doing test tests/test147.scm:
---------------------------------
-
-
-Test tests/test147.scm Passed
---------------------------------
-
-Doing test tests/test148.scm:
---------------------------------
-
-
-Test tests/test148.scm Passed
---------------------------------
-
-Doing test tests/test149.scm:
---------------------------------
-
-
-Test tests/test149.scm Passed
---------------------------------
-
-Doing test tests/test150.scm:
---------------------------------
-
-
-Test tests/test150.scm Passed
---------------------------------
-
-Doing test tests/test151.scm:
---------------------------------
-
-
-Test tests/test151.scm Passed
---------------------------------
-
-Doing test tests/test152.scm:
---------------------------------
-
-
-Test tests/test152.scm Passed
---------------------------------
-
-Doing test tests/test153.scm:
---------------------------------
-
-
-Test tests/test153.scm Passed
---------------------------------
-
-Doing test tests/test154.scm:
---------------------------------
-
-
-Test tests/test154.scm Passed
---------------------------------
-
-Doing test tests/test155.scm:
---------------------------------
-
-
-Test tests/test155.scm Passed
---------------------------------
-
-Doing test tests/test156.scm:
---------------------------------
-
-
-Test tests/test156.scm Passed
---------------------------------
-
-Doing test tests/test157.scm:
---------------------------------
-
-
-Test tests/test157.scm Passed
---------------------------------
-
-Doing test tests/test158.scm:
---------------------------------
-
-
-Test tests/test158.scm Passed
---------------------------------
-
-Doing test tests/test159.scm:
---------------------------------
-
-
-Test tests/test159.scm Passed
---------------------------------
-
 Doing test tests/test160.scm:
 --------------------------------
 
 
-Test tests/test160.scm Passed
+*** RESULTS DIFFER in tests/test160.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test161.scm:
@@ -890,7 +427,6 @@ Doing test tests/test161.scm:
 *** RESULTS DIFFER in tests/test161.scm
 *** scheme output: #t
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test162.scm:
@@ -900,7 +436,6 @@ Doing test tests/test162.scm:
 *** RESULTS DIFFER in tests/test162.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test163.scm:
@@ -910,7 +445,6 @@ Doing test tests/test163.scm:
 *** RESULTS DIFFER in tests/test163.scm
 *** scheme output: #t
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test164.scm:
@@ -920,7 +454,6 @@ Doing test tests/test164.scm:
 *** RESULTS DIFFER in tests/test164.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test165.scm:
@@ -930,7 +463,6 @@ Doing test tests/test165.scm:
 *** RESULTS DIFFER in tests/test165.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 202
 --------------------------------
 
 Doing test tests/test166.scm:
@@ -940,14 +472,15 @@ Doing test tests/test166.scm:
 *** RESULTS DIFFER in tests/test166.scm
 *** scheme output: #t
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test167.scm:
 --------------------------------
 
 
-Test tests/test167.scm Passed
+*** RESULTS DIFFER in tests/test167.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test168.scm:
@@ -957,52 +490,24 @@ Doing test tests/test168.scm:
 *** RESULTS DIFFER in tests/test168.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 202
---------------------------------
-
-Doing test tests/test169.scm:
---------------------------------
-
-
-Test tests/test169.scm Passed
---------------------------------
-
-Doing test tests/test170.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test170.scm
-*** scheme output: (2 3)
-*** our output: (2 . (3 . 
-Fatal error: Corrupt sexpr type: 208
---------------------------------
-
-Doing test tests/test171.scm:
---------------------------------
-
-
-Test tests/test171.scm Passed
---------------------------------
-
-Doing test tests/test172.scm:
---------------------------------
-
-
-Test tests/test172.scm Passed
 --------------------------------
 
 Doing test tests/test173.scm:
 --------------------------------
 
 
-Test tests/test173.scm Passed
+*** RESULTS DIFFER in tests/test173.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test174.scm:
 --------------------------------
 
 
-Test tests/test174.scm Passed
+*** RESULTS DIFFER in tests/test174.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test175.scm:
@@ -1012,7 +517,6 @@ Doing test tests/test175.scm:
 *** RESULTS DIFFER in tests/test175.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 203
 --------------------------------
 
 Doing test tests/test176.scm:
@@ -1021,62 +525,41 @@ Doing test tests/test176.scm:
 
 *** RESULTS DIFFER in tests/test176.scm
 *** scheme output: (#<procedure> . #<void>)
-*** our output: (#<closure at 211 env: 210 code: 4354343> . #<void>)
+*** our output: 
 --------------------------------
 
 Doing test tests/test177.scm:
 --------------------------------
 
 
-*** RESULTS DIFFER in tests/test177.scm
-*** scheme output: 
-*** our output: (
-Fatal error: Corrupt sexpr type: 0
---------------------------------
-
-Doing test tests/test178.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test178.scm
-*** scheme output: (1 -2 3 #t)
-*** our output: (1 . (-2 . (3 . (#t . 
-Fatal error: Corrupt sexpr type: 199
---------------------------------
-
-Doing test tests/test179.scm:
---------------------------------
-
-
-Test tests/test179.scm Passed
---------------------------------
-
-Doing test tests/test180.scm:
---------------------------------
-
-
-Test tests/test180.scm Passed
+Test tests/test177.scm Passed
 --------------------------------
 
 Doing test tests/test181.scm:
 --------------------------------
 
 
-Test tests/test181.scm Passed
+*** RESULTS DIFFER in tests/test181.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test182.scm:
 --------------------------------
 
 
-Test tests/test182.scm Passed
+*** RESULTS DIFFER in tests/test182.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test183.scm:
 --------------------------------
 
 
-Test tests/test183.scm Passed
+*** RESULTS DIFFER in tests/test183.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test184.scm:
@@ -1086,7 +569,6 @@ Doing test tests/test184.scm:
 *** RESULTS DIFFER in tests/test184.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test185.scm:
@@ -1096,21 +578,24 @@ Doing test tests/test185.scm:
 *** RESULTS DIFFER in tests/test185.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 204
 --------------------------------
 
 Doing test tests/test186.scm:
 --------------------------------
 
 
-Test tests/test186.scm Passed
+*** RESULTS DIFFER in tests/test186.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test187.scm:
 --------------------------------
 
 
-Test tests/test187.scm Passed
+*** RESULTS DIFFER in tests/test187.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test188.scm:
@@ -1120,7 +605,6 @@ Doing test tests/test188.scm:
 *** RESULTS DIFFER in tests/test188.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 202
 --------------------------------
 
 Doing test tests/test189.scm:
@@ -1129,7 +613,7 @@ Doing test tests/test189.scm:
 
 *** RESULTS DIFFER in tests/test189.scm
 *** scheme output: #f
-*** our output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test190.scm:
@@ -1139,7 +623,6 @@ Doing test tests/test190.scm:
 *** RESULTS DIFFER in tests/test190.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 206
 --------------------------------
 
 Doing test tests/test191.scm:
@@ -1148,14 +631,16 @@ Doing test tests/test191.scm:
 
 *** RESULTS DIFFER in tests/test191.scm
 *** scheme output: #f
-*** our output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test192.scm:
 --------------------------------
 
 
-Test tests/test192.scm Passed
+*** RESULTS DIFFER in tests/test192.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test193.scm:
@@ -1165,7 +650,6 @@ Doing test tests/test193.scm:
 *** RESULTS DIFFER in tests/test193.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 214
 --------------------------------
 
 Doing test tests/test194.scm:
@@ -1174,7 +658,7 @@ Doing test tests/test194.scm:
 
 *** RESULTS DIFFER in tests/test194.scm
 *** scheme output: #f
-*** our output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test195.scm:
@@ -1184,7 +668,6 @@ Doing test tests/test195.scm:
 *** RESULTS DIFFER in tests/test195.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 215
 --------------------------------
 
 Doing test tests/test196.scm:
@@ -1193,7 +676,7 @@ Doing test tests/test196.scm:
 
 *** RESULTS DIFFER in tests/test196.scm
 *** scheme output: #f
-*** our output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test197.scm:
@@ -1203,14 +686,15 @@ Doing test tests/test197.scm:
 *** RESULTS DIFFER in tests/test197.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 228
 --------------------------------
 
 Doing test tests/test198.scm:
 --------------------------------
 
 
-Test tests/test198.scm Passed
+*** RESULTS DIFFER in tests/test198.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test199.scm:
@@ -1220,7 +704,6 @@ Doing test tests/test199.scm:
 *** RESULTS DIFFER in tests/test199.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 203
 --------------------------------
 
 Doing test tests/test200.scm:
@@ -1230,14 +713,6 @@ Doing test tests/test200.scm:
 *** RESULTS DIFFER in tests/test200.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
---------------------------------
-
-Doing test tests/test201.scm:
---------------------------------
-
-
-Test tests/test201.scm Passed
 --------------------------------
 
 Doing test tests/test202.scm:
@@ -1246,7 +721,7 @@ Doing test tests/test202.scm:
 
 *** RESULTS DIFFER in tests/test202.scm
 *** scheme output: #\Ã¿
-*** our output: #\ÿ
+*** our output: 
 --------------------------------
 
 Doing test tests/test203.scm:
@@ -1255,18 +730,7 @@ Doing test tests/test203.scm:
 
 *** RESULTS DIFFER in tests/test203.scm
 *** scheme output: (#<procedure list>)
-*** our output: (#<closure at 180 env: 179 code: 4325364> . 
-Fatal error: Corrupt sexpr type: 193
---------------------------------
-
-Doing test tests/test204.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test204.scm
-*** scheme output: (-1 2 -3 4)
-*** our output: (-1 . (2 . (-3 . (4 . 
-Fatal error: Corrupt sexpr type: 199
+*** our output: 
 --------------------------------
 
 Doing test tests/test205.scm:
@@ -1275,18 +739,7 @@ Doing test tests/test205.scm:
 
 *** RESULTS DIFFER in tests/test205.scm
 *** scheme output: (#t #t #f #t)
-*** our output: (#t . (#t . (
-Fatal error: Corrupt sexpr type: 200
---------------------------------
-
-Doing test tests/test206.scm:
---------------------------------
-
-
-*** RESULTS DIFFER in tests/test206.scm
-*** scheme output: ()
 *** our output: 
-Fatal error: Corrupt sexpr type: 193
 --------------------------------
 
 Doing test tests/test207.scm:
@@ -1296,27 +749,6 @@ Doing test tests/test207.scm:
 *** RESULTS DIFFER in tests/test207.scm
 *** scheme output: "\x0;\x0;\x0;"
 *** our output: 
---------------------------------
-
-Doing test tests/test208.scm:
---------------------------------
-
-
-Test tests/test208.scm Passed
---------------------------------
-
-Doing test tests/test209.scm:
---------------------------------
-
-
-Test tests/test209.scm Passed
---------------------------------
-
-Doing test tests/test210.scm:
---------------------------------
-
-
-Test tests/test210.scm Passed
 --------------------------------
 
 Doing test tests/test211.scm:
@@ -1359,14 +791,9 @@ Doing test tests/test215.scm:
 --------------------------------
 
 
-Test tests/test215.scm Passed
---------------------------------
-
-Doing test tests/test216.scm:
---------------------------------
-
-
-Test tests/test216.scm Passed
+*** RESULTS DIFFER in tests/test215.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test217.scm:
@@ -1375,7 +802,7 @@ Doing test tests/test217.scm:
 
 *** RESULTS DIFFER in tests/test217.scm
 *** scheme output: #f
-*** our output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test218.scm:
@@ -1384,7 +811,7 @@ Doing test tests/test218.scm:
 
 *** RESULTS DIFFER in tests/test218.scm
 *** scheme output: #f
-*** our output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test219.scm:
@@ -1394,7 +821,6 @@ Doing test tests/test219.scm:
 *** RESULTS DIFFER in tests/test219.scm
 *** scheme output: #t
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test220.scm:
@@ -1404,7 +830,6 @@ Doing test tests/test220.scm:
 *** RESULTS DIFFER in tests/test220.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 210
 --------------------------------
 
 Doing test tests/test221.scm:
@@ -1414,21 +839,24 @@ Doing test tests/test221.scm:
 *** RESULTS DIFFER in tests/test221.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test222.scm:
 --------------------------------
 
 
-Test tests/test222.scm Passed
+*** RESULTS DIFFER in tests/test222.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test223.scm:
 --------------------------------
 
 
-Test tests/test223.scm Passed
+*** RESULTS DIFFER in tests/test223.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test224.scm:
@@ -1438,7 +866,6 @@ Doing test tests/test224.scm:
 *** RESULTS DIFFER in tests/test224.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test225.scm:
@@ -1448,35 +875,15 @@ Doing test tests/test225.scm:
 *** RESULTS DIFFER in tests/test225.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 215
---------------------------------
-
-Doing test tests/test226.scm:
---------------------------------
-
-
-Test tests/test226.scm Passed
---------------------------------
-
-Doing test tests/test227.scm:
---------------------------------
-
-
-Test tests/test227.scm Passed
---------------------------------
-
-Doing test tests/test228.scm:
---------------------------------
-
-
-Test tests/test228.scm Passed
 --------------------------------
 
 Doing test tests/test229.scm:
 --------------------------------
 
 
-Test tests/test229.scm Passed
+*** RESULTS DIFFER in tests/test229.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test230.scm:
@@ -1486,7 +893,6 @@ Doing test tests/test230.scm:
 *** RESULTS DIFFER in tests/test230.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test231.scm:
@@ -1496,21 +902,24 @@ Doing test tests/test231.scm:
 *** RESULTS DIFFER in tests/test231.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 202
 --------------------------------
 
 Doing test tests/test232.scm:
 --------------------------------
 
 
-Test tests/test232.scm Passed
+*** RESULTS DIFFER in tests/test232.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test233.scm:
 --------------------------------
 
 
-Test tests/test233.scm Passed
+*** RESULTS DIFFER in tests/test233.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test234.scm:
@@ -1520,31 +929,31 @@ Doing test tests/test234.scm:
 *** RESULTS DIFFER in tests/test234.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test235.scm:
 --------------------------------
 
 
-Test tests/test235.scm Passed
+*** RESULTS DIFFER in tests/test235.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test236.scm:
 --------------------------------
 
 
-Test tests/test236.scm Passed
+*** RESULTS DIFFER in tests/test236.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test237.scm:
 --------------------------------
 
 
-*** RESULTS DIFFER in tests/test237.scm
-*** scheme output: 
-*** our output: 
-Fatal error: Corrupt sexpr type: 205
+Test tests/test237.scm Passed
 --------------------------------
 
 Doing test tests/test238.scm:
@@ -1554,7 +963,6 @@ Doing test tests/test238.scm:
 *** RESULTS DIFFER in tests/test238.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 215
 --------------------------------
 
 Doing test tests/test239.scm:
@@ -1566,34 +974,11 @@ Doing test tests/test239.scm:
 *** our output: 
 --------------------------------
 
-Doing test tests/test240.scm:
---------------------------------
-
-
-Test tests/test240.scm Passed
---------------------------------
-
 Doing test tests/test241.scm:
 --------------------------------
 
 
-*** RESULTS DIFFER in tests/test241.scm
-*** scheme output: 
-*** our output: ""
---------------------------------
-
-Doing test tests/test242.scm:
---------------------------------
-
-
-Test tests/test242.scm Passed
---------------------------------
-
-Doing test tests/test243.scm:
---------------------------------
-
-
-Test tests/test243.scm Passed
+Test tests/test241.scm Passed
 --------------------------------
 
 Doing test tests/test244.scm:
@@ -1604,22 +989,7 @@ Doing test tests/test244.scm:
 *** scheme output: ((4 5) 2 3)
 (4 5)
 (2 3)
-*** our output: ((4 . (5 . 
-Fatal error: Corrupt sexpr type: 219
---------------------------------
-
-Doing test tests/test245.scm:
---------------------------------
-
-
-Test tests/test245.scm Passed
---------------------------------
-
-Doing test tests/test246.scm:
---------------------------------
-
-
-Test tests/test246.scm Passed
+*** our output: 
 --------------------------------
 
 Doing test tests/test247.scm:
@@ -1630,50 +1000,7 @@ Doing test tests/test247.scm:
 *** scheme output: (1 4 5)
 1
 (4 5)
-*** our output: (1 . (4 . (5 . 
-Fatal error: Corrupt sexpr type: 219
---------------------------------
-
-Doing test tests/test248.scm:
---------------------------------
-
-
-Test tests/test248.scm Passed
---------------------------------
-
-Doing test tests/test249.scm:
---------------------------------
-
-
-Test tests/test249.scm Passed
---------------------------------
-
-Doing test tests/test250.scm:
---------------------------------
-
-
-Test tests/test250.scm Passed
---------------------------------
-
-Doing test tests/test251.scm:
---------------------------------
-
-
-Test tests/test251.scm Passed
---------------------------------
-
-Doing test tests/test252.scm:
---------------------------------
-
-
-Test tests/test252.scm Passed
---------------------------------
-
-Doing test tests/test253.scm:
---------------------------------
-
-
-Test tests/test253.scm Passed
+*** our output: 
 --------------------------------
 
 Doing test tests/test254.scm:
@@ -1683,28 +1010,33 @@ Doing test tests/test254.scm:
 *** RESULTS DIFFER in tests/test254.scm
 *** scheme output: #t
 *** our output: 
-Fatal error: Corrupt sexpr type: 211
 --------------------------------
 
 Doing test tests/test255.scm:
 --------------------------------
 
 
-Test tests/test255.scm Passed
+*** RESULTS DIFFER in tests/test255.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test256.scm:
 --------------------------------
 
 
-Test tests/test256.scm Passed
+*** RESULTS DIFFER in tests/test256.scm
+*** scheme output: fresh
+*** our output: 
 --------------------------------
 
 Doing test tests/test257.scm:
 --------------------------------
 
 
-Test tests/test257.scm Passed
+*** RESULTS DIFFER in tests/test257.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test258.scm:
@@ -1714,7 +1046,6 @@ Doing test tests/test258.scm:
 *** RESULTS DIFFER in tests/test258.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 212
 --------------------------------
 
 Doing test tests/test259.scm:
@@ -1724,14 +1055,15 @@ Doing test tests/test259.scm:
 *** RESULTS DIFFER in tests/test259.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test260.scm:
 --------------------------------
 
 
-Test tests/test260.scm Passed
+*** RESULTS DIFFER in tests/test260.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test261.scm:
@@ -1741,7 +1073,6 @@ Doing test tests/test261.scm:
 *** RESULTS DIFFER in tests/test261.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 208
 --------------------------------
 
 Doing test tests/test262.scm:
@@ -1751,14 +1082,15 @@ Doing test tests/test262.scm:
 *** RESULTS DIFFER in tests/test262.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 200
 --------------------------------
 
 Doing test tests/test263.scm:
 --------------------------------
 
 
-Test tests/test263.scm Passed
+*** RESULTS DIFFER in tests/test263.scm
+*** scheme output: "sym"
+*** our output: 
 --------------------------------
 
 Doing test tests/test264.scm:
@@ -1767,42 +1099,52 @@ Doing test tests/test264.scm:
 
 *** RESULTS DIFFER in tests/test264.scm
 *** scheme output: #(#<procedure vector> #<procedure vector>)
-*** our output: #2(#<closure at 163 env: 0 code: 4265636> #<closure at 163 env: 0 code: 4265636>)
+*** our output: 
 --------------------------------
 
 Doing test tests/test265.scm:
 --------------------------------
 
 
-Test tests/test265.scm Passed
+*** RESULTS DIFFER in tests/test265.scm
+*** scheme output: #(a 1 1 "uno" einz)
+*** our output: 
 --------------------------------
 
 Doing test tests/test266.scm:
 --------------------------------
 
 
-Test tests/test266.scm Passed
+*** RESULTS DIFFER in tests/test266.scm
+*** scheme output: #()
+*** our output: 
 --------------------------------
 
 Doing test tests/test267.scm:
 --------------------------------
 
 
-Test tests/test267.scm Passed
+*** RESULTS DIFFER in tests/test267.scm
+*** scheme output: 0
+*** our output: 
 --------------------------------
 
 Doing test tests/test268.scm:
 --------------------------------
 
 
-Test tests/test268.scm Passed
+*** RESULTS DIFFER in tests/test268.scm
+*** scheme output: 2
+*** our output: 
 --------------------------------
 
 Doing test tests/test269.scm:
 --------------------------------
 
 
-Test tests/test269.scm Passed
+*** RESULTS DIFFER in tests/test269.scm
+*** scheme output: 1
+*** our output: 
 --------------------------------
 
 Doing test tests/test270.scm:
@@ -1819,34 +1161,41 @@ Doing test tests/test271.scm:
 *** RESULTS DIFFER in tests/test271.scm
 *** scheme output: #f
 *** our output: 
-Fatal error: Corrupt sexpr type: 204
 --------------------------------
 
 Doing test tests/test272.scm:
 --------------------------------
 
 
-Test tests/test272.scm Passed
+*** RESULTS DIFFER in tests/test272.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test273.scm:
 --------------------------------
 
 
-Test tests/test273.scm Passed
+*** RESULTS DIFFER in tests/test273.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test274.scm:
 --------------------------------
 
 
-Test tests/test274.scm Passed
+*** RESULTS DIFFER in tests/test274.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 
 Doing test tests/test275.scm:
 --------------------------------
 
 
-Test tests/test275.scm Passed
+*** RESULTS DIFFER in tests/test275.scm
+*** scheme output: #t
+*** our output: 
 --------------------------------
 

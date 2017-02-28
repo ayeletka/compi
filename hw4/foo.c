@@ -9,9 +9,9 @@ Programmers: Ayelet Kalderon & Avishag Daniely */
 
 #define SOB_NIL 2
 
-#define FALSE 3 
+#define FALSE 102 
 
-#define TRUE 5 
+#define TRUE 104 
 
 #define LOCAL_NUM_ARGS 1 
 
@@ -1621,7 +1621,7 @@ CALL(PRINT_R0);
 MOV(R0, IMM(113));
 
 CALL(PRINT_R0);
-INFO;
+
 
 PROG_ENDING: 
   MOV(SP,FP);
