@@ -32,6 +32,31 @@
   DIV(R2, R0);
   DIV(R3, R0);
 
+  // (-2 / -3 = 2/3  ,  +2 / -3 = -2/3)
+  CMP(R3, IMM(0));
+  JUMP_GE(DENOMINATOR_NOT_MINUS);
+  CMP(R2, IMM(0));
+  JUMP_GE(NUMERATOR_NOT_MINUS);
+  MOV(R0, IMM(0));
+  SUB(R0, R2);
+  MOV(R2, R0);
+  MOV(R0, IMM(0));
+  SUB(R0, R3);
+  MOV(R3, R0);
+  JUMP(DENOMINATOR_NOT_MINUS);
+
+  NUMERATOR_NOT_MINUS:
+  MOV(R0, R2);
+  ADD(R2, R2);
+  SUB(R0, R2);
+  MOV(R2, R0);
+  MOV(R0, IMM(0));
+  SUB(R0, R3);
+  MOV(R3, R0);
+
+  DENOMINATOR_NOT_MINUS:
+
+
   MOV(INDD(R4, 0), T_FRAC);
   MOV(INDD(R4, 1), R2); // 1
   MOV(INDD(R4, 2), R3); // 2
