@@ -1263,5 +1263,5 @@
             (close-output-port out-port))))
 
 
-;(compile-scheme-file "test-files/test2.scm" "foo.c")
+(compile-scheme-file "test-files/test2.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")
