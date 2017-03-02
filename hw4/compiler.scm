@@ -327,11 +327,8 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
        ((equal? var 'make-string) (string-append (closureFromLabelMaker "MAKE_STRING") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
-      
-      
-
-      ;((equal? var 'cons) (string-append (closureFromLabelMaker "CONS") (string-append 
-      ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'apply) (string-append (closureFromLabelMaker "APPLY") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       ;((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
       ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
       (else
