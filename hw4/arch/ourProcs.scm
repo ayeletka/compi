@@ -51,16 +51,20 @@
 	(lambda (x) (car (car (car (car x))))))
 
 (define append2Lists
-	(lambda (list1 list2)
-        (if (null? list1) list2
-            (cons (car list1) (append2Lists (cdr list1) list2)))))
+	(lambda (s1 s2)
+	(if (null? s1) s2
+		  (cons (car s1)
+		   (append2Lists (cdr s1) s2)))))
+
+(define append-helper  
+	(lambda (s1 s)
+	      (if (null? s) s1
+		  (append2Lists s1 (append-helper  (car s) (cdr s))))))
 
 (define append
-	(lambda lst
-		(if (null? lst) lst
-			(if (null? (cdr lst)) (car lst)
-			(append (cons (append2Lists (car lst) (cadr lst)) (cddr lst)))
-		))))
+	    (lambda s
+      (if (null? s) '()
+	  (append-helper (car s) (cdr s)))))
 
 ;waiting 4 apply
 ;(define map (lambda (proc lst1 . restLsts)

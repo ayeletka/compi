@@ -1,5 +1,2 @@
-(append)
-(append '(1 2))
-(append '(1) '(2) '(3) '(4))
-(append '(1 2) '(12))
-(append '(1 2) '(12 3) '(123 4))
+(let ((x (list 'b)))
+	    (eq? x (cdr (append '(a) x))))

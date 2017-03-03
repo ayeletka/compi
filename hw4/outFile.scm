@@ -1,7 +1,2 @@
-(define min 
-		(lambda lst
-		  (if (null? (cdr lst)) (car lst)
-		    (if (< (car lst) (apply min (cdr lst)))
-			  (car lst)
-			  (apply min (cdr lst))))))
-	   (apply min '(6 8 3 2 5))
+(define abs (lambda (x) (if (< x 0) (- x) x)))
+	  (map abs '(1 -2 3 -4 5 -6))
