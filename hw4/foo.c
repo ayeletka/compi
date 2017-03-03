@@ -17,7 +17,7 @@ Programmers: Ayelet Kalderon & Avishag Daniely */
 
 #define LOCAL_ENV 0
 
-#define SYMTAB 202
+#define SYMTAB 191
 
 #include "arch/cisc.h"
 #include "arch/BenTest.h"
@@ -26,7 +26,7 @@ int main()
 {
  START_MACHINE;
 
-PUSH(IMM(202));
+PUSH(IMM(191));
 CALL(MALLOC);
 DROP(1);
 PUSH(IMM(0));
@@ -58,261 +58,250 @@ MOV(IND(103), IMM(0));
 MOV(IND(104), IMM(T_BOOL));
 MOV(IND(105), IMM(1));
 MOV(IND(106), IMM(T_INTEGER));
-MOV(IND(107), IMM(13));
-MOV(IND(108), IMM(T_FRAC));
-MOV(IND(109), IMM(5));
-MOV(IND(110), IMM(6));
-MOV(IND(111), IMM(T_INTEGER));
-MOV(IND(112), IMM(12));
-MOV(IND(113), IMM(T_INTEGER));
-MOV(IND(114), IMM(2));
-MOV(IND(115), IMM(T_FRAC));
-MOV(IND(116), IMM(-3));
-MOV(IND(117), IMM(4));
-MOV(IND(118), IMM(T_VECTOR));
-MOV(IND(119), IMM(0));
-MOV(IND(120), IMM(T_INTEGER));
-MOV(IND(121), IMM(1));
-MOV(IND(122), IMM(T_FRAC));
-MOV(IND(123), IMM(-1));
-MOV(IND(124), IMM(3));
-MOV(IND(125), IMM(T_CHAR));
-MOV(IND(126), IMM(97));
-MOV(IND(127), IMM(T_STRING));
-MOV(IND(128), IMM(5));
-MOV(IND(129), IMM(65));
-MOV(IND(130), IMM(107));
-MOV(IND(131), IMM(117));
-MOV(IND(132), IMM(110));
-MOV(IND(133), IMM(97));
-MOV(IND(134), IMM(T_STRING));
-MOV(IND(135), IMM(6));
-MOV(IND(136), IMM(77));
-MOV(IND(137), IMM(97));
-MOV(IND(138), IMM(116));
-MOV(IND(139), IMM(97));
-MOV(IND(140), IMM(116));
-MOV(IND(141), IMM(97));
-MOV(IND(142), IMM(T_STRING));
-MOV(IND(143), IMM(0));
-MOV(IND(144), IMM(T_INTEGER));
-MOV(IND(145), IMM(0));
+MOV(IND(107), IMM(4));
+MOV(IND(108), IMM(T_INTEGER));
+MOV(IND(109), IMM(2));
+MOV(IND(110), IMM(T_INTEGER));
+MOV(IND(111), IMM(3));
+MOV(IND(112), IMM(T_INTEGER));
+MOV(IND(113), IMM(3));
+MOV(IND(114), IMM(T_INTEGER));
+MOV(IND(115), IMM(3));
+MOV(IND(116), IMM(T_PAIR));
+MOV(IND(117), IMM(110));
+MOV(IND(118), IMM(101));
+MOV(IND(119), IMM(T_PAIR));
+MOV(IND(120), IMM(110));
+MOV(IND(121), IMM(116));
+MOV(IND(122), IMM(T_PAIR));
+MOV(IND(123), IMM(110));
+MOV(IND(124), IMM(119));
+MOV(IND(125), IMM(T_PAIR));
+MOV(IND(126), IMM(108));
+MOV(IND(127), IMM(122));
+MOV(IND(128), IMM(T_PAIR));
+MOV(IND(129), IMM(106));
+MOV(IND(130), IMM(125));
+MOV(IND(131), IMM(T_STRING));
+MOV(IND(132), IMM(0));
+MOV(IND(133), IMM(T_INTEGER));
+MOV(IND(134), IMM(0));
 
 PUSH(LABEL(PLUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(146), R0);
+MOV(IND(135), R0);
 PUSH(LABEL(MINUS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(147), R0);
+MOV(IND(136), R0);
 PUSH(LABEL(MULTIPLY));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(148), R0);
+MOV(IND(137), R0);
 PUSH(LABEL(DIVIDE));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(149), R0);
+MOV(IND(138), R0);
 PUSH(LABEL(LOWER));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(150), R0);
+MOV(IND(139), R0);
 PUSH(LABEL(GREATER));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(151), R0);
+MOV(IND(140), R0);
 PUSH(LABEL(EQUAL));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(152), R0);
+MOV(IND(141), R0);
 PUSH(LABEL(IS_NUM));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(153), R0);
+MOV(IND(142), R0);
 PUSH(LABEL(IS_INT));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(154), R0);
+MOV(IND(143), R0);
 PUSH(LABEL(IS_BOOLEAN));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(155), R0);
+MOV(IND(144), R0);
 PUSH(LABEL(IS_SYMBOL));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(156), R0);
+MOV(IND(145), R0);
 PUSH(LABEL(IS_CHAR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(157), R0);
+MOV(IND(146), R0);
 PUSH(LABEL(IS_NULL));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(158), R0);
+MOV(IND(147), R0);
 PUSH(LABEL(IS_PAIR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(159), R0);
+MOV(IND(148), R0);
 PUSH(LABEL(IS_STRING));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(160), R0);
+MOV(IND(149), R0);
 PUSH(LABEL(OURS_IS_ZERO));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(161), R0);
+MOV(IND(150), R0);
 PUSH(LABEL(IS_VECTOR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(162), R0);
+MOV(IND(151), R0);
 PUSH(LABEL(IS_PROC));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(163), R0);
+MOV(IND(152), R0);
 PUSH(LABEL(CHAR_2_INTEGER));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(164), R0);
+MOV(IND(153), R0);
 PUSH(LABEL(INTEGER_2_CHAR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(165), R0);
+MOV(IND(154), R0);
 PUSH(LABEL(STRING_LENGTH));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(166), R0);
+MOV(IND(155), R0);
 PUSH(LABEL(STRING_REF));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(167), R0);
+MOV(IND(156), R0);
 PUSH(LABEL(STRING_SET));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(168), R0);
+MOV(IND(157), R0);
 PUSH(LABEL(MAKE_STRING));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(169), R0);
+MOV(IND(158), R0);
 PUSH(LABEL(VECTOR_LENGTH));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(170), R0);
+MOV(IND(159), R0);
 PUSH(LABEL(VECTOR_REF));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(171), R0);
+MOV(IND(160), R0);
 PUSH(LABEL(VECTOR_SET));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(172), R0);
+MOV(IND(161), R0);
 PUSH(LABEL(MAKE_VECTOR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(173), R0);
+MOV(IND(162), R0);
 PUSH(LABEL(CONS));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(174), R0);
+MOV(IND(163), R0);
 PUSH(LABEL(CAR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(175), R0);
+MOV(IND(164), R0);
 PUSH(LABEL(CDR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(176), R0);
+MOV(IND(165), R0);
 PUSH(LABEL(SET_CDR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(177), R0);
+MOV(IND(166), R0);
 PUSH(LABEL(SET_CAR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(178), R0);
+MOV(IND(167), R0);
 PUSH(LABEL(LIST));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(179), R0);
+MOV(IND(168), R0);
 PUSH(LABEL(VECTOR));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(180), R0);
+MOV(IND(169), R0);
 PUSH(LABEL(APPLY));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(181), R0);
-MOV(IND(182), IMM(999999));
+MOV(IND(170), R0);
+MOV(IND(171), IMM(999999));
 PUSH(LABEL(SYMBOL_2_STRING));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(183), R0);
+MOV(IND(172), R0);
 PUSH(LABEL(STRING_2_SYMBOL));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(184), R0);
+MOV(IND(173), R0);
 PUSH(LABEL(CHECK_EQ_OBJECT));
 PUSH(IMM(0));
 CALL(MAKE_SOB_CLOSURE);
 DROP(IMM(2));
-MOV(IND(185), R0);
+MOV(IND(174), R0);
+MOV(IND(175), IMM(999999));
+MOV(IND(176), IMM(999999));
+MOV(IND(177), IMM(999999));
+MOV(IND(178), IMM(999999));
+MOV(IND(179), IMM(999999));
+MOV(IND(180), IMM(999999));
+MOV(IND(181), IMM(999999));
+MOV(IND(182), IMM(999999));
+MOV(IND(183), IMM(999999));
+MOV(IND(184), IMM(999999));
+MOV(IND(185), IMM(999999));
 MOV(IND(186), IMM(999999));
 MOV(IND(187), IMM(999999));
 MOV(IND(188), IMM(999999));
 MOV(IND(189), IMM(999999));
 MOV(IND(190), IMM(999999));
-MOV(IND(191), IMM(999999));
-MOV(IND(192), IMM(999999));
-MOV(IND(193), IMM(999999));
-MOV(IND(194), IMM(999999));
-MOV(IND(195), IMM(999999));
-MOV(IND(196), IMM(999999));
-MOV(IND(197), IMM(999999));
-MOV(IND(198), IMM(999999));
-MOV(IND(199), IMM(999999));
-MOV(IND(200), IMM(999999));
-MOV(IND(201), IMM(999999));
 
 /* ----------initiating symbols string linked list---------- */
-MOV(IND(202), IMM(0));
+MOV(IND(191), IMM(0));
 
 /* define */
 /* get old env address, put in R8 */
@@ -327,14 +316,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel219:
+closureEnvLoopLabel173:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel218);
+JUMP_EQ(closureEnvLoopEndLabel172);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel219);
-closureEnvLoopEndLabel218: 
+JUMP(closureEnvLoopLabel173);
+closureEnvLoopEndLabel172: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -344,15 +333,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel221:
+closureParameterLoopLabel175:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel220);
+JUMP_EQ(closureParameterLoopEndLabel174);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel221);
-closureParameterLoopEndLabel220: 
+JUMP(closureParameterLoopLabel175);
+closureParameterLoopEndLabel174: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -363,9 +352,9 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel223));
-JUMP(closureEndLabel222);
-closureBodyLabel223:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel177));
+JUMP(closureEndLabel176);
+closureBodyLabel177:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -391,7 +380,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(153));
+MOV(R0, IND(142));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -403,7 +392,7 @@ INCR(R1);
 DROP(R1);
 
 CMP(R0, FALSE);
-JUMP_EQ(labelElse224);
+JUMP_EQ(labelElse178);
 /* applic */
 
 /* push T_NIL for empty lambda var and opt */
@@ -419,7 +408,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(153));
+MOV(R0, IND(142));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -430,15 +419,15 @@ POP(R1);
 INCR(R1);
 DROP(R1);
 
-JUMP(labelIfExit225);
-labelElse224:
+JUMP(labelIfExit179);
+labelElse178:
 /*const*/
 MOV(R0, IMM(102));
 
-labelIfExit225:
+labelIfExit179:
 
 CMP(R0, FALSE);
-JUMP_EQ(labelElse267);
+JUMP_EQ(labelElse221);
 /*ifExp*/
 /* applic */
 
@@ -447,7 +436,7 @@ MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
 /*const*/
-MOV(R0, IMM(144));
+MOV(R0, IMM(133));
 
 PUSH(R0);
 /* pvar */
@@ -459,7 +448,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(152));
+MOV(R0, IND(141));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -471,14 +460,14 @@ INCR(R1);
 DROP(R1);
 
 CMP(R0, FALSE);
-JUMP_EQ(labelElse265);
+JUMP_EQ(labelElse219);
 /* pvar */
 MOV(R10, IMM(0));
 ADD(R10,IMM(2));
 MOV(R0, FPARG(R10));
 
-JUMP(labelIfExit266);
-labelElse265:
+JUMP(labelIfExit220);
+labelElse219:
 /*ifExp*/
 /* applic */
 
@@ -501,7 +490,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(152));
+MOV(R0, IND(141));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -513,7 +502,7 @@ INCR(R1);
 DROP(R1);
 
 CMP(R0, FALSE);
-JUMP_EQ(labelElse263);
+JUMP_EQ(labelElse217);
 /* tc-applic */
 
 /* push T_NIL for empty lambda var and opt */
@@ -535,7 +524,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(147));
+MOV(R0, IND(136));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -555,38 +544,38 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel226:
+closureParameterLoopLabel180:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel227);
+JUMP_EQ(closureParameterLoopEndLabel181);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel226);
-closureParameterLoopEndLabel227:
+JUMP(closureParameterLoopLabel180);
+closureParameterLoopEndLabel181:
 CMP(R5,R2);
-JUMP_GE(greaterLabel229);
+JUMP_GE(greaterLabel183);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel228);
-greaterLabel229:
+DROP(1);JUMP(endLabel182);
+greaterLabel183:
 CMP(R5,R2);
-JUMP_EQ(equalLabel230);
+JUMP_EQ(equalLabel184);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel228);
-equalLabel230:
+DROP(1);JUMP(endLabel182);
+equalLabel184:
 DROP(R5);
-DROP(1);endLabel228:
+DROP(1);endLabel182:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
 
-JUMP(labelIfExit264);
-labelElse263:
+JUMP(labelIfExit218);
+labelElse217:
 /*ifExp*/
 /* applic */
 
@@ -609,7 +598,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(147));
+MOV(R0, IND(136));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -630,7 +619,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(152));
+MOV(R0, IND(141));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -642,7 +631,7 @@ INCR(R1);
 DROP(R1);
 
 CMP(R0, FALSE);
-JUMP_EQ(labelElse261);
+JUMP_EQ(labelElse215);
 /* tc-applic */
 
 /* push T_NIL for empty lambda var and opt */
@@ -664,7 +653,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(146));
+MOV(R0, IND(135));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -684,38 +673,38 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel231:
+closureParameterLoopLabel185:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel232);
+JUMP_EQ(closureParameterLoopEndLabel186);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel231);
-closureParameterLoopEndLabel232:
+JUMP(closureParameterLoopLabel185);
+closureParameterLoopEndLabel186:
 CMP(R5,R2);
-JUMP_GE(greaterLabel234);
+JUMP_GE(greaterLabel188);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel233);
-greaterLabel234:
+DROP(1);JUMP(endLabel187);
+greaterLabel188:
 CMP(R5,R2);
-JUMP_EQ(equalLabel235);
+JUMP_EQ(equalLabel189);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel233);
-equalLabel235:
+DROP(1);JUMP(endLabel187);
+equalLabel189:
 DROP(R5);
-DROP(1);endLabel233:
+DROP(1);endLabel187:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
 
-JUMP(labelIfExit262);
-labelElse261:
+JUMP(labelIfExit216);
+labelElse215:
 /*ifExp*/
 /* applic */
 
@@ -724,7 +713,7 @@ MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
 /*const*/
-MOV(R0, IMM(144));
+MOV(R0, IMM(133));
 
 PUSH(R0);
 /* pvar */
@@ -736,7 +725,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(150));
+MOV(R0, IND(139));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -748,7 +737,7 @@ INCR(R1);
 DROP(R1);
 
 CMP(R0, FALSE);
-JUMP_EQ(labelElse259);
+JUMP_EQ(labelElse213);
 /* tc-applic */
 
 /* push T_NIL for empty lambda var and opt */
@@ -770,7 +759,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(147));
+MOV(R0, IND(136));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -790,604 +779,6 @@ MOV(R0, FPARG(R10));
 PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(186));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel236:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel237);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel236);
-closureParameterLoopEndLabel237:
-CMP(R5,R2);
-JUMP_GE(greaterLabel239);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel238);
-greaterLabel239:
-CMP(R5,R2);
-JUMP_EQ(equalLabel240);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel238);
-equalLabel240:
-DROP(R5);
-DROP(1);endLabel238:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-JUMP(labelIfExit260);
-labelElse259:
-/*ifExp*/
-/*ifExp*/
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(144));
-
-PUSH(R0);
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(150));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse241);
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(147));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(151));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-JUMP(labelIfExit242);
-labelElse241:
-/*const*/
-MOV(R0, IMM(102));
-
-labelIfExit242:
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse257);
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(147));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(147));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(147));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(186));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel243:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel244);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel243);
-closureParameterLoopEndLabel244:
-CMP(R5,R2);
-JUMP_GE(greaterLabel246);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel245);
-greaterLabel246:
-CMP(R5,R2);
-JUMP_EQ(equalLabel247);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel245);
-equalLabel247:
-DROP(R5);
-DROP(1);endLabel245:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-JUMP(labelIfExit258);
-labelElse257:
-/*ifExp*/
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(144));
-
-PUSH(R0);
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(150));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse255);
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-JUMP(labelIfExit256);
-labelElse255:
-/*ifExp*/
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(151));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse253);
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(147));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(186));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel248:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel249);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel248);
-closureParameterLoopEndLabel249:
-CMP(R5,R2);
-JUMP_GE(greaterLabel251);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel250);
-greaterLabel251:
-CMP(R5,R2);
-JUMP_EQ(equalLabel252);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel250);
-equalLabel252:
-DROP(R5);
-DROP(1);endLabel250:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-JUMP(labelIfExit254);
-labelElse253:
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-labelIfExit254:
-
-labelIfExit256:
-
-labelIfExit258:
-
-labelIfExit260:
-
-labelIfExit262:
-
-labelIfExit264:
-
-labelIfExit266:
-
-JUMP(labelIfExit268);
-labelElse267:
-/*const*/
-MOV(R0, IMM(142));
-
-labelIfExit268:
-
-
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel222:
-
-MOV(IND(IMM(186)),IMM(R0));
-MOV(R0, IMM(T_VOID));
-
-CALL(PRINT_R0);
-
-/* define */
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(1));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel208:
-CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel207);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel208);
-closureEnvLoopEndLabel207: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel210:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel209);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel210);
-closureParameterLoopEndLabel209: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel212));
-JUMP(closureEndLabel211);
-closureBodyLabel212:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda simple body */
-/* check if number of params is correct */
-MOV(R1, FPARG(1));
-CMP(R1, IMM(1));
-JUMP_NE(ERROR);
-/* code-gen on body */
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
 /*fvar */
 MOV(R0, IND(175));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
@@ -1409,119 +800,287 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel213:
+closureParameterLoopLabel190:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel214);
+JUMP_EQ(closureParameterLoopEndLabel191);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel213);
-closureParameterLoopEndLabel214:
+JUMP(closureParameterLoopLabel190);
+closureParameterLoopEndLabel191:
 CMP(R5,R2);
-JUMP_GE(greaterLabel216);
+JUMP_GE(greaterLabel193);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel215);
-greaterLabel216:
+DROP(1);JUMP(endLabel192);
+greaterLabel193:
 CMP(R5,R2);
-JUMP_EQ(equalLabel217);
+JUMP_EQ(equalLabel194);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel215);
-equalLabel217:
+DROP(1);JUMP(endLabel192);
+equalLabel194:
 DROP(R5);
-DROP(1);endLabel215:
+DROP(1);endLabel192:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
 
+JUMP(labelIfExit214);
+labelElse213:
+/*ifExp*/
+/*ifExp*/
+/* applic */
 
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel211:
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(133));
 
-MOV(IND(IMM(187)),IMM(R0));
-MOV(R0, IMM(T_VOID));
+PUSH(R0);
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
 
-CALL(PRINT_R0);
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(139));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
 
-/* define */
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
+CMP(R0, FALSE);
+JUMP_EQ(labelElse195);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
 PUSH(IMM(1));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
+/*fvar */
+MOV(R0, IND(136));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(140));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+JUMP(labelIfExit196);
+labelElse195:
+/*const*/
+MOV(R0, IMM(102));
+
+labelIfExit196:
+
+CMP(R0, FALSE);
+JUMP_EQ(labelElse211);
+/* tc-applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
 MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel197:
-CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel196);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel197);
-closureEnvLoopEndLabel196: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel199:
-CMP(R10,R12);
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(136));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(136));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(136));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(175));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+
+/*tc-applic specific code starts here */
+PUSH(FPARG(-1));
+MOV(R1,FPARG(-2));
+PUSH(R1);
+MOV(R2, FPARG(1));
+INCR(R2);
+MOV(R3, R2);
+INCR(R3);
+ADD(R2,IMM(4));
+MOV(R4,STARG(2));
+ADD(R4,IMM(3));
+MOV(R5, R4);
+ADD(R5,IMM(2));
+/* loop over frame, R6 <- running indx */
+MOV(R6, IMM(0));
+closureParameterLoopLabel197:
+CMP(R6, R5);
 JUMP_EQ(closureParameterLoopEndLabel198);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel199);
-closureParameterLoopEndLabel198: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel201));
-JUMP(closureEndLabel200);
-closureBodyLabel201:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda simple body */
-/* check if number of params is correct */
-MOV(R1, FPARG(1));
-CMP(R1, IMM(1));
-JUMP_NE(ERROR);
-/* code-gen on body */
-/* tc-applic */
+MOV(FPARG(R3), STARG(R4));
+DECR(R4);
+DECR(R3);
+INCR(R6);
+JUMP(closureParameterLoopLabel197);
+closureParameterLoopEndLabel198:
+CMP(R5,R2);
+JUMP_GE(greaterLabel200);
+DROP(R5);
+SUB(R2,R5);
+DROP(R2);
+DROP(1);JUMP(endLabel199);
+greaterLabel200:
+CMP(R5,R2);
+JUMP_EQ(equalLabel201);
+MOV(R7,R5);
+SUB(R5,R2);
+SUB(R7,R5);
+DROP(R7);
+DROP(1);JUMP(endLabel199);
+equalLabel201:
+DROP(R5);
+DROP(1);endLabel199:
+MOV(FP, R1);
+JUMPA(INDD(R0, 2));
 
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
+
+JUMP(labelIfExit212);
+labelElse211:
+/*ifExp*/
 /* applic */
 
 /* push T_NIL for empty lambda var and opt */
 MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(133));
+
+PUSH(R0);
 /* pvar */
 MOV(R10, IMM(0));
 ADD(R10,IMM(2));
@@ -1529,9 +1088,97 @@ MOV(R0, FPARG(R10));
 
 PUSH(R0);
 /* push number of arguments */
-PUSH(IMM(1));
+PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(139));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CMP(R0, FALSE);
+JUMP_EQ(labelElse209);
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+JUMP(labelIfExit210);
+labelElse209:
+/*ifExp*/
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(140));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CMP(R0, FALSE);
+JUMP_EQ(labelElse207);
+/* tc-applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(136));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -1544,7 +1191,7 @@ DROP(R1);
 
 PUSH(R0);
 /* push number of arguments */
-PUSH(IMM(1));
+PUSH(IMM(2));
 /*fvar */
 MOV(R0, IND(175));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
@@ -1596,13 +1243,41 @@ MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
 
+JUMP(labelIfExit208);
+labelElse207:
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+labelIfExit208:
+
+labelIfExit210:
+
+labelIfExit212:
+
+labelIfExit214:
+
+labelIfExit216:
+
+labelIfExit218:
+
+labelIfExit220:
+
+JUMP(labelIfExit222);
+labelElse221:
+/*const*/
+MOV(R0, IMM(131));
+
+labelIfExit222:
+
 
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel200:
+closureEndLabel176:
 
-MOV(IND(IMM(188)),IMM(R0));
+MOV(IND(IMM(175)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -1620,14 +1295,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel186:
+closureEnvLoopLabel162:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel185);
+JUMP_EQ(closureEnvLoopEndLabel161);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel186);
-closureEnvLoopEndLabel185: 
+JUMP(closureEnvLoopLabel162);
+closureEnvLoopEndLabel161: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -1637,15 +1312,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel188:
+closureParameterLoopLabel164:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel187);
+JUMP_EQ(closureParameterLoopEndLabel163);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel188);
-closureParameterLoopEndLabel187: 
+JUMP(closureParameterLoopLabel164);
+closureParameterLoopEndLabel163: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -1656,9 +1331,9 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel190));
-JUMP(closureEndLabel189);
-closureBodyLabel190:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel166));
+JUMP(closureEndLabel165);
+closureBodyLabel166:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -1688,7 +1363,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -1703,7 +1378,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -1723,32 +1398,32 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel191:
+closureParameterLoopLabel167:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel192);
+JUMP_EQ(closureParameterLoopEndLabel168);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel191);
-closureParameterLoopEndLabel192:
+JUMP(closureParameterLoopLabel167);
+closureParameterLoopEndLabel168:
 CMP(R5,R2);
-JUMP_GE(greaterLabel194);
+JUMP_GE(greaterLabel170);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel193);
-greaterLabel194:
+DROP(1);JUMP(endLabel169);
+greaterLabel170:
 CMP(R5,R2);
-JUMP_EQ(equalLabel195);
+JUMP_EQ(equalLabel171);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel193);
-equalLabel195:
+DROP(1);JUMP(endLabel169);
+equalLabel171:
 DROP(R5);
-DROP(1);endLabel193:
+DROP(1);endLabel169:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
@@ -1757,9 +1432,9 @@ JUMPA(INDD(R0, 2));
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel189:
+closureEndLabel165:
 
-MOV(IND(IMM(189)),IMM(R0));
+MOV(IND(IMM(176)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -1777,14 +1452,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel175:
+closureEnvLoopLabel151:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel174);
+JUMP_EQ(closureEnvLoopEndLabel150);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel175);
-closureEnvLoopEndLabel174: 
+JUMP(closureEnvLoopLabel151);
+closureEnvLoopEndLabel150: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -1794,15 +1469,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel177:
+closureParameterLoopLabel153:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel176);
+JUMP_EQ(closureParameterLoopEndLabel152);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel177);
-closureParameterLoopEndLabel176: 
+JUMP(closureParameterLoopLabel153);
+closureParameterLoopEndLabel152: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -1813,9 +1488,9 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel179));
-JUMP(closureEndLabel178);
-closureBodyLabel179:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel155));
+JUMP(closureEndLabel154);
+closureBodyLabel155:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -1836,12 +1511,6 @@ PUSH(R0);
 MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
 /* pvar */
 MOV(R10, IMM(0));
 ADD(R10,IMM(2));
@@ -1851,7 +1520,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -1866,22 +1535,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -1901,32 +1555,32 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel180:
+closureParameterLoopLabel156:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel181);
+JUMP_EQ(closureParameterLoopEndLabel157);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel180);
-closureParameterLoopEndLabel181:
+JUMP(closureParameterLoopLabel156);
+closureParameterLoopEndLabel157:
 CMP(R5,R2);
-JUMP_GE(greaterLabel183);
+JUMP_GE(greaterLabel159);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel182);
-greaterLabel183:
+DROP(1);JUMP(endLabel158);
+greaterLabel159:
 CMP(R5,R2);
-JUMP_EQ(equalLabel184);
+JUMP_EQ(equalLabel160);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel182);
-equalLabel184:
+DROP(1);JUMP(endLabel158);
+equalLabel160:
 DROP(R5);
-DROP(1);endLabel182:
+DROP(1);endLabel158:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
@@ -1935,9 +1589,9 @@ JUMPA(INDD(R0, 2));
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel178:
+closureEndLabel154:
 
-MOV(IND(IMM(190)),IMM(R0));
+MOV(IND(IMM(177)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -1955,14 +1609,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel164:
+closureEnvLoopLabel140:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel163);
+JUMP_EQ(closureEnvLoopEndLabel139);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel164);
-closureEnvLoopEndLabel163: 
+JUMP(closureEnvLoopLabel140);
+closureEnvLoopEndLabel139: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -1972,15 +1626,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel166:
+closureParameterLoopLabel142:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel165);
+JUMP_EQ(closureParameterLoopEndLabel141);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel166);
-closureParameterLoopEndLabel165: 
+JUMP(closureParameterLoopLabel142);
+closureParameterLoopEndLabel141: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -1991,9 +1645,9 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel168));
-JUMP(closureEndLabel167);
-closureBodyLabel168:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel144));
+JUMP(closureEndLabel143);
+closureBodyLabel144:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -2014,12 +1668,6 @@ PUSH(R0);
 MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
 /* pvar */
 MOV(R10, IMM(0));
 ADD(R10,IMM(2));
@@ -2029,7 +1677,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2044,22 +1692,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2079,32 +1712,32 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel169:
+closureParameterLoopLabel145:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel170);
+JUMP_EQ(closureParameterLoopEndLabel146);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel169);
-closureParameterLoopEndLabel170:
+JUMP(closureParameterLoopLabel145);
+closureParameterLoopEndLabel146:
 CMP(R5,R2);
-JUMP_GE(greaterLabel172);
+JUMP_GE(greaterLabel148);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel171);
-greaterLabel172:
+DROP(1);JUMP(endLabel147);
+greaterLabel148:
 CMP(R5,R2);
-JUMP_EQ(equalLabel173);
+JUMP_EQ(equalLabel149);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel171);
-equalLabel173:
+DROP(1);JUMP(endLabel147);
+equalLabel149:
 DROP(R5);
-DROP(1);endLabel171:
+DROP(1);endLabel147:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
@@ -2113,9 +1746,9 @@ JUMPA(INDD(R0, 2));
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel167:
+closureEndLabel143:
 
-MOV(IND(IMM(191)),IMM(R0));
+MOV(IND(IMM(178)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -2133,14 +1766,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel153:
+closureEnvLoopLabel129:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel152);
+JUMP_EQ(closureEnvLoopEndLabel128);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel153);
-closureEnvLoopEndLabel152: 
+JUMP(closureEnvLoopLabel129);
+closureEnvLoopEndLabel128: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -2150,15 +1783,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel155:
+closureParameterLoopLabel131:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel154);
+JUMP_EQ(closureParameterLoopEndLabel130);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel155);
-closureParameterLoopEndLabel154: 
+JUMP(closureParameterLoopLabel131);
+closureParameterLoopEndLabel130: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -2169,187 +1802,9 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel157));
-JUMP(closureEndLabel156);
-closureBodyLabel157:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda simple body */
-/* check if number of params is correct */
-MOV(R1, FPARG(1));
-CMP(R1, IMM(1));
-JUMP_NE(ERROR);
-/* code-gen on body */
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel158:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel159);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel158);
-closureParameterLoopEndLabel159:
-CMP(R5,R2);
-JUMP_GE(greaterLabel161);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel160);
-greaterLabel161:
-CMP(R5,R2);
-JUMP_EQ(equalLabel162);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel160);
-equalLabel162:
-DROP(R5);
-DROP(1);endLabel160:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel156:
-
-MOV(IND(IMM(192)),IMM(R0));
-MOV(R0, IMM(T_VOID));
-
-CALL(PRINT_R0);
-
-/* define */
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(1));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel142:
-CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel141);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel142);
-closureEnvLoopEndLabel141: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel144:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel143);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel144);
-closureParameterLoopEndLabel143: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel146));
-JUMP(closureEndLabel145);
-closureBodyLabel146:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel133));
+JUMP(closureEndLabel132);
+closureBodyLabel133:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -2385,7 +1840,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2400,7 +1855,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2415,7 +1870,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2435,32 +1890,32 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel147:
+closureParameterLoopLabel134:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel148);
+JUMP_EQ(closureParameterLoopEndLabel135);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel147);
-closureParameterLoopEndLabel148:
+JUMP(closureParameterLoopLabel134);
+closureParameterLoopEndLabel135:
 CMP(R5,R2);
-JUMP_GE(greaterLabel150);
+JUMP_GE(greaterLabel137);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel149);
-greaterLabel150:
+DROP(1);JUMP(endLabel136);
+greaterLabel137:
 CMP(R5,R2);
-JUMP_EQ(equalLabel151);
+JUMP_EQ(equalLabel138);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel149);
-equalLabel151:
+DROP(1);JUMP(endLabel136);
+equalLabel138:
 DROP(R5);
-DROP(1);endLabel149:
+DROP(1);endLabel136:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
@@ -2469,9 +1924,9 @@ JUMPA(INDD(R0, 2));
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel145:
+closureEndLabel132:
 
-MOV(IND(IMM(193)),IMM(R0));
+MOV(IND(IMM(179)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -2489,14 +1944,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel131:
+closureEnvLoopLabel118:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel130);
+JUMP_EQ(closureEnvLoopEndLabel117);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel131);
-closureEnvLoopEndLabel130: 
+JUMP(closureEnvLoopLabel118);
+closureEnvLoopEndLabel117: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -2506,15 +1961,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel133:
+closureParameterLoopLabel120:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel132);
+JUMP_EQ(closureParameterLoopEndLabel119);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel133);
-closureParameterLoopEndLabel132: 
+JUMP(closureParameterLoopLabel120);
+closureParameterLoopEndLabel119: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -2525,9 +1980,9 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel135));
-JUMP(closureEndLabel134);
-closureBodyLabel135:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel122));
+JUMP(closureEndLabel121);
+closureBodyLabel122:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -2554,12 +2009,6 @@ PUSH(R0);
 MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
 /* pvar */
 MOV(R10, IMM(0));
 ADD(R10,IMM(2));
@@ -2569,7 +2018,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2584,7 +2033,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2599,22 +2048,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2634,32 +2068,32 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel136:
+closureParameterLoopLabel123:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel137);
+JUMP_EQ(closureParameterLoopEndLabel124);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel136);
-closureParameterLoopEndLabel137:
+JUMP(closureParameterLoopLabel123);
+closureParameterLoopEndLabel124:
 CMP(R5,R2);
-JUMP_GE(greaterLabel139);
+JUMP_GE(greaterLabel126);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel138);
-greaterLabel139:
+DROP(1);JUMP(endLabel125);
+greaterLabel126:
 CMP(R5,R2);
-JUMP_EQ(equalLabel140);
+JUMP_EQ(equalLabel127);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel138);
-equalLabel140:
+DROP(1);JUMP(endLabel125);
+equalLabel127:
 DROP(R5);
-DROP(1);endLabel138:
+DROP(1);endLabel125:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
@@ -2668,9 +2102,9 @@ JUMPA(INDD(R0, 2));
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel134:
+closureEndLabel121:
 
-MOV(IND(IMM(194)),IMM(R0));
+MOV(IND(IMM(180)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -2688,14 +2122,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel120:
+closureEnvLoopLabel107:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel119);
+JUMP_EQ(closureEnvLoopEndLabel106);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel120);
-closureEnvLoopEndLabel119: 
+JUMP(closureEnvLoopLabel107);
+closureEnvLoopEndLabel106: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -2705,15 +2139,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel122:
+closureParameterLoopLabel109:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel121);
+JUMP_EQ(closureParameterLoopEndLabel108);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel122);
-closureParameterLoopEndLabel121: 
+JUMP(closureParameterLoopLabel109);
+closureParameterLoopEndLabel108: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -2724,9 +2158,9 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel124));
-JUMP(closureEndLabel123);
-closureBodyLabel124:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel111));
+JUMP(closureEndLabel110);
+closureBodyLabel111:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -2753,12 +2187,6 @@ PUSH(R0);
 MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
 /* pvar */
 MOV(R10, IMM(0));
 ADD(R10,IMM(2));
@@ -2768,7 +2196,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2783,7 +2211,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2798,22 +2226,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2833,32 +2246,32 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel125:
+closureParameterLoopLabel112:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel126);
+JUMP_EQ(closureParameterLoopEndLabel113);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel125);
-closureParameterLoopEndLabel126:
+JUMP(closureParameterLoopLabel112);
+closureParameterLoopEndLabel113:
 CMP(R5,R2);
-JUMP_GE(greaterLabel128);
+JUMP_GE(greaterLabel115);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel127);
-greaterLabel128:
+DROP(1);JUMP(endLabel114);
+greaterLabel115:
 CMP(R5,R2);
-JUMP_EQ(equalLabel129);
+JUMP_EQ(equalLabel116);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel127);
-equalLabel129:
+DROP(1);JUMP(endLabel114);
+equalLabel116:
 DROP(R5);
-DROP(1);endLabel127:
+DROP(1);endLabel114:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
@@ -2867,9 +2280,9 @@ JUMPA(INDD(R0, 2));
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel123:
+closureEndLabel110:
 
-MOV(IND(IMM(195)),IMM(R0));
+MOV(IND(IMM(181)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -2887,14 +2300,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel109:
+closureEnvLoopLabel96:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel108);
+JUMP_EQ(closureEnvLoopEndLabel95);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel109);
-closureEnvLoopEndLabel108: 
+JUMP(closureEnvLoopLabel96);
+closureEnvLoopEndLabel95: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -2904,15 +2317,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel111:
+closureParameterLoopLabel98:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel110);
+JUMP_EQ(closureParameterLoopEndLabel97);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel111);
-closureParameterLoopEndLabel110: 
+JUMP(closureParameterLoopLabel98);
+closureParameterLoopEndLabel97: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -2923,9 +2336,187 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel113));
-JUMP(closureEndLabel112);
-closureBodyLabel113:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel100));
+JUMP(closureEndLabel99);
+closureBodyLabel100:
+PUSH(FP);
+MOV(FP,SP);
+/* lambda simple body */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(1));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* tc-applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+
+/*tc-applic specific code starts here */
+PUSH(FPARG(-1));
+MOV(R1,FPARG(-2));
+PUSH(R1);
+MOV(R2, FPARG(1));
+INCR(R2);
+MOV(R3, R2);
+INCR(R3);
+ADD(R2,IMM(4));
+MOV(R4,STARG(2));
+ADD(R4,IMM(3));
+MOV(R5, R4);
+ADD(R5,IMM(2));
+/* loop over frame, R6 <- running indx */
+MOV(R6, IMM(0));
+closureParameterLoopLabel101:
+CMP(R6, R5);
+JUMP_EQ(closureParameterLoopEndLabel102);
+MOV(FPARG(R3), STARG(R4));
+DECR(R4);
+DECR(R3);
+INCR(R6);
+JUMP(closureParameterLoopLabel101);
+closureParameterLoopEndLabel102:
+CMP(R5,R2);
+JUMP_GE(greaterLabel104);
+DROP(R5);
+SUB(R2,R5);
+DROP(R2);
+DROP(1);JUMP(endLabel103);
+greaterLabel104:
+CMP(R5,R2);
+JUMP_EQ(equalLabel105);
+MOV(R7,R5);
+SUB(R5,R2);
+SUB(R7,R5);
+DROP(R7);
+DROP(1);JUMP(endLabel103);
+equalLabel105:
+DROP(R5);
+DROP(1);endLabel103:
+MOV(FP, R1);
+JUMPA(INDD(R0, 2));
+
+
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel99:
+
+MOV(IND(IMM(182)),IMM(R0));
+MOV(R0, IMM(T_VOID));
+
+CALL(PRINT_R0);
+
+/* define */
+/* get old env address, put in R8 */
+MOV(R8, FPARG(0));
+/* make room for new env */
+PUSH(IMM(1));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R9 */
+MOV(R9,R0);
+/* clone the env */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(1));
+closureEnvLoopLabel85:
+CMP(R10,IMM(0));
+JUMP_EQ(closureEnvLoopEndLabel84);
+MOV(INDD(R9,R11), INDD(R8,R10));
+INCR(R10);
+INCR(R11);
+JUMP(closureEnvLoopLabel85);
+closureEnvLoopEndLabel84: 
+MOV(R12, FPARG(1));
+PUSH(R12);
+CALL(MALLOC);
+DROP(1);/* put old params in R9 */
+MOV(INDD(R9,0),R0);
+/* clone parameters from stack */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(2));
+closureParameterLoopLabel87:
+CMP(R10,R12);
+JUMP_EQ(closureParameterLoopEndLabel86);
+MOV(R13,INDD(R9,IMM(0)));
+MOV(INDD(R13,R10), FPARG(R11));
+INCR(R10);
+INCR(R11);
+JUMP(closureParameterLoopLabel87);
+closureParameterLoopEndLabel86: 
+MOV(INDD(R9,IMM(0)),R13);
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R9);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel89));
+JUMP(closureEndLabel88);
+closureBodyLabel89:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -2967,7 +2558,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2982,7 +2573,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -2997,7 +2588,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3012,7 +2603,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3032,32 +2623,32 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel114:
+closureParameterLoopLabel90:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel115);
+JUMP_EQ(closureParameterLoopEndLabel91);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel114);
-closureParameterLoopEndLabel115:
+JUMP(closureParameterLoopLabel90);
+closureParameterLoopEndLabel91:
 CMP(R5,R2);
-JUMP_GE(greaterLabel117);
+JUMP_GE(greaterLabel93);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel116);
-greaterLabel117:
+DROP(1);JUMP(endLabel92);
+greaterLabel93:
 CMP(R5,R2);
-JUMP_EQ(equalLabel118);
+JUMP_EQ(equalLabel94);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel116);
-equalLabel118:
+DROP(1);JUMP(endLabel92);
+equalLabel94:
 DROP(R5);
-DROP(1);endLabel116:
+DROP(1);endLabel92:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
@@ -3066,407 +2657,9 @@ JUMPA(INDD(R0, 2));
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel112:
+closureEndLabel88:
 
-MOV(IND(IMM(196)),IMM(R0));
-MOV(R0, IMM(T_VOID));
-
-CALL(PRINT_R0);
-
-/* define */
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(1));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel98:
-CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel97);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel98);
-closureEnvLoopEndLabel97: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel100:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel99);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel100);
-closureParameterLoopEndLabel99: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel102));
-JUMP(closureEndLabel101);
-closureBodyLabel102:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda simple body */
-/* check if number of params is correct */
-MOV(R1, FPARG(1));
-CMP(R1, IMM(1));
-JUMP_NE(ERROR);
-/* code-gen on body */
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel103:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel104);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel103);
-closureParameterLoopEndLabel104:
-CMP(R5,R2);
-JUMP_GE(greaterLabel106);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel105);
-greaterLabel106:
-CMP(R5,R2);
-JUMP_EQ(equalLabel107);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel105);
-equalLabel107:
-DROP(R5);
-DROP(1);endLabel105:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel101:
-
-MOV(IND(IMM(197)),IMM(R0));
-MOV(R0, IMM(T_VOID));
-
-CALL(PRINT_R0);
-
-/* define */
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(1));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel87:
-CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel86);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel87);
-closureEnvLoopEndLabel86: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel89:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel88);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel89);
-closureParameterLoopEndLabel88: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel91));
-JUMP(closureEndLabel90);
-closureBodyLabel91:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda simple body */
-/* check if number of params is correct */
-MOV(R1, FPARG(1));
-CMP(R1, IMM(1));
-JUMP_NE(ERROR);
-/* code-gen on body */
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel92:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel93);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel92);
-closureParameterLoopEndLabel93:
-CMP(R5,R2);
-JUMP_GE(greaterLabel95);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel94);
-greaterLabel95:
-CMP(R5,R2);
-JUMP_EQ(equalLabel96);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel94);
-equalLabel96:
-DROP(R5);
-DROP(1);endLabel94:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel90:
-
-MOV(IND(IMM(198)),IMM(R0));
+MOV(IND(IMM(183)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -3528,45 +2721,9 @@ MOV(FP,SP);
 /* lambda simple body */
 /* check if number of params is correct */
 MOV(R1, FPARG(1));
-CMP(R1, IMM(2));
+CMP(R1, IMM(1));
 JUMP_NE(ERROR);
 /* code-gen on body */
-/*ifExp*/
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(158));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse84);
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-JUMP(labelIfExit85);
-labelElse84:
 /* tc-applic */
 
 /* push T_NIL for empty lambda var and opt */
@@ -3579,12 +2736,12 @@ PUSH(R0);
 MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(1));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
+/* applic */
 
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
 PUSH(R0);
+/* push params in reverse order. */
 /* applic */
 
 /* push T_NIL for empty lambda var and opt */
@@ -3600,7 +2757,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3610,39 +2767,12 @@ DROP(1);
 POP(R1);
 INCR(R1);
 DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(199));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
 
 PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3655,9 +2785,24 @@ DROP(R1);
 
 PUSH(R0);
 /* push number of arguments */
-PUSH(IMM(2));
+PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(174));
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3707,15 +2852,13 @@ MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
 
-labelIfExit85:
-
 
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
 closureEndLabel77:
 
-MOV(IND(IMM(199)),IMM(R0));
+MOV(IND(IMM(184)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
@@ -3733,14 +2876,14 @@ MOV(R9,R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(1));
-closureEnvLoopLabel61:
+closureEnvLoopLabel63:
 CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel60);
+JUMP_EQ(closureEnvLoopEndLabel62);
 MOV(INDD(R9,R11), INDD(R8,R10));
 INCR(R10);
 INCR(R11);
-JUMP(closureEnvLoopLabel61);
-closureEnvLoopEndLabel60: 
+JUMP(closureEnvLoopLabel63);
+closureEnvLoopEndLabel62: 
 MOV(R12, FPARG(1));
 PUSH(R12);
 CALL(MALLOC);
@@ -3750,15 +2893,15 @@ MOV(INDD(R9,0),R0);
 /* R10 is i, R11 is j */
 MOV(R10, IMM(0));
 MOV(R11, IMM(2));
-closureParameterLoopLabel63:
+closureParameterLoopLabel65:
 CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel62);
+JUMP_EQ(closureParameterLoopEndLabel64);
 MOV(R13,INDD(R9,IMM(0)));
 MOV(INDD(R13,R10), FPARG(R11));
 INCR(R10);
 INCR(R11);
-JUMP(closureParameterLoopLabel63);
-closureParameterLoopEndLabel62: 
+JUMP(closureParameterLoopLabel65);
+closureParameterLoopEndLabel64: 
 MOV(INDD(R9,IMM(0)),R13);
 /* Calling malloc for closure, env and body. */
 PUSH(IMM(3));
@@ -3769,9 +2912,855 @@ MOV(INDD(R0,IMM(0)),276405);
 /* put env in R0 */
 MOV(INDD(R0,IMM(1)), R9);
 /* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel65));
-JUMP(closureEndLabel64);
-closureBodyLabel65:
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel67));
+JUMP(closureEndLabel66);
+closureBodyLabel67:
+PUSH(FP);
+MOV(FP,SP);
+/* lambda simple body */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(1));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* tc-applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+
+/*tc-applic specific code starts here */
+PUSH(FPARG(-1));
+MOV(R1,FPARG(-2));
+PUSH(R1);
+MOV(R2, FPARG(1));
+INCR(R2);
+MOV(R3, R2);
+INCR(R3);
+ADD(R2,IMM(4));
+MOV(R4,STARG(2));
+ADD(R4,IMM(3));
+MOV(R5, R4);
+ADD(R5,IMM(2));
+/* loop over frame, R6 <- running indx */
+MOV(R6, IMM(0));
+closureParameterLoopLabel68:
+CMP(R6, R5);
+JUMP_EQ(closureParameterLoopEndLabel69);
+MOV(FPARG(R3), STARG(R4));
+DECR(R4);
+DECR(R3);
+INCR(R6);
+JUMP(closureParameterLoopLabel68);
+closureParameterLoopEndLabel69:
+CMP(R5,R2);
+JUMP_GE(greaterLabel71);
+DROP(R5);
+SUB(R2,R5);
+DROP(R2);
+DROP(1);JUMP(endLabel70);
+greaterLabel71:
+CMP(R5,R2);
+JUMP_EQ(equalLabel72);
+MOV(R7,R5);
+SUB(R5,R2);
+SUB(R7,R5);
+DROP(R7);
+DROP(1);JUMP(endLabel70);
+equalLabel72:
+DROP(R5);
+DROP(1);endLabel70:
+MOV(FP, R1);
+JUMPA(INDD(R0, 2));
+
+
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel66:
+
+MOV(IND(IMM(185)),IMM(R0));
+MOV(R0, IMM(T_VOID));
+
+CALL(PRINT_R0);
+
+/* define */
+/* get old env address, put in R8 */
+MOV(R8, FPARG(0));
+/* make room for new env */
+PUSH(IMM(1));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R9 */
+MOV(R9,R0);
+/* clone the env */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(1));
+closureEnvLoopLabel52:
+CMP(R10,IMM(0));
+JUMP_EQ(closureEnvLoopEndLabel51);
+MOV(INDD(R9,R11), INDD(R8,R10));
+INCR(R10);
+INCR(R11);
+JUMP(closureEnvLoopLabel52);
+closureEnvLoopEndLabel51: 
+MOV(R12, FPARG(1));
+PUSH(R12);
+CALL(MALLOC);
+DROP(1);/* put old params in R9 */
+MOV(INDD(R9,0),R0);
+/* clone parameters from stack */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(2));
+closureParameterLoopLabel54:
+CMP(R10,R12);
+JUMP_EQ(closureParameterLoopEndLabel53);
+MOV(R13,INDD(R9,IMM(0)));
+MOV(INDD(R13,R10), FPARG(R11));
+INCR(R10);
+INCR(R11);
+JUMP(closureParameterLoopLabel54);
+closureParameterLoopEndLabel53: 
+MOV(INDD(R9,IMM(0)),R13);
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R9);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel56));
+JUMP(closureEndLabel55);
+closureBodyLabel56:
+PUSH(FP);
+MOV(FP,SP);
+/* lambda simple body */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(1));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* tc-applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+
+/*tc-applic specific code starts here */
+PUSH(FPARG(-1));
+MOV(R1,FPARG(-2));
+PUSH(R1);
+MOV(R2, FPARG(1));
+INCR(R2);
+MOV(R3, R2);
+INCR(R3);
+ADD(R2,IMM(4));
+MOV(R4,STARG(2));
+ADD(R4,IMM(3));
+MOV(R5, R4);
+ADD(R5,IMM(2));
+/* loop over frame, R6 <- running indx */
+MOV(R6, IMM(0));
+closureParameterLoopLabel57:
+CMP(R6, R5);
+JUMP_EQ(closureParameterLoopEndLabel58);
+MOV(FPARG(R3), STARG(R4));
+DECR(R4);
+DECR(R3);
+INCR(R6);
+JUMP(closureParameterLoopLabel57);
+closureParameterLoopEndLabel58:
+CMP(R5,R2);
+JUMP_GE(greaterLabel60);
+DROP(R5);
+SUB(R2,R5);
+DROP(R2);
+DROP(1);JUMP(endLabel59);
+greaterLabel60:
+CMP(R5,R2);
+JUMP_EQ(equalLabel61);
+MOV(R7,R5);
+SUB(R5,R2);
+SUB(R7,R5);
+DROP(R7);
+DROP(1);JUMP(endLabel59);
+equalLabel61:
+DROP(R5);
+DROP(1);endLabel59:
+MOV(FP, R1);
+JUMPA(INDD(R0, 2));
+
+
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel55:
+
+MOV(IND(IMM(186)),IMM(R0));
+MOV(R0, IMM(T_VOID));
+
+CALL(PRINT_R0);
+
+/* define */
+/* get old env address, put in R8 */
+MOV(R8, FPARG(0));
+/* make room for new env */
+PUSH(IMM(1));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R9 */
+MOV(R9,R0);
+/* clone the env */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(1));
+closureEnvLoopLabel41:
+CMP(R10,IMM(0));
+JUMP_EQ(closureEnvLoopEndLabel40);
+MOV(INDD(R9,R11), INDD(R8,R10));
+INCR(R10);
+INCR(R11);
+JUMP(closureEnvLoopLabel41);
+closureEnvLoopEndLabel40: 
+MOV(R12, FPARG(1));
+PUSH(R12);
+CALL(MALLOC);
+DROP(1);/* put old params in R9 */
+MOV(INDD(R9,0),R0);
+/* clone parameters from stack */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(2));
+closureParameterLoopLabel43:
+CMP(R10,R12);
+JUMP_EQ(closureParameterLoopEndLabel42);
+MOV(R13,INDD(R9,IMM(0)));
+MOV(INDD(R13,R10), FPARG(R11));
+INCR(R10);
+INCR(R11);
+JUMP(closureParameterLoopLabel43);
+closureParameterLoopEndLabel42: 
+MOV(INDD(R9,IMM(0)),R13);
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R9);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel45));
+JUMP(closureEndLabel44);
+closureBodyLabel45:
+PUSH(FP);
+MOV(FP,SP);
+/* lambda simple body */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(1));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/* tc-applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+
+/*tc-applic specific code starts here */
+PUSH(FPARG(-1));
+MOV(R1,FPARG(-2));
+PUSH(R1);
+MOV(R2, FPARG(1));
+INCR(R2);
+MOV(R3, R2);
+INCR(R3);
+ADD(R2,IMM(4));
+MOV(R4,STARG(2));
+ADD(R4,IMM(3));
+MOV(R5, R4);
+ADD(R5,IMM(2));
+/* loop over frame, R6 <- running indx */
+MOV(R6, IMM(0));
+closureParameterLoopLabel46:
+CMP(R6, R5);
+JUMP_EQ(closureParameterLoopEndLabel47);
+MOV(FPARG(R3), STARG(R4));
+DECR(R4);
+DECR(R3);
+INCR(R6);
+JUMP(closureParameterLoopLabel46);
+closureParameterLoopEndLabel47:
+CMP(R5,R2);
+JUMP_GE(greaterLabel49);
+DROP(R5);
+SUB(R2,R5);
+DROP(R2);
+DROP(1);JUMP(endLabel48);
+greaterLabel49:
+CMP(R5,R2);
+JUMP_EQ(equalLabel50);
+MOV(R7,R5);
+SUB(R5,R2);
+SUB(R7,R5);
+DROP(R7);
+DROP(1);JUMP(endLabel48);
+equalLabel50:
+DROP(R5);
+DROP(1);endLabel48:
+MOV(FP, R1);
+JUMPA(INDD(R0, 2));
+
+
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel44:
+
+MOV(IND(IMM(187)),IMM(R0));
+MOV(R0, IMM(T_VOID));
+
+CALL(PRINT_R0);
+
+/* define */
+/* get old env address, put in R8 */
+MOV(R8, FPARG(0));
+/* make room for new env */
+PUSH(IMM(1));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R9 */
+MOV(R9,R0);
+/* clone the env */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(1));
+closureEnvLoopLabel28:
+CMP(R10,IMM(0));
+JUMP_EQ(closureEnvLoopEndLabel27);
+MOV(INDD(R9,R11), INDD(R8,R10));
+INCR(R10);
+INCR(R11);
+JUMP(closureEnvLoopLabel28);
+closureEnvLoopEndLabel27: 
+MOV(R12, FPARG(1));
+PUSH(R12);
+CALL(MALLOC);
+DROP(1);/* put old params in R9 */
+MOV(INDD(R9,0),R0);
+/* clone parameters from stack */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(2));
+closureParameterLoopLabel30:
+CMP(R10,R12);
+JUMP_EQ(closureParameterLoopEndLabel29);
+MOV(R13,INDD(R9,IMM(0)));
+MOV(INDD(R13,R10), FPARG(R11));
+INCR(R10);
+INCR(R11);
+JUMP(closureParameterLoopLabel30);
+closureParameterLoopEndLabel29: 
+MOV(INDD(R9,IMM(0)),R13);
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R9);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel32));
+JUMP(closureEndLabel31);
+closureBodyLabel32:
+PUSH(FP);
+MOV(FP,SP);
+/* lambda simple body */
+/* check if number of params is correct */
+MOV(R1, FPARG(1));
+CMP(R1, IMM(2));
+JUMP_NE(ERROR);
+/* code-gen on body */
+/*ifExp*/
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(147));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CMP(R0, FALSE);
+JUMP_EQ(labelElse38);
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+JUMP(labelIfExit39);
+labelElse38:
+/* tc-applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(1));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(188));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(163));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+
+/*tc-applic specific code starts here */
+PUSH(FPARG(-1));
+MOV(R1,FPARG(-2));
+PUSH(R1);
+MOV(R2, FPARG(1));
+INCR(R2);
+MOV(R3, R2);
+INCR(R3);
+ADD(R2,IMM(4));
+MOV(R4,STARG(2));
+ADD(R4,IMM(3));
+MOV(R5, R4);
+ADD(R5,IMM(2));
+/* loop over frame, R6 <- running indx */
+MOV(R6, IMM(0));
+closureParameterLoopLabel33:
+CMP(R6, R5);
+JUMP_EQ(closureParameterLoopEndLabel34);
+MOV(FPARG(R3), STARG(R4));
+DECR(R4);
+DECR(R3);
+INCR(R6);
+JUMP(closureParameterLoopLabel33);
+closureParameterLoopEndLabel34:
+CMP(R5,R2);
+JUMP_GE(greaterLabel36);
+DROP(R5);
+SUB(R2,R5);
+DROP(R2);
+DROP(1);JUMP(endLabel35);
+greaterLabel36:
+CMP(R5,R2);
+JUMP_EQ(equalLabel37);
+MOV(R7,R5);
+SUB(R5,R2);
+SUB(R7,R5);
+DROP(R7);
+DROP(1);JUMP(endLabel35);
+equalLabel37:
+DROP(R5);
+DROP(1);endLabel35:
+MOV(FP, R1);
+JUMPA(INDD(R0, 2));
+
+
+labelIfExit39:
+
+
+POP(FP);
+RETURN;
+/* LABEL END LAMBDA */
+closureEndLabel31:
+
+MOV(IND(IMM(188)),IMM(R0));
+MOV(R0, IMM(T_VOID));
+
+CALL(PRINT_R0);
+
+/* define */
+/* get old env address, put in R8 */
+MOV(R8, FPARG(0));
+/* make room for new env */
+PUSH(IMM(1));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put new env in R9 */
+MOV(R9,R0);
+/* clone the env */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(1));
+closureEnvLoopLabel15:
+CMP(R10,IMM(0));
+JUMP_EQ(closureEnvLoopEndLabel14);
+MOV(INDD(R9,R11), INDD(R8,R10));
+INCR(R10);
+INCR(R11);
+JUMP(closureEnvLoopLabel15);
+closureEnvLoopEndLabel14: 
+MOV(R12, FPARG(1));
+PUSH(R12);
+CALL(MALLOC);
+DROP(1);/* put old params in R9 */
+MOV(INDD(R9,0),R0);
+/* clone parameters from stack */
+/* R10 is i, R11 is j */
+MOV(R10, IMM(0));
+MOV(R11, IMM(2));
+closureParameterLoopLabel17:
+CMP(R10,R12);
+JUMP_EQ(closureParameterLoopEndLabel16);
+MOV(R13,INDD(R9,IMM(0)));
+MOV(INDD(R13,R10), FPARG(R11));
+INCR(R10);
+INCR(R11);
+JUMP(closureParameterLoopLabel17);
+closureParameterLoopEndLabel16: 
+MOV(INDD(R9,IMM(0)),R13);
+/* Calling malloc for closure, env and body. */
+PUSH(IMM(3));
+CALL(MALLOC);
+DROP(IMM(1));
+/* put closure in R0 */
+MOV(INDD(R0,IMM(0)),276405);
+/* put env in R0 */
+MOV(INDD(R0,IMM(1)), R9);
+/* closure body ...*/
+MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel19));
+JUMP(closureEndLabel18);
+closureBodyLabel19:
 PUSH(FP);
 MOV(FP,SP);
 /* lambda simple body */
@@ -3796,7 +3785,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(158));
+MOV(R0, IND(147));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3808,14 +3797,14 @@ INCR(R1);
 DROP(R1);
 
 CMP(R0, FALSE);
-JUMP_EQ(labelElse71);
+JUMP_EQ(labelElse25);
 /* pvar */
 MOV(R10, IMM(0));
 ADD(R10,IMM(2));
 MOV(R0, FPARG(R10));
 
-JUMP(labelIfExit72);
-labelElse71:
+JUMP(labelIfExit26);
+labelElse25:
 /* tc-applic */
 
 /* push T_NIL for empty lambda var and opt */
@@ -3843,7 +3832,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(176));
+MOV(R0, IND(165));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3870,7 +3859,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(1));
 /*fvar */
-MOV(R0, IND(175));
+MOV(R0, IND(164));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3885,7 +3874,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(200));
+MOV(R0, IND(189));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3906,7 +3895,7 @@ PUSH(R0);
 /* push number of arguments */
 PUSH(IMM(2));
 /*fvar */
-MOV(R0, IND(199));
+MOV(R0, IND(188));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -3926,571 +3915,50 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel66:
+closureParameterLoopLabel20:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel67);
+JUMP_EQ(closureParameterLoopEndLabel21);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel66);
-closureParameterLoopEndLabel67:
+JUMP(closureParameterLoopLabel20);
+closureParameterLoopEndLabel21:
 CMP(R5,R2);
-JUMP_GE(greaterLabel69);
+JUMP_GE(greaterLabel23);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel68);
-greaterLabel69:
+DROP(1);JUMP(endLabel22);
+greaterLabel23:
 CMP(R5,R2);
-JUMP_EQ(equalLabel70);
+JUMP_EQ(equalLabel24);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel68);
-equalLabel70:
+DROP(1);JUMP(endLabel22);
+equalLabel24:
 DROP(R5);
-DROP(1);endLabel68:
+DROP(1);endLabel22:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
 
 
-labelIfExit72:
+labelIfExit26:
 
 
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
-closureEndLabel64:
+closureEndLabel18:
 
-MOV(IND(IMM(200)),IMM(R0));
+MOV(IND(IMM(189)),IMM(R0));
 MOV(R0, IMM(T_VOID));
 
 CALL(PRINT_R0);
 
 /* define */
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(1));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel48:
-CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel47);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel48);
-closureEnvLoopEndLabel47: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel50:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel49);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel50);
-closureParameterLoopEndLabel49: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel52));
-JUMP(closureEndLabel51);
-closureBodyLabel52:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda var body */
-POP(R10);
-POP(R11);
-POP(R12);
-POP(R13);
-PUSH(R13);
-PUSH(IMM(0));
-CALL(LIST);
-DROP(IMM(1));
-POP(R13);
-DROP(R13);
-PUSH(R0);
-PUSH(IMM(1));
-PUSH(R12);
-PUSH(R11);
-PUSH(R10);
-MOV(FP, SP);
-/*ifExp*/
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(158));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CMP(R0, FALSE);
-JUMP_EQ(labelElse58);
-/*const*/
-MOV(R0, IMM(101));
-
-JUMP(labelIfExit59);
-labelElse58:
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(176));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/* pvar */
-MOV(R10, IMM(0));
-ADD(R10,IMM(2));
-MOV(R0, FPARG(R10));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(1));
-/*fvar */
-MOV(R0, IND(175));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/*fvar */
-MOV(R0, IND(200));
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel53:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel54);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel53);
-closureParameterLoopEndLabel54:
-CMP(R5,R2);
-JUMP_GE(greaterLabel56);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel55);
-greaterLabel56:
-CMP(R5,R2);
-JUMP_EQ(equalLabel57);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel55);
-equalLabel57:
-DROP(R5);
-DROP(1);endLabel55:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-labelIfExit59:
-
-
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel51:
-
-MOV(IND(IMM(201)),IMM(R0));
-MOV(R0, IMM(T_VOID));
-
-CALL(PRINT_R0);
-
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(118));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(125));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(122));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(3));
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(1));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel27:
-CMP(R10,IMM(0));
-JUMP_EQ(closureEnvLoopEndLabel26);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel27);
-closureEnvLoopEndLabel26: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel29:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel28);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel29);
-closureParameterLoopEndLabel28: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel31));
-JUMP(closureEndLabel30);
-closureBodyLabel31:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda opt body */
-POP(R10);
-POP(R11);
-POP(R12);
-POP(R13);
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-MOV(R14, R0);
-MOV(R15, IMM(0));
-optLambdaCopyLabel32:
-CMP(R15, IMM(3));
-JUMP_EQ(optLambdaEndCopyLabel33);
-POP(R1);
-MOV(INDD(R14,R15), R1);
-ADD(R15, IMM(1));
-JUMP(optLambdaCopyLabel32);
-optLambdaEndCopyLabel33:
-MOV(R1, R13);
-SUB(R1, IMM(3));
-PUSH(R1);
-PUSH(IMM(0));
-CALL(LIST);
-DROP(IMM(1));
-POP(R1);
-DROP(R1);
-MOV(R2, R0);
-PUSH(R2);
-MOV(R15, IMM(2));
-optLambdaPushLabel34:
-CMP(R15, IMM(-1));
-JUMP_EQ(optLambdaEndPushLabel35);
-PUSH(INDD(R14,R15));
-SUB(R15, IMM(1));
-JUMP(optLambdaPushLabel34);
-optLambdaEndPushLabel35:
-PUSH(IMM(4));
-PUSH(R12);
-PUSH(R11);
-PUSH(R10);
-MOV(FP, SP);
-/* tc-applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(134));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(127));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(2));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel37:
-CMP(R10,IMM(1));
-JUMP_EQ(closureEnvLoopEndLabel36);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel37);
-closureEnvLoopEndLabel36: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel39:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel38);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel39);
-closureParameterLoopEndLabel38: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel41));
-JUMP(closureEndLabel40);
-closureBodyLabel41:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda var body */
-POP(R10);
-POP(R11);
-POP(R12);
-POP(R13);
-PUSH(R13);
-PUSH(IMM(0));
-CALL(LIST);
-DROP(IMM(1));
-POP(R13);
-DROP(R13);
-PUSH(R0);
-PUSH(IMM(1));
-PUSH(R12);
-PUSH(R11);
-PUSH(R10);
-MOV(FP, SP);
-/* bvar */
-MOV(R0, FPARG(IMM(0)));
-MOV(R0,INDD(R0,0));
-MOV(R0,INDD(R0,3));
-
-
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel40:
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-
-/*tc-applic specific code starts here */
-PUSH(FPARG(-1));
-MOV(R1,FPARG(-2));
-PUSH(R1);
-MOV(R2, FPARG(1));
-INCR(R2);
-MOV(R3, R2);
-INCR(R3);
-ADD(R2,IMM(4));
-MOV(R4,STARG(2));
-ADD(R4,IMM(3));
-MOV(R5, R4);
-ADD(R5,IMM(2));
-/* loop over frame, R6 <- running indx */
-MOV(R6, IMM(0));
-closureParameterLoopLabel42:
-CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel43);
-MOV(FPARG(R3), STARG(R4));
-DECR(R4);
-DECR(R3);
-INCR(R6);
-JUMP(closureParameterLoopLabel42);
-closureParameterLoopEndLabel43:
-CMP(R5,R2);
-JUMP_GE(greaterLabel45);
-DROP(R5);
-SUB(R2,R5);
-DROP(R2);
-DROP(1);JUMP(endLabel44);
-greaterLabel45:
-CMP(R5,R2);
-JUMP_EQ(equalLabel46);
-MOV(R7,R5);
-SUB(R5,R2);
-SUB(R7,R5);
-DROP(R7);
-DROP(1);JUMP(endLabel44);
-equalLabel46:
-DROP(R5);
-DROP(1);endLabel44:
-MOV(FP, R1);
-JUMPA(INDD(R0, 2));
-
-
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel30:
-CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
-JUMP_NE(ERROR);
-PUSH(INDD(R0,IMM(1)));
-CALLA(INDD(R0,IMM(2)));
-/* move number of args to R5, this is the amount to drop from stack. */
-DROP(1);
-POP(R1);
-INCR(R1);
-DROP(R1);
-
-CALL(PRINT_R0);
-
-/* applic */
-
-/* push T_NIL for empty lambda var and opt */
-MOV(R0,IMM(101));
-PUSH(R0);
-/* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(106));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(111));
-
-PUSH(R0);
-/* push number of arguments */
-PUSH(IMM(2));
 /* get old env address, put in R8 */
 MOV(R8, FPARG(0));
 /* make room for new env */
@@ -4544,174 +4012,121 @@ JUMP(closureEndLabel5);
 closureBodyLabel6:
 PUSH(FP);
 MOV(FP,SP);
-/* lambda opt body */
+/* lambda var body */
 POP(R10);
 POP(R11);
 POP(R12);
 POP(R13);
-PUSH(IMM(2));
-CALL(MALLOC);
-DROP(IMM(1));
-MOV(R14, R0);
-MOV(R15, IMM(0));
-optLambdaCopyLabel7:
-CMP(R15, IMM(2));
-JUMP_EQ(optLambdaEndCopyLabel8);
-POP(R1);
-MOV(INDD(R14,R15), R1);
-ADD(R15, IMM(1));
-JUMP(optLambdaCopyLabel7);
-optLambdaEndCopyLabel8:
-MOV(R1, R13);
-SUB(R1, IMM(2));
-PUSH(R1);
+PUSH(R13);
 PUSH(IMM(0));
 CALL(LIST);
 DROP(IMM(1));
-POP(R1);
-DROP(R1);
-MOV(R2, R0);
-PUSH(R2);
-MOV(R15, IMM(1));
-optLambdaPushLabel9:
-CMP(R15, IMM(-1));
-JUMP_EQ(optLambdaEndPushLabel10);
-PUSH(INDD(R14,R15));
-SUB(R15, IMM(1));
-JUMP(optLambdaPushLabel9);
-optLambdaEndPushLabel10:
-PUSH(IMM(3));
+POP(R13);
+DROP(R13);
+PUSH(R0);
+PUSH(IMM(1));
 PUSH(R12);
 PUSH(R11);
 PUSH(R10);
 MOV(FP, SP);
+/*ifExp*/
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(147));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+CMP(R0, FALSE);
+JUMP_EQ(labelElse12);
+/*const*/
+MOV(R0, IMM(101));
+
+JUMP(labelIfExit13);
+labelElse12:
 /* tc-applic */
 
 /* push T_NIL for empty lambda var and opt */
 MOV(R0,IMM(101));
 PUSH(R0);
 /* push params in reverse order. */
-/*const*/
-MOV(R0, IMM(108));
+/* applic */
 
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
 PUSH(R0);
-/*const*/
-MOV(R0, IMM(115));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(113));
-
-PUSH(R0);
-/*const*/
-MOV(R0, IMM(120));
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
 
 PUSH(R0);
 /* push number of arguments */
-PUSH(IMM(4));
-/* get old env address, put in R8 */
-MOV(R8, FPARG(0));
-/* make room for new env */
-PUSH(IMM(2));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put new env in R9 */
-MOV(R9,R0);
-/* clone the env */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(1));
-closureEnvLoopLabel12:
-CMP(R10,IMM(1));
-JUMP_EQ(closureEnvLoopEndLabel11);
-MOV(INDD(R9,R11), INDD(R8,R10));
-INCR(R10);
-INCR(R11);
-JUMP(closureEnvLoopLabel12);
-closureEnvLoopEndLabel11: 
-MOV(R12, FPARG(1));
-PUSH(R12);
-CALL(MALLOC);
-DROP(1);/* put old params in R9 */
-MOV(INDD(R9,0),R0);
-/* clone parameters from stack */
-/* R10 is i, R11 is j */
-MOV(R10, IMM(0));
-MOV(R11, IMM(2));
-closureParameterLoopLabel14:
-CMP(R10,R12);
-JUMP_EQ(closureParameterLoopEndLabel13);
-MOV(R13,INDD(R9,IMM(0)));
-MOV(INDD(R13,R10), FPARG(R11));
-INCR(R10);
-INCR(R11);
-JUMP(closureParameterLoopLabel14);
-closureParameterLoopEndLabel13: 
-MOV(INDD(R9,IMM(0)),R13);
-/* Calling malloc for closure, env and body. */
-PUSH(IMM(3));
-CALL(MALLOC);
-DROP(IMM(1));
-/* put closure in R0 */
-MOV(INDD(R0,IMM(0)),276405);
-/* put env in R0 */
-MOV(INDD(R0,IMM(1)), R9);
-/* closure body ...*/
-MOV(INDD(R0,IMM(2)), LABEL(closureBodyLabel16));
-JUMP(closureEndLabel15);
-closureBodyLabel16:
-PUSH(FP);
-MOV(FP,SP);
-/* lambda opt body */
-POP(R10);
-POP(R11);
-POP(R12);
-POP(R13);
-PUSH(IMM(2));
-CALL(MALLOC);
-DROP(IMM(1));
-MOV(R14, R0);
-MOV(R15, IMM(0));
-optLambdaCopyLabel17:
-CMP(R15, IMM(2));
-JUMP_EQ(optLambdaEndCopyLabel18);
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(165));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
 POP(R1);
-MOV(INDD(R14,R15), R1);
-ADD(R15, IMM(1));
-JUMP(optLambdaCopyLabel17);
-optLambdaEndCopyLabel18:
-MOV(R1, R13);
-SUB(R1, IMM(2));
-PUSH(R1);
-PUSH(IMM(0));
-CALL(LIST);
-DROP(IMM(1));
-POP(R1);
+INCR(R1);
 DROP(R1);
-MOV(R2, R0);
-PUSH(R2);
-MOV(R15, IMM(1));
-optLambdaPushLabel19:
-CMP(R15, IMM(-1));
-JUMP_EQ(optLambdaEndPushLabel20);
-PUSH(INDD(R14,R15));
-SUB(R15, IMM(1));
-JUMP(optLambdaPushLabel19);
-optLambdaEndPushLabel20:
-PUSH(IMM(3));
-PUSH(R12);
-PUSH(R11);
-PUSH(R10);
-MOV(FP, SP);
-/* bvar */
-MOV(R0, FPARG(IMM(0)));
-MOV(R0,INDD(R0,0));
-MOV(R0,INDD(R0,2));
 
-POP(FP);
-RETURN;
-/* LABEL END LAMBDA */
-closureEndLabel15:
+PUSH(R0);
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/* pvar */
+MOV(R10, IMM(0));
+ADD(R10,IMM(2));
+MOV(R0, FPARG(R10));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(1));
+/*fvar */
+MOV(R0, IND(164));
+CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
+JUMP_NE(ERROR);
+PUSH(INDD(R0,IMM(1)));
+CALLA(INDD(R0,IMM(2)));
+/* move number of args to R5, this is the amount to drop from stack. */
+DROP(1);
+POP(R1);
+INCR(R1);
+DROP(R1);
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(189));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
@@ -4731,40 +4146,67 @@ MOV(R5, R4);
 ADD(R5,IMM(2));
 /* loop over frame, R6 <- running indx */
 MOV(R6, IMM(0));
-closureParameterLoopLabel21:
+closureParameterLoopLabel7:
 CMP(R6, R5);
-JUMP_EQ(closureParameterLoopEndLabel22);
+JUMP_EQ(closureParameterLoopEndLabel8);
 MOV(FPARG(R3), STARG(R4));
 DECR(R4);
 DECR(R3);
 INCR(R6);
-JUMP(closureParameterLoopLabel21);
-closureParameterLoopEndLabel22:
+JUMP(closureParameterLoopLabel7);
+closureParameterLoopEndLabel8:
 CMP(R5,R2);
-JUMP_GE(greaterLabel24);
+JUMP_GE(greaterLabel10);
 DROP(R5);
 SUB(R2,R5);
 DROP(R2);
-DROP(1);JUMP(endLabel23);
-greaterLabel24:
+DROP(1);JUMP(endLabel9);
+greaterLabel10:
 CMP(R5,R2);
-JUMP_EQ(equalLabel25);
+JUMP_EQ(equalLabel11);
 MOV(R7,R5);
 SUB(R5,R2);
 SUB(R7,R5);
 DROP(R7);
-DROP(1);JUMP(endLabel23);
-equalLabel25:
+DROP(1);JUMP(endLabel9);
+equalLabel11:
 DROP(R5);
-DROP(1);endLabel23:
+DROP(1);endLabel9:
 MOV(FP, R1);
 JUMPA(INDD(R0, 2));
+
+
+labelIfExit13:
 
 
 POP(FP);
 RETURN;
 /* LABEL END LAMBDA */
 closureEndLabel5:
+
+MOV(IND(IMM(190)),IMM(R0));
+MOV(R0, IMM(T_VOID));
+
+CALL(PRINT_R0);
+
+/* applic */
+
+/* push T_NIL for empty lambda var and opt */
+MOV(R0,IMM(101));
+PUSH(R0);
+/* push params in reverse order. */
+/*const*/
+MOV(R0, IMM(128));
+
+PUSH(R0);
+/*fvar */
+MOV(R0, IND(135));
+
+PUSH(R0);
+/* push number of arguments */
+PUSH(IMM(2));
+/*fvar */
+MOV(R0, IND(170));
 CMP(INDD(R0,IMM(0)), IMM(T_CLOSURE));
 JUMP_NE(ERROR);
 PUSH(INDD(R0,IMM(1)));
