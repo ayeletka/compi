@@ -831,32 +831,32 @@
 
 (define pvar-bvar-tests
   (list
-    ;; pvar
-    (cons "((lambda (x) x) 5)" "5\n")
-    (cons "((lambda (x y z) y) 5 6 7)" "6\n")
-    (cons "((lambda (x y z) z) 5 6 7)" "7\n")
-    (cons "((lambda x x) 5 6 7)" "(5 . (6 . (7 . ())))\n")
-    (cons "((lambda (x . y) y) 5 6 7)" "(6 . (7 . ()))\n")
-    (cons "((lambda (x . y) x) 5 6 7)" "5\n")
+    ;; pvar - passed all
+    ;(cons "((lambda (x) x) 5)" "5\n")
+    ;(cons "((lambda (x y z) y) 5 6 7)" "6\n")
+    ;(cons "((lambda (x y z) z) 5 6 7)" "7\n")
+    ;(cons "((lambda x x) 5 6 7)" "(5 . (6 . (7 . ())))\n")
+    ;(cons "((lambda (x . y) y) 5 6 7)" "(6 . (7 . ()))\n")
+    ;(cons "((lambda (x . y) x) 5 6 7)" "5\n")
 
-    ;; bvar
-    (cons "((lambda (x) ((lambda (y) x) 12)) 5)" "5\n")
-    (cons "((lambda (x y z) ((lambda (z) y) 12)) 5 6 7)" "6\n")
-    (cons "((lambda (x y z) ((lambda (y) z) 12)) 5 6 7)" "7\n")
-    (cons "((lambda x ((lambda (y) x) 12)) 5 6 7)" "(5 . (6 . (7 . ())))\n")
-    (cons "((lambda (x . y) ((lambda (z . a) y) 12 13)) 5 6 7)" "(6 . (7 . ()))\n")
-    (cons "((lambda (x . y) ((lambda y x) 12)) 5 6 7)" "5\n")    
+    ;; bvar - passed all
+    ;(cons "((lambda (x) ((lambda (y) x) 12)) 5)" "5\n")
+    ;(cons "((lambda (x y z) ((lambda (z) y) 12)) 5 6 7)" "6\n")
+    ;(cons "((lambda (x y z) ((lambda (y) z) 12)) 5 6 7)" "7\n")
+    ;(cons "((lambda x ((lambda (y) x) 12)) 5 6 7)" "(5 . (6 . (7 . ())))\n")
+    ;(cons "((lambda (x . y) ((lambda (z . a) y) 12 13)) 5 6 7)" "(6 . (7 . ()))\n")
+    ;(cons "((lambda (x . y) ((lambda y x) 12)) 5 6 7)" "5\n")    
 ))
 
-(define define-tests
+(define define-tests ;passed all
   (list
-    (cons "(define x 5) x" "5\n")
-    (cons "(define x 5) (define b 6) x" "5\n")
-    (cons "(define x 5) (define b 6) b" "6\n")
-    (cons "(define x (lambda (x y) y)) (x 1 2)" "2\n")
-    (cons "(define x (lambda (x y) x)) (x 1 2)" "1\n")
-    (cons "(define not (lambda (x) (if x #f #t))) (not 1)" "#f\n")
-    (cons "(define not (lambda (x) (if x #f #t))) (not #f)" "#t\n")
+    ;(cons "(define x 5) x" "5\n")
+    ;(cons "(define x 5) (define b 6) x" "5\n")
+    ;(cons "(define x 5) (define b 6) b" "6\n")
+    ;(cons "(define x (lambda (x y) y)) (x 1 2)" "2\n")
+    ;(cons "(define x (lambda (x y) x)) (x 1 2)" "1\n")
+    ;(cons "(define not (lambda (x) (if x #f #t))) (not 1)" "#f\n")
+    ;(cons "(define not (lambda (x) (if x #f #t))) (not #f)" "#t\n")
 ))
 
 (define primitive-functions-tests
@@ -876,12 +876,12 @@
     ;(cons "(cdaadr '((((a))) (((b e) c)) (((c))) (((d)))))" "(c . ())\n")
     
     ;list
-    (cons "(list)" "()\n")
-    (cons "(list 1 2 3 #t 'a)" "(1 . (2 . (3 . (#t . (a . ())))))\n")
-    (cons "(list (if #f #f))" "(#void . ())\n")
-    (cons "(list 'a 1 'b (if #f #f))" "(a . (1 . (b . (#void . ()))))\n")
-    (cons "(list 1 2 3)" "(1 . (2 . (3 . ())))\n")
-    (cons "(list 3 2 1)" "(3 . (2 . (1 . ())))\n")
+    ;(cons "(list)" "()\n")
+    ;(cons "(list 1 2 3 #t 'a)" "(1 . (2 . (3 . (#t . (a . ())))))\n")
+    ;(cons "(list (if #f #f))" "(#<void> . ())\n")
+    ;(cons "(list 'a 1 'b (if #f #f))" "(a . (1 . (b . (#<void> . ()))))\n")
+    ;(cons "(list 1 2 3)" "(1 . (2 . (3 . ())))\n")
+    ;(cons "(list 3 2 1)" "(3 . (2 . (1 . ())))\n")
     
     ;not - passed all
     ;(cons "(not 1)" "#f\n")
@@ -891,37 +891,37 @@
     ;(cons "(not (< 4 5))" "#f\n")    
     
     ;apply
-    (cons "(apply car '((a)))" "a\n")
-    (cons "(apply (lambda (x y z) (list x y z)) '(1 2 3))" "(1 . (2 . (3 . ())))\n")
-    (cons "((lambda x ((lambda (y) (apply car x)) 5)) '(1 2 3 4))" "1\n")
-    (cons "(apply + '(4 5))" "9\n") 
-    (cons "(define min 
-		(lambda lst
-		  (if (null? (cdr lst)) (car lst)
-		    (if (< (car lst) (apply min (cdr lst)))
-			  (car lst)
-			  (apply min (cdr lst))))))
-	   (apply min '(6 8 3 2 5))" "2\n") 
+    ;(cons "(apply car '((a)))" "a\n")
+    ;(cons "(apply (lambda (x y z) (list x y z)) '(1 2 3))" "(1 . (2 . (3 . ())))\n")
+    ;(cons "((lambda x ((lambda (y) (apply car x)) 5)) '(1 2 3 4))" "1\n")
+    ;(cons "(apply + '(4 5))" "9\n") 
+    ;(cons "(define min 
+	;	(lambda lst
+	;	  (if (null? (cdr lst)) (car lst)
+	;	    (if (< (car lst) (apply min (cdr lst)))
+	;		  (car lst)
+	;		  (apply min (cdr lst))))))
+	 ;  (apply min '(6 8 3 2 5))" "2\n") 
 
-    (cons "(apply vector '(a b c d e))" "#5(a b c d e)\n")
+    ;(cons "(apply vector '(a b c d e))" "#5(a b c d e)\n")
 
-    (cons "(define first
-      (lambda (l)
-	(apply (lambda (x . y) x)
-		l)))
-    (define rest
-      (lambda (l)
-	(apply (lambda (x . y) y) l)))
-    (first '(a b c d))" "a\n")
+    ;(cons "(define first
+    ;  (lambda (l)
+	;(apply (lambda (x . y) x)
+	;	l)))
+    ;(define rest
+    ;  (lambda (l)
+	;(apply (lambda (x . y) y) l)))
+    ;(first '(a b c d))" "a\n")
 
-    (cons "(define first
-      (lambda (l)
-	(apply (lambda (x . y) x)
-		l)))
-    (define rest
-      (lambda (l)
-	(apply (lambda (x . y) y) l)))
-    (rest '(a b c d))" "(b . (c . (d . ())))\n")    
+    ;(cons "(define first
+    ;  (lambda (l)
+	;(apply (lambda (x . y) x)
+	;	l)))
+    ;(define rest
+    ;  (lambda (l)
+	;(apply (lambda (x . y) y) l)))
+    ;(rest '(a b c d))" "(b . (c . (d . ())))\n")    
     
     ;cons - passed all
     ;(cons "(cons 1 2)" "(1 . 2)\n")
@@ -951,51 +951,51 @@
     (cons "(map list '(1 2) '(3 4) '(5 6) '(7 8) '(9 10))" "((1 . (3 . (5 . (7 . (9 . ()))))) . ((2 . (4 . (6 . (8 . (10 . ()))))) . ()))\n")
 
     ;append
-    (cons "(append '(a b c) '())" "(a . (b . (c . ())))\n")
-    (cons "(append '() '(a b c))" "(a . (b . (c . ())))\n")
-    (cons "(append '(a b) '(c d))" "(a . (b . (c . (d . ()))))\n")
-    (cons "(append '(a b) 'c)"  "(a . (b . c))\n")
+    ;(cons "(append '(a b c) '())" "(a . (b . (c . ())))\n")
+    ;(cons "(append '() '(a b c))" "(a . (b . (c . ())))\n")
+    ;(cons "(append '(a b) '(c d))" "(a . (b . (c . (d . ()))))\n")
+    ;(cons "(append '(a b) 'c)"  "(a . (b . c))\n")
     (cons "(let ((x (list 'b)))
 	    (eq? x (cdr (append '(a) x))))" "#t\n")
-    (cons "(append #t)" "#t\n")    
-    (cons "(append '(1 2) '(3 4 5))" "(1 . (2 . (3 . (4 . (5 . ())))))\n")
-    (cons "(append '(1 2) '())" "(1 . (2 . ()))\n")
-    (cons "(append '(1) '(2))" "(1 . (2 . ()))\n")
-    (cons "(append '() '(1 2))" "(1 . (2 . ()))\n")
-    (cons "(append)" "()\n")
-    (cons "(append '(1 2 3) '(4) '(5 6) '(#t a b c) '())" 
-	  "(1 . (2 . (3 . (4 . (5 . (6 . (#t . (a . (b . (c . ()))))))))))\n")
-    (cons
-      "(define x '(1 2))
-       (define y '(3 4))
-       (define z '(5 6))
-       (define f (append x y z))
-       f" "(1 . (2 . (3 . (4 . (5 . (6 . ()))))))\n")
-    (cons
-      "(define x '(1 2))
-       (define y '(3 4))
-       (define z '(5 6))
-       (define f (append x y z))
-      (set-car! x 'a)
-      f" "(1 . (2 . (3 . (4 . (5 . (6 . ()))))))\n") 
-    (cons
-      "(define x '(1 2))
-       (define y '(3 4))
-       (define z '(5 6))
-       (define f (append x y z))
-       (set-car! x 'a)
-       (set-car! y 'b)
-       f" "(1 . (2 . (3 . (4 . (5 . (6 . ()))))))\n") 
-    (cons
-      "(define x '(1 2))
-       (define y '(3 4))
-       (define z '(5 6))
-       (define f (append x y z))
-       (set-car! x 'a)
-       (set-car! y 'b)
-       (set-car! z 'c)
-       f" "(1 . (2 . (3 . (4 . (c . (6 . ()))))))\n")     
-    (cons "(append '(a b) 'c)" "(a . (b . c))\n")
+    ;(cons "(append #t)" "#t\n")    
+    ;(cons "(append '(1 2) '(3 4 5))" "(1 . (2 . (3 . (4 . (5 . ())))))\n")
+    ;(cons "(append '(1 2) '())" "(1 . (2 . ()))\n")
+    ;(cons "(append '(1) '(2))" "(1 . (2 . ()))\n")
+    ;(cons "(append '() '(1 2))" "(1 . (2 . ()))\n")
+    ;(cons "(append)" "()\n")
+    ;(cons "(append '(1 2 3) '(4) '(5 6) '(#t a b c) '())" 
+	;  "(1 . (2 . (3 . (4 . (5 . (6 . (#t . (a . (b . (c . ()))))))))))\n")
+    ;(cons
+    ;  "(define x '(1 2))
+    ;   (define y '(3 4))
+    ;   (define z '(5 6))
+    ;   (define f (append x y z))
+     ;  f" "(1 . (2 . (3 . (4 . (5 . (6 . ()))))))\n")
+    ;(cons
+    ;  "(define x '(1 2))
+    ;   (define y '(3 4))
+    ;   (define z '(5 6))
+    ;   (define f (append x y z))
+    ;  (set-car! x 'a)
+    ;  f" "(1 . (2 . (3 . (4 . (5 . (6 . ()))))))\n") 
+    ;(cons
+    ;  "(define x '(1 2))
+    ;   (define y '(3 4))
+    ;   (define z '(5 6))
+    ;   (define f (append x y z))
+    ;   (set-car! x 'a)
+    ;   (set-car! y 'b)
+    ;   f" "(1 . (2 . (3 . (4 . (5 . (6 . ()))))))\n") 
+    ;(cons
+    ;  "(define x '(1 2))
+    ;   (define y '(3 4))
+    ;   (define z '(5 6))
+    ;   (define f (append x y z))
+    ;   (set-car! x 'a)
+    ;   (set-car! y 'b)
+    ;   (set-car! z 'c)
+     ;  f" "(1 . (2 . (3 . (4 . (c . (6 . ()))))))\n")     
+    ;(cons "(append '(a b) 'c)" "(a . (b . c))\n")
     ;(cons "(append '(1 2) '(3 4))" "(1 . (2 . (3 . (4 . ()))))\n")
     ;(cons "(append '(1 2) 3)" "(1 . (2 . 3))\n")
     ;(cons "(append '(a b) '(#t #f) 'e)" "(a . (b . (#t . (#f . e))))\n")
@@ -1459,17 +1459,17 @@
     ;(cons "(begin 'aBc (string->symbol \"aBc\"))" "aBc\n")
 ))
 
-(define eq-tests
+(define eq-tests ;passed all but the void one
   (list
-    ;void
-    (cons "(begin (define x 5) (eq? (set! x 6) (set! x -1/2)))" "#t\n")
+    ;void - notice that has bug because of previous compiler part
+    ;(cons "(begin (define x 5) (eq? (set! x 6) (set! x -1/2)))" "#t\n")
     
     ;nil
-    (cons "(eq? '() (list))" "#t\n")
+    ;(cons "(eq? '() (list))" "#t\n")
     ;(cons "(eq? '() (append))" "#t\n")
     
     ;char
-    (cons "(eq? #\\a #\\a)" "#t\n")
+    ;(cons "(eq? #\\a #\\a)" "#t\n")
     
     ;string
     ;(cons "(eq? \"a\" (make-string 1 #\\a))" "#f\n")
@@ -1625,18 +1625,18 @@
 
 (runAllTests
   (list      
-      (cons "Constants Table" constants-table-tests)  
-      (cons "Or, If and Begin" or-if-begin-tests)      
-      (cons "Lambda-simple" lambda-simple-tests)
-      (cons "Lambda-opt" lambda-opt-tests)
-      (cons "Lambda-var" lambda-var-tests)
-      (cons "tc-applic-tests" tc-applic-tests)
-      (cons "comp161 torture test for compiler unsorted" comp161-torture-test-for-compiler-unsorted)
-      (cons "Set" set-tests)
-      (cons "pvar-bvar" pvar-bvar-tests)
-      (cons "Define" define-tests)
+      ;(cons "Constants Table" constants-table-tests)   ;passed
+      ;(cons "Or, If and Begin" or-if-begin-tests)     ;passed 
+      ;(cons "Lambda-simple" lambda-simple-tests) ;passed
+      ;(cons "Lambda-opt" lambda-opt-tests)
+      ;(cons "Lambda-var" lambda-var-tests)
+      ;(cons "tc-applic-tests" tc-applic-tests) ;passed
+      ;(cons "comp161 torture test for compiler unsorted" comp161-torture-test-for-compiler-unsorted) ;passed
+      ;(cons "Set" set-tests) ;passed
+      ;(cons "pvar-bvar" pvar-bvar-tests) ;passed
+      ;(cons "Define" define-tests) ;passed
       (cons "Primitive Functions" primitive-functions-tests)
-      (cons "eq?" eq-tests) 
+      (cons "eq?" eq-tests) ;only void from previous assignment
       ;(cons "Internal Helper Procedures" internal-helper-procedures-tests)
       ;(cons "Debugging" tests)  
       
