@@ -66,10 +66,13 @@
       (if (null? s) '()
 	  (append-helper (car s) (cdr s)))))
 
-
-(define map
-	(lambda (func lst)
-  (if (null? lst)
-      (list)
-      (cons (func (car lst))
-            (map func (cdr lst))))))
+(define map (lambda (proc lst1 . restLsts)
+ (define (FalseIfTrue proc lstToRun)
+   (and (pair? lstToRun) (or (proc (car lstToRun)) (FalseIfTrue proc (cdr lstToRun)))))
+ (define (map-helper proc lstToRun)
+   (if (null? lstToRun) '()
+       (cons (proc (car lstToRun)) (map-helper proc (cdr lstToRun)))))
+ (let ((lstToRuns (cons lst1 restLsts)))
+   (if (FalseIfTrue null? lstToRuns) '()
+       (cons (apply proc (map-helper car lstToRuns))
+             (apply map proc (map-helper cdr lstToRuns)))))))
