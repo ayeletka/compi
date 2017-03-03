@@ -1046,7 +1046,7 @@
       "MOV(R14, R0);" nl 
       ;R15 holds the idx
       "MOV(R15, IMM(0));" nl 
-      ; copy all opt args
+      ; copy allSymbolStrings opt args
       copyLabel ":" nl
       "CMP(R15, IMM(" (number->string numberOfParams) "));" nl
       "JUMP_EQ(" endCopyLabel ");" nl
@@ -1238,5 +1238,5 @@
             (close-output-port out-port))))
 
 
-(compile-scheme-file "AllTests/test1.scm" "foo.c")
+;(compile-scheme-file "AllTests/test1.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")
