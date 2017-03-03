@@ -1671,7 +1671,6 @@ PLUS:
   PUSH(R4);
   PUSH(R5);
   PUSH(R6);
-
   // Put 0/1 in R1:
   PUSH(0);
   PUSH(1);
@@ -1690,6 +1689,7 @@ PLUS_LOOP:
   JUMP_EQ(PLUS_END);
   // Get arg:
   MOV(R4, FPARG(R3)); /* SCHEME INTEGER */
+INFO;
 
   // Check if it is a fraction already:
   CMP(INDD(R4, 0), T_FRAC);
