@@ -232,13 +232,20 @@ END:
 ///////////////////////////////////////////////////////////////////////////
 
 
-  
-
   APPLY:
   PUSH(FP);
   MOV(FP,SP);
   PUSH(R1);
   PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  PUSH(R7);
+  PUSH(R8);
+  PUSH(R9);
+  PUSH(R10);
+  PUSH(R11);
 
   MOV(R1, IMM(0)); // WILL HOLD THE NUM OF ARGS
   MOV(R2, FPARG(2)); //FUNC
@@ -246,10 +253,8 @@ END:
   MOV(R4, IMM(0)); //CONTER FOR REVERSE LST
   MOV(R5, IMM(1)); //CONTER FOR REVERSE LST
 
-   CMP(INDD(R2, 0), T_NIL);
-   JUMP_EQ(LST_IS_NIL);
-
-
+  CMP(INDD(R2, 0), T_NIL);
+  JUMP_EQ(LST_IS_NIL);
   PUSH(R3);
   CALL(LIST_LEN);
   DROP(1);
@@ -264,66 +269,63 @@ END:
   PUSH(R6);
   CALL(GIVE_ME_ARG_IN_LST);
   DROP(2);
-  INFO;
-  PUSH(R0);
+  PUSH(R0); //PUSHING THE ARG
   ADD(R4, IMM(1));
   ADD(R5, IMM(1));
   JUMP(LST_REVERSE_LOOP);
 
-
   JUMP(CONT);
-   LST_IS_NIL:
-  MOV(R1, IMM(0));
-
+  LST_IS_NIL:
+  MOV(R1, IMM(0)); //NUM OF ARGS
 
   CONT:
-   PUSH(R1);
-   PUSH(INDD(R2, 1));
-   PUSH(FPARG(-1));
-   MOV(R8, FPARG(-2));
-  MOV(R12,FPARG(1));
-  /* R13 hold the new num of arg */
-  MOV(R13,STARG(1));
-            
-  /* R6 will old the STARG offset */
-  MOV(R6, R1);
+  PUSH(R1); //NUM OF ARGS
+  PUSH(INDD(R2, 1)); //FUNC BODY
+  PUSH(FPARG(-1));
+  MOV(R7, FPARG(-2));
+  MOV(R8, FPARG(1));
+  MOV(R10, STARG(1));            
+  MOV(R6, R1); //STARG OFFSET
   ADD(R6, 1); 
-            
-  /* R5 will old the FPARG offset */
-  MOV(R5, R12);
+  MOV(R5, R8); //FPARG OFFSET
   ADD(R5, IMM(1));
+  MOV(R4, IMM(0)); //INDEX  
+  MOV(R11, IMM(2)); //COPIES TO DO
+  ADD(R11, 3); //5
 
-  /* R4 is the running index */
-  MOV(R4, IMM(0));
-  
-  /* R14 is the number of copy */
-  MOV(R14, IMM(2));
-  ADD(R14, 3);
-  APPLY_TC_FIX_STACK:
-  CMP(R4, R14);
-  JUMP_EQ(APPLY_TC_FIX_STACK_EXIT);
+  CHANGING_STACK:
+  CMP(R4, R11);
+  JUMP_EQ(EXIT_STACK);
   MOV(FPARG(R5), STARG(R6));
-  SUB(R6, IMM(1));
-  SUB(R5, IMM(1));
   ADD(R4, IMM(1));
-  JUMP(APPLY_TC_FIX_STACK);
-APPLY_TC_FIX_STACK_EXIT:
-  MOV(R9, R13);
+  SUB(R5, IMM(1));
+  SUB(R6, IMM(1));
+  JUMP(CHANGING_STACK);
+
+  EXIT_STACK:
+  MOV(R9, R10);
   SUB(R9, IMM(1));
-  SUB(R9, R12);
+  SUB(R9, R8);
   MOV(SP, FP);
   ADD(SP, R9);
-  MOV(FP, R8);
-  JUMPA(INDD(R2, 2));
-  JUMP(ERROR);
-  
-  /* call func body */ 
-  CALLA(INDD(R2, 2));
-  /* drop the parameters and env and num of params ... */
-  MOV(R2, STARG(0));
-  ADD(R2, R1);  
+  MOV(FP, R7);
+  INFO;
+  JUMPA(INDD(R2, 2));  
+  CALLA(INDD(R2, 2)); //FUNCTION BODY
+  MOV(R2, STARG(0)); //ENV+#ARGS
+  ADD(R2, R1);  //NUM OF ARGS
   DROP(R2);
 
+
+  POP(R11);
+  POP(R10);
+  POP(R9);
+  POP(R8);
+  POP(R7);
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
   POP(R2);
   POP(R1);   
   POP(FP);     
@@ -339,12 +341,14 @@ GIVE_ME_ARG_IN_LST:
   MOV(R1, FPARG(0)); //NUM
   MOV(R2, FPARG(1)); // LIST
   MOV(R3, IMM(0)); //COUNTER
+
 GIVE_ME_ARG_IN_LST_LOOP:
   CMP(R3, R1);
   JUMP_EQ(GIVE_ME_ARG_IN_LST_END);
   MOV(R2, INDD(R2, 2));
   ADD(R3, IMM(1));
   JUMP(GIVE_ME_ARG_IN_LST_LOOP);
+
 GIVE_ME_ARG_IN_LST_END:
   MOV(R0, INDD(R2, 1));
   POP(R3);
