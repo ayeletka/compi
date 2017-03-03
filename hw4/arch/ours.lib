@@ -223,8 +223,6 @@ END:
   POP(FP);
   RETURN;
 
-
-
  ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////  APPLY  ///////////////////////////////////////
@@ -658,6 +656,58 @@ VECTOR_END:
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
+LIST:
+  PUSH(FP);
+  MOV(FP, SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+  MOV(R1, FPARG(1)); 
+  MOV(R2, 0); 
+  MOV(R3, 2); 
+  CMP(0, R1);
+  JUMP_NE(LIST_NODES);  
+  PUSH(1);
+  CALL(MALLOC);
+  DROP(1);
+  MOV(R0, SOB_NIL);
+  JUMP(LIST_END);
+LIST_NODES:
+  CMP(R1, R2);
+  JUMP_EQ(LIST_LAST);
+  PUSH(3);
+  CALL(MALLOC);
+  DROP(1);
+  MOV(R5, R0);
+  MOV(INDD(R5, 0), T_PAIR);
+  MOV(INDD(R5, 1), FPARG(R3));
+  CMP(R2, 0);
+  JUMP_EQ(FIRST_TIME);
+  MOV(INDD(R6, 2), R5);
+  JUMP(LIST_CONTINUE);
+FIRST_TIME:
+  MOV(R4, R5);
+LIST_CONTINUE:
+  MOV(R6, R5);
+  ADD(R2, 1);
+  ADD(R3, 1);
+  JUMP(LIST_NODES);
+LIST_LAST:
+  MOV(INDD(R6, 2), SOB_NIL);
+  MOV(R0, R4);
+LIST_END:
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  JUMP(END);
+
+
 CONS:
   PUSH(FP);
   MOV(FP, SP);
@@ -692,7 +742,6 @@ CAR:
   
 
 CDR:
- LcdrBody:   
  PUSH(FP);    
  MOV(FP,SP);
  PUSH(R1);    
@@ -701,11 +750,20 @@ CDR:
  MOV(R1,FPARG(2));    
  CMP(INDD(R1,0),IMM(T_PAIR));   
  JUMP_NE(Lerror_incorr_type);
- MOV(R0,INDD(R1,2));
+ MOV(R0,INDD(R1,2)); 
+ CMP(R0,IMM(0));
+ JUMP_EQ(CDR_NIL);
  POP(R1); 
  POP(FP);   
  RETURN; 
- 
+
+CDR_NIL:
+  MOV(R0,SOB_NIL);
+  POP(R1); 
+  POP(FP);   
+  RETURN; 
+
+
 SET_CAR:
  PUSH(FP);
  MOV(FP,SP);
@@ -1901,7 +1959,7 @@ LOOP_SYMTAB:
   JUMP(LOOP_SYMTAB);
 
 FOUND_SAME_SYMB:
-  MOV(R0, R3);
+  MOV(R0, IND(R3));
   JUMP(STRING_2_SYMBOL_END);  
 
 //assuming list of symbols is empty///

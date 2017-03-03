@@ -69,6 +69,7 @@
 (define T_VECTOR  335728)
 (define T_CLOSURE   276405)
 (define T_UNDEFINED 999999)
+(define SOB_NIL 101)
 
 
 (define const_table '())
@@ -89,6 +90,7 @@
 
 (define getConstAddress
   (lambda (const)
+    (if (equal? const '()) SOB_NIL
     (letrec ((loop 
             (lambda (const_table)
               (cond 
@@ -98,7 +100,7 @@
               )
             )
     ))
-    (loop const_table))))
+    (loop const_table)))))
 
 
 
@@ -329,8 +331,10 @@
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
       ((equal? var 'apply) (string-append (closureFromLabelMaker "APPLY") (string-append 
                   "MOV(IND(" (number->string idx) "), R0);" nl )))
-      ;((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
+      ;((equal? var 'append) (string-append (closureFromLabelMaker "APPEND") (string-append 
       ;            "MOV(IND(" (number->string idx) "), R0);" nl )))
+      ((equal? var 'list) (string-append (closureFromLabelMaker "LIST") (string-append 
+                  "MOV(IND(" (number->string idx) "), R0);" nl )))
       (else
         (string-append 
                   "MOV(IND(" (number->string idx) "), IMM(" (number->string val) "));" nl
@@ -1171,7 +1175,7 @@
 
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
-    "#define SOB_NIL 2" nl nl
+    "#define SOB_NIL 101" nl nl
     "#define FALSE 102 " nl nl
     "#define TRUE 104 " nl nl
     "#define LOCAL_NUM_ARGS 1 " nl nl
@@ -1260,5 +1264,5 @@
             (close-output-port out-port))))
 
 
-(compile-scheme-file "test-files/test2.scm" "foo.c")
+(compile-scheme-file "AllTests/test1.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")

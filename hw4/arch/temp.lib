@@ -1,0 +1,80 @@
+ ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+////////////////////////////  APPEND  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+APPEND:
+  PUSH(FP);
+  MOV(FP,SP);
+  PUSH(R1);
+  PUSH(R2);
+  PUSH(R3);
+  PUSH(R4);
+  PUSH(R5);
+  PUSH(R6);
+
+  /*R1 holds num of args*/
+  MOV(R1,FPARG(1));
+  CMP(R1,IMM(0));
+  JUMP_EQ(APPEND_T_NIL);  
+  CMP(R1,IMM(1));
+  JUMP_EQ(APPEND_ONE_ARG);
+  MOV(R2,IMM(1));
+APPEND_ITER_VARS:
+  MOV(R3,FPARG(2));
+  CMP(R1,R2);
+  JUMP_EQ(APPEND_ONE_ARG);
+  ADD(R3,R2);
+  CMP(INDD(R3,0),T_PAIR);
+  JUMP_NE(APPEND_ERROR_NOT_PAIR);
+  MOV(R4,FPARG(2));
+FPARG_2_ITER_VARS:
+  MOV(R5, INDD(R4, 1));
+  /* check that is represented that way */
+  CMP(R5,SOB_NIL); 
+  JUMP_EQ(R3_ITER_VARS);
+  PUSH(R5);
+  MOV(R4, INDD(R4, 2));
+  CMP(R4,SOB_NIL); 
+  JUMP_EQ(R3_ITER_VARS);  
+  JUMP(FPARG_2_ITER_VARS);
+
+R3_ITER_VARS:
+  MOV(R5, INDD(R3, 1));
+  /* check that is represented that way */
+  CMP(R5,SOB_NIL); 
+  JUMP_EQ(MAKE_APPEND_LIST);
+  PUSH(R5);
+  MOV(R3, INDD(R3, 2));
+  CMP(R3,SOB_NIL); 
+  JUMP_EQ(MAKE_APPEND_LIST);  
+  JUMP(R3_ITER_VARS);
+
+MAKE_APPEND_LIST:
+  PUSH(T_NIL);
+  PUSH()
+  CALL(LIST);
+
+
+
+APPEND_ONE_ARG:
+  MOV(R0, FPARG(2));
+  JUMP(APPEND_END);
+
+APPEND_T_NIL:
+  MOV(R0, SOB_NIL);
+  JUMP(APPEND_END);
+
+APPEND_END:
+  POP(R6);
+  POP(R5);
+  POP(R4);
+  POP(R3);
+  POP(R2);
+  POP(R1);
+  POP(FP);
+  RETURN;
+
+APPEND_ERROR_NOT_PAIR:
+  HALT;

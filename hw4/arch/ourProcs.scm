@@ -1,28 +1,17 @@
 (define remainder 
-(lambda (num1 num2)
-(cond 
-	((and (number? num1) (number? num2) (< num2 0)) (remainder num1 (- num2)))
-	((and (number? num1) (number? num2) (< num1 0) (< (- num1) num2)) num1)
-	((and (number? num1) (number? num2) (or (> num1 0) (= num1 0)) (< num1 num2)) num1)
-((and (number? num1) (number? num2)) (remainder (- num1 num2) num2))
-(else ""))))
-
-(define list (lambda vars vars))
-
-;works in scheme doesnt work in compiler
-(define append
-	((lambda ()
-  (define loop1
-		    (lambda (lst1 lst2)
-		    			(if (null? lst1) lst2
-			  				(cons (car lst1) (loop1 (cdr lst1) lst2)))))
-	(define internalApply
-		    (lambda (lst1 lst)
-		      			(if (null? lst) lst1
-			  				(loop1 lst1 (internalApply (car lst) (cdr lst))))))
-    (lambda lst
-      (if (null? lst) '()
-	  (internalApply (car lst) (cdr lst)))))))
+	(lambda (num1 num2) 
+		(if (and (number? num1) (number? num2))
+			(cond
+				((= num1 0) num1)
+				((= num2 num1) (- num1 num2))
+				((= num2 (- num1)) (+ num2 num1))
+				((< num2 0) (remainder num1 (- num2)))
+				((and (< num1 0) (> (- num1) num2)) (remainder (- (- (- num1) num2))  num2))
+				((< num1 0) num1)
+				((> num1 num2) (remainder (- num1 num2) num2))
+				(else num1)
+				)
+			"")))
 
 (define cadr 
 	(lambda (x) (car (cdr x))))
@@ -61,6 +50,17 @@
 (define caaaar 
 	(lambda (x) (car (car (car (car x))))))
 
+(define append2Lists
+	(lambda (list1 list2)
+        (if (null? list1) list2
+            (cons (car list1) (append2Lists (cdr list1) list2)))))
+
+(define append
+	(lambda lst
+		(if (null? lst) lst
+			(if (null? (cdr lst)) (car lst)
+			(append (cons (append2Lists (car lst) (cadr lst)) (cddr lst)))
+		))))
 
 ;waiting 4 apply
 ;(define map (lambda (proc lst1 . restLsts)

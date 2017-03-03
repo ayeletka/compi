@@ -1,0 +1,118 @@
+
+----------------------------
+Register Info:
+----------------------------
+FP = 4      SP = 13
+
+R0 = 307        R1 = 5
+R2 = 2841       R3 = 2576
+R4 = 5          R5 = -2
+R6 = 1          R7 = 4
+
+----------------------------
+Stack Info:
+----------------------------
+STACK[13] = 0
+STACK[12] = 0
+STACK[11] = 0
+STACK[10] = 4
+STACK[ 9] = 307
+STACK[ 8] = 269
+STACK[ 7] = 123
+STACK[ 6] = 146
+STACK[ 5] = 305
+STACK[ 4] = 101
+STACK[ 3] = 0
+STACK[ 2] = 4494490
+STACK[ 1] = 0
+STACK[ 0] = 0
+
+----------------------------
+Memory Info:
+----------------------------
+MEM[   0] = 2844       MEM[1] = 0          MEM[   2] = 0          MEM[3] = 0         
+MEM[   4] = 0          MEM[5] = 0          MEM[   6] = 0          MEM[7] = 0         
+MEM[   8] = 0          MEM[9] = 0          MEM[  10] = 0          MEM[11] = 0         
+MEM[  12] = 0          MEM[13] = 0          MEM[  14] = 0          MEM[15] = 0         
+MEM[  16] = 0          MEM[17] = 0          MEM[  18] = 0          MEM[19] = 0         
+MEM[  20] = 0          MEM[21] = 0          MEM[  22] = 0          MEM[23] = 0         
+MEM[  24] = 0          MEM[25] = 0          MEM[  26] = 0          MEM[27] = 0         
+MEM[  28] = 0          MEM[29] = 0          MEM[  30] = 0          MEM[31] = 0         
+MEM[  32] = 0          MEM[33] = 0          MEM[  34] = 0          MEM[35] = 0         
+MEM[  36] = 0          MEM[37] = 0          MEM[  38] = 0          MEM[39] = 0         
+MEM[  40] = 0          MEM[41] = 0          MEM[  42] = 0          MEM[43] = 0         
+MEM[  44] = 0          MEM[45] = 0          MEM[  46] = 0          MEM[47] = 0         
+MEM[  48] = 0          MEM[49] = 0          MEM[  50] = 0          MEM[51] = 0         
+MEM[  52] = 0          MEM[53] = 0          MEM[  54] = 0          MEM[55] = 0         
+MEM[  56] = 0          MEM[57] = 0          MEM[  58] = 0          MEM[59] = 0         
+MEM[  60] = 0          MEM[61] = 0          MEM[  62] = 0          MEM[63] = 0         
+MEM[  64] = 0          MEM[65] = 0          MEM[  66] = 0          MEM[67] = 0         
+MEM[  68] = 0          MEM[69] = 0          MEM[  70] = 0          MEM[71] = 0         
+MEM[  72] = 0          MEM[73] = 0          MEM[  74] = 0          MEM[75] = 0         
+MEM[  76] = 0          MEM[77] = 0          MEM[  78] = 0          MEM[79] = 0         
+MEM[  80] = 0          MEM[81] = 0          MEM[  82] = 0          MEM[83] = 0         
+MEM[  84] = 0          MEM[85] = 0          MEM[  86] = 0          MEM[87] = 0         
+MEM[  88] = 0          MEM[89] = 0          MEM[  90] = 0          MEM[91] = 0         
+MEM[  92] = 0          MEM[93] = 0          MEM[  94] = 0          MEM[95] = 0         
+MEM[  96] = 0          MEM[97] = 0          MEM[  98] = 0          MEM[99] = 0         
+MEM[ 100] = T_VOID     MEM[101] = T_NIL      MEM[ 102] = T_BOOL     MEM[103] = 0         
+MEM[ 104] = T_BOOL     MEM[105] = 1          MEM[ 106] = T_INTEGER  MEM[107] = 123       
+MEM[ 108] = T_INTEGER  MEM[109] = 4          MEM[ 110] = T_PAIR     MEM[111] = 108       
+MEM[ 112] = 101        MEM[113] = T_PAIR     MEM[ 114] = 106        MEM[115] = 110       
+MEM[ 116] = T_INTEGER  MEM[117] = 12         MEM[ 118] = T_PAIR     MEM[119] = 116       
+MEM[ 120] = 101        MEM[121] = T_INTEGER  MEM[ 122] = 12         MEM[123] = T_INTEGER 
+MEM[ 124] = 3          MEM[125] = T_PAIR     MEM[ 126] = 123        MEM[127] = 101       
+MEM[ 128] = T_PAIR     MEM[129] = 116        MEM[ 130] = 125        MEM[131] = T_INTEGER 
+MEM[ 132] = 3          MEM[133] = T_PAIR     MEM[ 134] = 123        MEM[135] = 101       
+MEM[ 136] = T_INTEGER  MEM[137] = 4          MEM[ 138] = T_PAIR     MEM[139] = 108       
+MEM[ 140] = 101        MEM[141] = T_INTEGER  MEM[ 142] = 1          MEM[143] = T_PAIR    
+MEM[ 144] = 141        MEM[145] = 101        MEM[ 146] = T_INTEGER  MEM[147] = 2         
+MEM[ 148] = T_PAIR     MEM[149] = 146        MEM[ 150] = 101        MEM[151] = T_STRING  
+MEM[ 152] = 0          MEM[153] = T_INTEGER  MEM[ 154] = 1          MEM[155] = T_INTEGER 
+MEM[ 156] = 2          MEM[157] = T_PAIR     MEM[ 158] = 146        MEM[159] = 101       
+MEM[ 160] = T_PAIR     MEM[161] = 141        MEM[ 162] = 148        MEM[163] = T_INTEGER 
+MEM[ 164] = 0          MEM[165] = 2663       MEM[ 166] = 2666       MEM[167] = 2669      
+MEM[ 168] = 2672       MEM[169] = 2675       MEM[ 170] = 2678       MEM[171] = 2681      
+MEM[ 172] = 2684       MEM[173] = 2687       MEM[ 174] = 2690       MEM[175] = 2693      
+MEM[ 176] = 2696       MEM[177] = 2699       MEM[ 178] = 2702       MEM[179] = 2705      
+MEM[ 180] = 2708       MEM[181] = 2711       MEM[ 182] = 2714       MEM[183] = 2717      
+MEM[ 184] = 2720       MEM[185] = 2723       MEM[ 186] = 2726       MEM[187] = 2729      
+MEM[ 188] = 2732       MEM[189] = 2735       MEM[ 190] = 2738       MEM[191] = 2741      
+MEM[ 192] = 2744       MEM[193] = 2747       MEM[ 194] = 2750       MEM[195] = 2753      
+MEM[ 196] = 2756       MEM[197] = 2759       MEM[ 198] = 2762       MEM[199] = 2765      
+MEM[ 200] = 2768       MEM[201] = 999999     MEM[ 202] = 2771       MEM[203] = 2774      
+MEM[ 204] = 2777       MEM[205] = 2781       MEM[ 206] = 2785       MEM[207] = 2789      
+MEM[ 208] = 2793       MEM[209] = 2797       MEM[ 210] = 2801       MEM[211] = 2805      
+MEM[ 212] = 2809       MEM[213] = 2813       MEM[ 214] = 2817       MEM[215] = 2821      
+MEM[ 216] = 2825       MEM[217] = 2829       MEM[ 218] = 2833       MEM[219] = 2837      
+MEM[ 220] = T_VOID     MEM[221] = T_NIL      MEM[ 222] = T_BOOL     MEM[223] = 1         
+MEM[ 224] = T_BOOL     MEM[225] = 1          MEM[ 226] = T_PAIR     MEM[227] = 102       
+MEM[ 228] = 101        MEM[229] = T_PAIR     MEM[ 230] = 104        MEM[231] = 226       
+MEM[ 232] = T_STRING   MEM[233] = 1          MEM[ 234] = 101        MEM[235] = T_SYMBOL  
+MEM[ 236] = 232        MEM[237] = T_STRING   MEM[ 238] = 0          MEM[239] = T_STRING  
+MEM[ 240] = 1          MEM[241] = 97         MEM[ 242] = T_SYMBOL   MEM[243] = 239       
+MEM[ 244] = T_STRING   MEM[245] = 1          MEM[ 246] = 98         MEM[247] = T_SYMBOL  
+MEM[ 248] = 244        MEM[249] = T_PAIR     MEM[ 250] = 247        MEM[251] = 101       
+MEM[ 252] = T_PAIR     MEM[253] = 242        MEM[ 254] = 249        MEM[255] = T_INTEGER 
+MEM[ 256] = 0          MEM[257] = 235        MEM[ 258] = 259        MEM[259] = 242       
+MEM[ 260] = 261        MEM[261] = 247        MEM[ 262] = 263        MEM[263] = T_VOID    
+MEM[ 264] = T_NIL      MEM[265] = T_BOOL     MEM[ 266] = 1          MEM[267] = T_BOOL    
+MEM[ 268] = 1          MEM[269] = T_INTEGER  MEM[ 270] = 8          MEM[271] = T_INTEGER 
+MEM[ 272] = 9          MEM[273] = T_FRAC     MEM[ 274] = -1         MEM[275] = 2         
+MEM[ 276] = T_PAIR     MEM[277] = 273        MEM[ 278] = 101        MEM[279] = T_PAIR    
+MEM[ 280] = 271        MEM[281] = 276        MEM[ 282] = T_PAIR     MEM[283] = 269       
+MEM[ 284] = 279        MEM[285] = T_INTEGER  MEM[ 286] = 1          MEM[287] = T_INTEGER 
+MEM[ 288] = 2          MEM[289] = T_INTEGER  MEM[ 290] = 3          MEM[291] = T_INTEGER 
+MEM[ 292] = 4          MEM[293] = T_PAIR     MEM[ 294] = 108        MEM[295] = 101       
+MEM[ 296] = T_PAIR     MEM[297] = 123        MEM[ 298] = 110        MEM[299] = T_PAIR    
+MEM[ 300] = 146        MEM[301] = 296        MEM[ 302] = T_PAIR     MEM[303] = 141       
+MEM[ 304] = 299        MEM[305] = T_INTEGER  MEM[ 306] = 5          MEM[307] = T_INTEGER 
+MEM[ 308] = 6          MEM[309] = T_INTEGER  MEM[ 310] = 7          MEM[311] = T_PAIR    
+MEM[ 312] = 309        MEM[313] = 101        MEM[ 314] = T_PAIR     MEM[315] = 307       
+MEM[ 316] = 311        MEM[317] = T_PAIR     MEM[ 318] = 305        MEM[319] = 314       
+MEM[ 320] = T_STRING   MEM[321] = 1          MEM[ 322] = 97         MEM[323] = T_SYMBOL  
+MEM[ 324] = 239        MEM[325] = T_STRING   MEM[ 326] = 1          MEM[327] = 98        
+MEM[ 328] = T_SYMBOL   MEM[329] = 244        MEM[ 330] = T_PAIR     MEM[331] = 247       
+MEM[ 332] = 101        MEM[333] = T_PAIR     MEM[ 334] = 242        MEM[335] = 249       
+MEM[ 336] = T_PAIR     MEM[337] = 102        MEM[ 338] = 101        MEM[339] = T_PAIR    
+MEM[ 340] = 104        MEM[341] = 226        MEM[
