@@ -705,7 +705,10 @@
     (let* ( 
       (code-gen-test (code-gen (cadr ifExp) envLevel paramsLevel))
       (code-gen-do-if-true (code-gen (caddr ifExp) envLevel paramsLevel))
-      (code-gen-do-if-false (code-gen (cadddr ifExp) envLevel paramsLevel))
+      (code-gen-do-if-false (if (equal? (cadddr ifExp) `(const ,(void))) 
+                          (string-append 
+                           "/*const*/" nl
+                           "MOV(R0, IMM(T_VOID));" nl)  (code-gen (cadddr ifExp) envLevel paramsLevel)))
       (labelElse (string-append "labelElse" (labelNumberInString)))
       (labelIfExit (string-append "labelIfExit" (labelNumberInString)))
       )
@@ -1237,7 +1240,7 @@
             	)
             (close-output-port out-port))))
 
-(compile-scheme-file "variousTests/test-files/test2.scm" "foo.c")
+;(compile-scheme-file "variousTests/test-files/test2.scm" "foo.c")
 
-;(compile-scheme-file "AllTests/NotPassed/test211.scm" "foo.c")
+(compile-scheme-file "AllTests/NotPassed/test10.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")
