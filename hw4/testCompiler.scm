@@ -1544,17 +1544,17 @@
    
     
     ;box-get box-set box
-;;     (cons "((lambda (x) (box-get x)) (box 5))" "5\n")
-;;     (cons "((lambda (y) ((lambda (x) (box-get y)) 5)) (box '(a b c)))" "(a . (b . (c . ())))\n")
-;;     (cons "((lambda (y) ((lambda (x) (begin (box-set y 12) (box-get y))) 5)) (box '(a b c)))" "12\n")
-;;     (cons "((lambda (x) (begin (box-set x \"AbC\") (box-get x))) (box 5))" "\"AbC\"\n")
-;;     (cons "((lambda (y) ((lambda (x) (set! x (box x)) (box-get x)) 1)) (box '(a b c)))" "1\n")
-;;     (cons
-;; 	  "(define *example*
-;; 	    (let ((a 0))
-;; 	      (begin (lambda () a)
-;; 	      (lambda () (set! a (+ a 1)))
-;; 	      ((lambda (b) (set! a b) a) a)))) *example*" "0\n")
+    ;(cons "((lambda (x) (box-get x)) (box 5))" "5\n")
+     ;(cons "((lambda (y) ((lambda (x) (box-get y)) 5)) (box '(a b c)))" "(a . (b . (c . ())))\n")
+     ;(cons "((lambda (y) ((lambda (x) (begin (box-set y 12) (box-get y))) 5)) (box '(a b c)))" "12\n")
+     ;(cons "((lambda (x) (begin (box-set x \"AbC\") (box-get x))) (box 5))" "\"AbC\"\n")
+     ;(cons "((lambda (y) ((lambda (x) (set! x (box x)) (box-get x)) 1)) (box '(a b c)))" "1\n")
+     ;(cons
+ 	  ;"(define *example*
+ 	   ; (let ((a 0))
+ 	    ;  (begin (lambda () a)
+ 	     ; (lambda () (set! a (+ a 1)))
+ 	      ;((lambda (b) (set! a b) a) a)))) *example*" "0\n")
 	      
     ;+
     (cons "(asaf-lior-reduce-num 10/2)" "5\n")
@@ -1625,13 +1625,13 @@
 (runAllTests
   (list      
       ;(cons "Constants Table" constants-table-tests)  
-      (cons "Or, If and Begin" or-if-begin-tests)      
+      ;(cons "Or, If and Begin" or-if-begin-tests)      
       ;(cons "Lambda-simple" lambda-simple-tests)
       ;(cons "Lambda-opt" lambda-opt-tests)
       ;(cons "Lambda-var" lambda-var-tests)
       ;(cons "tc-applic-tests" tc-applic-tests)
       ;(cons "comp161 torture test for compiler unsorted" comp161-torture-test-for-compiler-unsorted)
-      ;(cons "Set" set-tests)
+      (cons "Set" set-tests)
       ;(cons "pvar-bvar" pvar-bvar-tests)
       ;(cons "Define" define-tests)
       ;(cons "Primitive Functions" primitive-functions-tests)

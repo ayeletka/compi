@@ -488,7 +488,7 @@
                       ""
                       (string-append
                         (code-gen (car exps) 0 0) nl
-                        ;"INFO;" nl
+                        ; nl
                         "CALL(PRINT_R0);" nl nl
                        ; "SHOW(\"\", R0);" nl
                         (loop (cdr exps))
@@ -553,6 +553,7 @@
     (string-append
       "/*fvar */" nl
       "MOV(R0, IND(" (number->string (getGlobalVarAddress (cadr fvar)))"));" nl
+      ; nl
                 ;"SHOW(\"\", R0);" nl
 
 )))
@@ -574,10 +575,12 @@
           (mjrdex (cadr bvar))
           (mindex (caddr bvar)))
     (string-append
+      ; nl
       "/* bvar */" nl
       "MOV(R0, FPARG(IMM(0)));" nl
       "MOV(R0,INDD(R0,"(number->string mjrdex) "));" nl
       "MOV(R0,INDD(R0,"(number->string mindex) "));" nl
+      ; nl
       )))) 
 
 
@@ -592,6 +595,7 @@
       "ADD(R10,IMM(2));" nl
       (malloc 1) nl
       "MOV(IND(R0),FPARG(R10));" nl
+      ;
       ))
     (let (
           (mjrdex (caddar setvar))
@@ -648,30 +652,31 @@
 ;need to check once box and box-set are done
 (define code-gen-box-get
   (lambda (setvar envLevel paramsLevel)
-    (if (equal? (caar setvar) 'pvar)
-    (let (;(e (cadr setvar))
-          (mindex (caddar setvar)))
-    (string-append
-      "/* box-get-pvar */" nl
-      ;(code-gen e envLevel paramsLevel) nl
-      "MOV(R10, IMM("(number->string mindex)"));" nl
-      "ADD(R10,IMM(2));" nl
-      "MOV(R0,IND(FPARG(R10)));" nl
-      ;"INFO;" nl 
-      ))
-    (let (;(e (cadr setvar))
-          (mjrdex (caddar setvar))
-          (mindex (car (cdddar setvar))))
-    (string-append
-      "/* box-get-bvar */" nl
-      ;(code-gen e envLevel paramsLevel) nl
-      "MOV(R1, FPARG(IMM(0)));" nl
-      "MOV(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
-      "MOV(R1,INDD(R1,IMM("(number->string mindex)")));" nl
-      "MOV(R0,IND(R1));" nl
-      ;"INFO;" nl
-      ))
-    ))) 
+      (if 
+      (equal? (caar setvar) 'pvar)
+      (let ((mindex (caddar setvar)))
+      (string-append
+        ;
+        "/* box-get-pvar */" nl
+        ;(code-gen e envLevel paramsLevel) nl
+        "MOV(R10, IMM("(number->string mindex)"));" nl
+        "ADD(R10,IMM(2));" nl
+        "MOV(R0,IND(FPARG(R10)));" nl
+        ; nl 
+        ))
+      (let (;(e (cadr setvar))
+            (mjrdex (caddar setvar))
+            (mindex (car (cdddar setvar))))
+      (string-append
+        ; nl
+        "/* box-get-bvar */" nl
+        ;(code-gen e envLevel paramsLevel) nl
+        "MOV(R1, FPARG(IMM(0)));" nl
+        "MOV(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
+        "MOV(R1,INDD(R1,IMM("(number->string mindex)")));" nl
+        "MOV(R0,IND(R1));" nl
+        )))
+    ))
 
 (define code-gen-box-set
   (lambda (setvar envLevel paramsLevel)
@@ -679,11 +684,13 @@
     (let ((e (cadr setvar))
           (mindex (caddar setvar)))
     (string-append
+      ;
       "/* box-set-pvar */" nl
       (code-gen e envLevel paramsLevel) nl
-      "MOV(R10, IMM("(number->string mindex)"));" nl
-      "ADD(R10,IMM(2));" nl
-      "MOV(IND(R10),R0);" nl
+      "MOV(R1, IMM("(number->string mindex)"));" nl
+      "ADD(R1,IMM(2));" nl
+      "MOV(IND(FPARG(R1)),R0);" nl
+      ; nl
       ))
     (let ((e (cadr setvar))
           (mjrdex (caddar setvar))
@@ -693,10 +700,10 @@
       (code-gen e envLevel paramsLevel) nl
       "MOV(R1, FPARG(IMM(0)));" nl
       "MOV(R1,INDD(R1,IMM("(number->string mjrdex)")));" nl
-      ;"INFO;" nl
+      ; nl
       "MOV(R1,INDD(R1,IMM("(number->string mindex)")));" nl
       "MOV(IND(R1),R0);" nl
-      ;"INFO;" nl
+      ; nl
       ))
     )))
 
@@ -714,9 +721,10 @@
       )
         (string-append
           "/*ifExp*/" nl
-          code-gen-test nl
+          code-gen-test nl          
+
          ; "SHOW(\"\",R0)" nl
-         ;"INFO;" nl
+         ; nl
           "CMP(R0, FALSE);" nl
           "JUMP_EQ("labelElse");" nl
           code-gen-do-if-true nl
@@ -801,10 +809,6 @@
         ))))
 
 
-
-
-
-;;;;;; TODO: 
 (define code-gen-tc-applic 
   (lambda (applicExp envLevel paramsLevel)
       (let*   (   
@@ -818,6 +822,7 @@
 
             (equalLabel (string-append "equalLabel" (labelNumberInString)))
           )
+      ;(display (cadr applicExp))
           (string-append
             "/* tc-applic */" nl nl
             "/* push T_NIL for empty lambda var and opt */" nl
@@ -1219,6 +1224,7 @@
           (fvar-list (create-list-of-certain-type parsedEvaledSexpr 'fvar))
           (fvar-no-duplicates (remove_duplicate (append saveProcedures fvar-list)))
           )
+    ;(display (total-evaluation sexprLstNoProcs))
             (initConstTable)
             (map addToConstTable constant-list)
 
@@ -1240,7 +1246,7 @@
             	)
             (close-output-port out-port))))
 
-;(compile-scheme-file "variousTests/test-files/test2.scm" "foo.c")
+(compile-scheme-file "AllTests/notPassed/tests.scm" "foo.c")
 
-(compile-scheme-file "AllTests/NotPassed/test10.scm" "foo.c")
+;(compile-scheme-file "AllTests/NotPassed/test10.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")
