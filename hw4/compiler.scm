@@ -521,6 +521,7 @@
         ((equal?  (car sexpr) 'lambda-opt) (code-gen-lambda sexpr envLevel paramsLevel)) 
         ((equal?  (car sexpr) 'lambda-var) (code-gen-lambda sexpr envLevel paramsLevel))
         ((equal? (car sexpr) 'tc-applic) (code-gen-tc-applic sexpr envLevel paramsLevel))
+        ((and (equal? (cdr sexpr) '()) (or (equal? (caar sexpr) 'lambda-simple)) (equal? (caar sexpr) 'lambda-opt) (equal? (caar sexpr) 'lambda-var)) (code-gen (car sexpr) envLevel paramsLevel))
         (else (error 'code-gen "Code-gen didn't recognize the type of the sexpr"))
     )))
 
@@ -1246,7 +1247,7 @@
             	)
             (close-output-port out-port))))
 
-(compile-scheme-file "AllTests/notPassed/tests.scm" "foo.c")
+;(compile-scheme-file "AllTests/notPassed/avTest.scm" "foo.c")
 
 ;(compile-scheme-file "AllTests/NotPassed/test10.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")
