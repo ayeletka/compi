@@ -1248,26 +1248,5 @@
 
 (compile-scheme-file "AllTests/notPassed/tests.scm" "foo.c")
 
-
-(codeGenOnAllSexps '(if3 (applic (fvar null?) ((pvar set 1)))
-     (tc-applic (fvar list) ((pvar x 0)))
-     (if3 (applic
-            (fvar =)
-            ((pvar x 0) (applic (fvar car) ((pvar set 1)))))
-          (pvar set 1)
-          (if3 (applic
-                 (fvar <)
-                 ((pvar x 0) (applic (fvar car) ((pvar set 1)))))
-               (tc-applic (fvar cons) ((pvar x 0) (pvar set 1)))
-               (tc-applic
-                 (fvar cons)
-                 ((applic (fvar car) ((pvar set 1)))
-                   (applic
-                     (fvar a)
-                     ((pvar x 0) (applic (fvar cdr) ((pvar set 1)))))))))))
-
-
-;(compile-scheme-file "AllTests/notPassed/test2.scm" "foo.c")
-
 ;(compile-scheme-file "AllTests/NotPassed/test10.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")

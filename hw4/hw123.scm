@@ -11,11 +11,6 @@
 
     done)
   )
-(define <WhiteSpaceNoStar>
-  (new (*parser (range (integer->char 1) (integer->char 32)))
-
-    done)
-  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;; Comments;;;;;;;;;;;;;;;;;;;;;;
@@ -49,7 +44,7 @@
 
 (define <skip>
   (disj <Comments>
-  <WhiteSpaceNoStar>))
+  <WhiteSpace>))
 
 (define ^^<wrapped>
   (lambda (<wrapper>)
@@ -833,8 +828,9 @@
 ;;;;;;;;;;;;;;;;;;;;;; Sexpr ;;;;;;;;;;;;;;;;;;;;;;
 
 (define <sexpr>
-  (^<CommentOutPrefix*>
   (new
+    (*parser <WhiteSpace>)
+    (*parser <Comments>) *star
     (*parser <WhiteSpace>)
     (*parser <InfixExtension>)
     (*parser <Number>)
@@ -851,11 +847,13 @@
     (*parser <UnquoteAndSpliced⟩>)
     (*disj 13)
     (*parser <WhiteSpace>)
-    (*caten 3)
+    (*parser <Comments>) *star
+    (*parser <WhiteSpace>)
+    (*caten 7)
     (*pack-with 
-     (lambda (space1 expr space4)
+     (lambda (space1 comm1 space3 expr space2 comm2 space4)
            expr))
-  done)))
+  done))
 
 
 (define <Sexpr> <sexpr>)
@@ -1738,7 +1736,6 @@
 
 (define annotate-tc
   (lambda (exp)
-    ;(display exp)
     (letrec ((loop
                 (lambda (expr tail?)
                     (cond
@@ -1753,10 +1750,7 @@
                       ((equal? (car expr) 'seq) `(seq (,@(map (lambda (seqExp) (loop seqExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr))) tail?))))
 
                       ((equal? (car expr) 'or) `(or (,@(map (lambda (orExp) (loop orExp #f)) (reverse (cdr (reverse (cadr expr))))) ,(loop (car (reverse (cadr expr) )) tail?))))
-                      ((or (equal? (car expr) 'box-set)(equal? (car expr) 'set))  
-                        (if (equal? (cddr expr) '())
-                        `(,(car expr) ,(cadr expr))
-                        `(,(car expr) ,(cadr expr) ,(loop (caddr expr) #f))))
+                      ((or (equal? (car expr) 'box-set)(equal? (car expr) 'set))  `(,(car expr) ,(cadr expr) ,(loop (caddr expr) #f)))
                       ((and (equal? (car expr) 'applic) (equal? (cadr expr) '(fvar set))) 
                             `(,(if tail? 'tc-applic 'applic) ,(cadr expr) ,(list (caaddr expr) (loop (cadr (caddr expr)) #f))))
                       ((and (equal? (car expr) 'applic) (equal? (cadr expr) '(fvar box-set))) 
@@ -1767,10 +1761,7 @@
                           (list 'applic (loop (cadr expr) #f) (loop (caddr expr) #f))
                         )
                       )
-                       ((equal? (car expr) 'def)  
-                        (list 'def (cadr expr) (loop (cddr expr) tail?)))
-                      (else 
-                        (cons (loop (car expr) tail?) (loop (cdr expr) tail?))) 
+                      (else (cons (loop (car expr) tail?) (loop (cdr expr) tail?))) 
                     )
                     )))
        (loop exp #f))
