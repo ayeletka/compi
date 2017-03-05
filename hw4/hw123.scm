@@ -75,10 +75,21 @@
 
 (define <CommentsInf>
   (new 
+    (*parser <WhiteSpace>)
     (*parser <line-comment>)
     (*parser <sexpr-comment-inf>)
     (*disj 2)
+    (*parser <WhiteSpace>)
+    (*caten 3)
 
+    done))
+
+(define <CommentsPrefix>
+  (new 
+    (*parser <WhiteSpace>)
+    (*parser <Comments>)
+    (*parser <WhiteSpace>)
+    (*caten 3)
     done))
 
 ;;;;;;;;;;;;;;;;;;;;;; Boolean;;;;;;;;;;;;;;;;;;;;;;
@@ -830,7 +841,7 @@
 (define <sexpr>
   (new
     (*parser <WhiteSpace>)
-    (*parser <Comments>) *star
+    (*parser <CommentsPrefix>) *star
     (*parser <WhiteSpace>)
     (*parser <InfixExtension>)
     (*parser <Number>)

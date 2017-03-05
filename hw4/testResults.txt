@@ -820,57 +820,8 @@ Doing test AllTests/2016Tests/tests/fact-x.scm:
 Doing test AllTests/2016Tests/tests/tests1.scm:
 --------------------------------
 
-[1;31m *** RESULTS DIFFER in AllTests/2016Tests/tests/tests1.scm ☹[0m
-*** scheme output: 23
--2
--1
-5
-35
-88706213
-2811
--5
-12
-14
-6
--5
-6
-1830
-185
-70
-64
-27
-#f
-#t
-400
--4
-200
-121
-250002
-178
-eq!
-no!
-720
-144
-#f
-#f
-"x is greater than y"
-a23
-#f
-36
-(3 . (5 . 4))
-0
-80976
-(1 . (2 . (3 . (4 . (5 . (6 . ()))))))
-2
-14
-hello
-5
-5504
-384
-123
-1241
-177147
-*** our output: 
+
+[1;32mTest AllTests/2016Tests/tests/tests1.scm Passed ☺ [0m
 --------------------------------
 
 Doing test AllTests/2016Tests/tests/tests2.scm:
@@ -897,54 +848,15 @@ Doing test AllTests/2016Tests/tests/tests4.scm:
 Doing test AllTests/2016Tests/tests/tests5.scm:
 --------------------------------
 
-[1;31m *** RESULTS DIFFER in AllTests/2016Tests/tests/tests5.scm ☹[0m
-*** scheme output: (1 . (2 . (3 . (#<void> . (#<void> . ())))))
-(a . (b . (#<void> . (#<void> . (f . ())))))
-1
-#t
-#f
-4
-65
-ok
-sbss
-acc
-(1 . (((1 . 2) . 66) . (3 . (4 . ()))))
-(1 . (2 . (1 . 2)))
-6
-106480
-14511880
-#f
-(0 . (1 . (2 . ())))
-(0 . (3 . (4 . ())))
-(1 . (a . ((* . (4 . ())) . ())))
-(bla . ((((s . ()) . (s . ())) . (sd . ())) . ()))
-*** our output: 
+
+[1;32mTest AllTests/2016Tests/tests/tests5.scm Passed ☺ [0m
 --------------------------------
 
 Doing test AllTests/2016Tests/tests/tests6.scm:
 --------------------------------
 
-[1;31m *** RESULTS DIFFER in AllTests/2016Tests/tests/tests6.scm ☹[0m
-*** scheme output: (1 . (2 . (7 . ())))
-(a . (3 . (4 . (24 . ()))))
-(a . (((b . (c . ())) . ((d . (e . ())) . ())) . (f . ())))
-((3 . (4 . (5 . ()))) . ())
-((3 . (4 . (5 . ()))) . ())
-1
-(1 . (2 . (3 . (4 . (5 . (6 . ()))))))
-39
-23
-done
-(armadilo . (is . (greater . (than . (komodo . ())))))
-#f
-11
-#f
-#t
-#t
-#t
-#t
-#t
-*** our output: 
+
+[1;32mTest AllTests/2016Tests/tests/tests6.scm Passed ☺ [0m
 --------------------------------
 
 Doing test AllTests/2016Tests/tests/torture-test-for-compiler-00.scm:
@@ -1028,9 +940,7 @@ Doing test AllTests/2016Tests/tests/torture-test-for-compiler-08.scm:
 --------------------------------
 
 
-[1;31m *** RESULTS DIFFER in AllTests/2016Tests/tests/torture-test-for-compiler-08.scm ☹[0m
-*** scheme output: ((#t . ()) . ((#t . ()) . ((#t . ()) . ())))
-*** our output: 
+[1;32mTest AllTests/2016Tests/tests/torture-test-for-compiler-08.scm Passed ☺ [0m
 --------------------------------
 
 Doing test AllTests/2016Tests/tests/torture-test-for-compiler-09.scm:
@@ -2476,5 +2386,5 @@ Doing test AllTests/ChloucheTests/tests/test275.scm:
 --------------------------------
 
 Number of tests: 341
-[1;32mNumber of passed tests: 337 [0m
-[1;31mNumber of failed tests: 4 [0m
+[1;32mNumber of passed tests: 341 [0m
+[1;31mNumber of failed tests: 0 [0m

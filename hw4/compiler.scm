@@ -1251,7 +1251,7 @@
             	)
             (close-output-port out-port))))
 
-(compile-scheme-file "AllTests/notPassed/tests5.scm" "foo.c")
+(compile-scheme-file "AllTests/notPassed/torture-test-for-compiler-08.scm" "foo.c")
 
 ;(compile-scheme-file "AllTests/NotPassed/test10.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")
