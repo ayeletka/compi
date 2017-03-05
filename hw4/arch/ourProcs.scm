@@ -50,21 +50,21 @@
 (define caaaar 
 	(lambda (x) (car (car (car (car x))))))
 
-(define append2Lists
+(define append
+	(letrec (
+		(append2Lists
 	(lambda (s1 s2)
 	(if (null? s1) s2
 		  (cons (car s1)
 		   (append2Lists (cdr s1) s2)))))
-
-(define append-helper  
+		(append-helper  
 	(lambda (s1 s)
 	      (if (null? s) s1
 		  (append2Lists s1 (append-helper  (car s) (cdr s))))))
-
-(define append
-	    (lambda s
+		)
+		(lambda s
       (if (null? s) '()
-	  (append-helper (car s) (cdr s)))))
+	  (append-helper (car s) (cdr s))))))
 
 (define map
 	(lambda (func lst)
@@ -72,3 +72,14 @@
       (list)
       (cons (func (car lst))
             (map func (cdr lst))))))
+
+;(define append2Lists
+;	(lambda (s1 s2)
+;	(if (null? s1) s2
+;		  (cons (car s1)
+;		   (append2Lists (cdr s1) s2)))))
+
+;(define append-helper  
+	;(lambda (s1 s)
+	 ;     (if (null? s) s1
+	;	  (append2Lists s1 (append-helper  (car s) (cdr s))))))

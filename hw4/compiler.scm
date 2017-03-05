@@ -713,10 +713,13 @@
     (let* ( 
       (code-gen-test (code-gen (cadr ifExp) envLevel paramsLevel))
       (code-gen-do-if-true (code-gen (caddr ifExp) envLevel paramsLevel))
-      (code-gen-do-if-false (if (equal? (cadddr ifExp) `(const ,(void))) 
-                          (string-append 
-                           "/*const*/" nl
-                           "MOV(R0, IMM(T_VOID));" nl)  (code-gen (cadddr ifExp) envLevel paramsLevel)))
+      (code-gen-do-if-false (code-gen (cadddr ifExp) envLevel paramsLevel))
+        ;(if 
+         ; (equal? (cadddr ifExp) `(const ,(void))) 
+          ;(string-append
+           ; "/*const*/" nl
+            ;"MOV(R0, IMM(T_VOID));" nl)
+          ;(code-gen (cadddr ifExp) envLevel paramsLevel)))
       (labelElse (string-append "labelElse" (labelNumberInString)))
       (labelIfExit (string-append "labelIfExit" (labelNumberInString)))
       )
@@ -1158,6 +1161,7 @@
 
 		"/* change to 0 for no debug info to be printed: */" nl
 		"#define DO_SHOW 1" nl nl
+    "#define SOB_VOID 100" nl nl
     "#define SOB_NIL 101" nl nl
     "#define FALSE 102 " nl nl
     "#define TRUE 104 " nl nl
@@ -1247,7 +1251,7 @@
             	)
             (close-output-port out-port))))
 
-;(compile-scheme-file "AllTests/notPassed/avTest.scm" "foo.c")
+(compile-scheme-file "AllTests/notPassed/tests5.scm" "foo.c")
 
 ;(compile-scheme-file "AllTests/NotPassed/test10.scm" "foo.c")
 ;(compile-scheme-file "tests/test254.scm" "foo.c")

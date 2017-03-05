@@ -1,9 +1,7 @@
-; test 37
-(define (a x set)
-  (cond
-    ((null? set) (list x))
-    ((= x (car set)) set)
-    ((< x (car set)) (cons x set))
-    (else (cons (car set)(a x (cdr set))))))
-	
-(a 3 (cons 5 4))	
+; test 144
+(begin
+    (define vec (make-vector 4))
+    (vector-set! vec 1 4)
+    (vector-set! vec 3 'a)
+    (symbol? (vector-ref vec 3))
+    )

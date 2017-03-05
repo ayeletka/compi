@@ -1393,11 +1393,12 @@
 (define eliminate-nested-defines
   (lambda (exp)
     (let ((noNestedDefines (eliminate-nested-defines-helper exp)))
-      (if (noDefines (cdr noNestedDefines))
-        noNestedDefines
-        (error 'define "tibeten calender ~s" ))
-      )
-    ))
+      noNestedDefines)))
+      ;(if (noDefines (cdr noNestedDefines))
+       ; noNestedDefines
+        ;(error 'define "tibeten calender ~s" ))
+      ;)
+    ;))
 
 ;;;;;;;;;;;;;;;;;;;;; Boxing of variables ;;;;;;;;;;;;;;;;;;;;
 
